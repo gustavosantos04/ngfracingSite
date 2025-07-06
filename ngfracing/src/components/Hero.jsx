@@ -28,12 +28,17 @@ const HeroSection = styled.section`
   text-align: center;
   color: white;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    background-attachment: scroll; /* melhora performance mobile */
+    padding: 0 1rem;
+  }
 `;
 
 const Overlay = styled.div`
   position: absolute;
-  inset: 0; /* top:0; right:0; bottom:0; left:0; */
-  background-color: rgba(0, 0, 0, 0.7); /* meio transparente, ajusta aqui a opacidade */
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 1;
 `;
 
@@ -42,16 +47,24 @@ const Content = styled.div`
   z-index: 2;
   max-width: 900px;
   animation: ${fadeSlideUp} 1s ease forwards;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 const Title = styled.h1`
   font-family: 'Montserrat', sans-serif;
   font-size: 3.5rem;
   margin-bottom: 1rem;
-  line-height: 1.1;
+  line-height: 1.2;
 
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
   }
 `;
 
@@ -64,30 +77,47 @@ const Subtitle = styled.p`
   @media (max-width: 768px) {
     font-size: 1.2rem;
   }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 
 const ButtonGroup = styled.div`
   display: inline-flex;
-  gap: 1.2rem;
+  gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
 `;
 
 const Button = styled.a`
   font-family: 'Orbitron', sans-serif;
-  background-color:rgb(231, 0, 0);
-  color: #ffff;
+  background-color: rgb(231, 0, 0);
+  color: #fff;
   padding: 0.9rem 2rem;
   border-radius: 8px;
   font-weight: 700;
   text-decoration: none;
   font-size: 1.1rem;
-  box-shadow: 0 4px 8pxrgba(200, 0, 0, 0.73);
   transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 8px rgba(200, 0, 0, 0.73);
 
   &:hover {
     background-color: #c80000;
     transform: translateY(-3px);
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    text-align: center;
   }
 `;
 

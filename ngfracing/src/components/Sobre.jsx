@@ -7,6 +7,10 @@ const SobreSection = styled.section`
   padding: 80px 20px;
   color: #fff;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 60px 16px;
+  }
 `;
 
 const SobreBg = styled.div`
@@ -27,16 +31,34 @@ const SobreContainer = styled.div`
   max-width: 1200px;
   margin: auto;
   gap: 40px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
 `;
 
 const SobreTexto = styled.div`
   flex: 2 1 600px;
+
+  @media (max-width: 768px) {
+    flex: unset;
+    width: 100%;
+  }
 `;
 
 const Titulo = styled.h2`
   font-family: 'Orbitron', sans-serif;
   font-size: 2.5rem;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.7rem;
+  }
 `;
 
 const Paragrafo = styled.p`
@@ -44,6 +66,14 @@ const Paragrafo = styled.p`
   font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 30px;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 
 const LinhaTempo = styled.div`
@@ -51,6 +81,11 @@ const LinhaTempo = styled.div`
   gap: 30px;
   margin-bottom: 30px;
   flex-wrap: wrap;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    gap: 16px;
+  }
 `;
 
 const Etapa = styled.div`
@@ -85,7 +120,11 @@ const BotaoConversao = styled.a`
 
   &:hover {
     background-color: #ce0000;
-    color: #fff;
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 `;
 
@@ -94,6 +133,11 @@ const SobreImagem = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 768px) {
+    flex: unset;
+    width: 100%;
+  }
 `;
 
 const Img = styled.img`
@@ -104,6 +148,11 @@ const Img = styled.img`
   margin-left: 20px;
   object-fit: cover;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    max-width: 100%;
+  }
 `;
 
 export default function Sobre() {
