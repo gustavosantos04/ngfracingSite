@@ -1,15 +1,15 @@
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Sobre from './components/Sobre';
+import Estoque from './components/Estoque';
 
 function App() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: '80px' }}>
-        <Hero />
-        <Sobre />
-      </main>
+      <Hero />
+      <Sobre />
+      <Estoque />
     </>
   );
 }

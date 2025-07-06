@@ -16,7 +16,7 @@ const SobreSection = styled.section`
 const SobreBg = styled.div`
   position: absolute;
   inset: 0;
-  background: url(${sobreBgImg}) center/cover no-repeat;
+  background-color: #000;
   filter: brightness(0.3);
   z-index: 1;
 `;
