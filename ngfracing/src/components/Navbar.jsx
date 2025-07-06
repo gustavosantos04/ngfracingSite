@@ -46,6 +46,8 @@ const NavList = styled.ul`
 const NavItem = styled.li``;
 
 const NavLink = styled.a`
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
   text-decoration: none;
   color: #fff;
   font-weight: 500;
@@ -58,6 +60,7 @@ const NavLink = styled.a`
 `;
 
 const Button = styled.a`
+  font-family: 'Orbitron', sans-serif;
   background-color: #e70000;
   color: #ffff;
   padding: 0.6rem 1.2rem;
