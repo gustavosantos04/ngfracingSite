@@ -128,7 +128,7 @@ export default function Hero() {
       <Content>
         <Title>Acelerando rumo à sua melhor conquista sobre quatro rodas.</Title>
         <Subtitle>
-          NGF Racing — veículos selecionados com qualidade, performance e confiança para quem valoriza cada detalhe.
+          NGF Racing — vendendo qualidade e procedência desde 2013.
         </Subtitle>
         <ButtonGroup>
           <Button href="#estoque">Ver Estoque</Button>

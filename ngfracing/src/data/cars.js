@@ -46,7 +46,55 @@ const cars = [
       '/cars/supra-3.jpeg',
     ],
     options: ['Motor 3.0 Turbo', 'Câmbio ZF', 'Rodas forjadas', 'Som JBL'],
-  }
+  },
+  {
+    id: 4,
+    brand: 'Toyota',
+    model: 'Supra GR',
+    year: 2023,
+    km: 5000,
+    fuel: 'Gasolina',
+    transmission: 'Automático',
+    price: 'R$ 629.900',
+    images: [
+      '/cars/supra-1.jpg',
+      '/cars/supra-2.jpeg',
+      '/cars/supra-3.jpeg',
+    ],
+    options: ['Motor 3.0 Turbo', 'Câmbio ZF', 'Rodas forjadas', 'Som JBL'],
+  },
+  {
+    id: 5,
+    brand: 'Audi',
+    model: 'RS3 Sportback',
+    year: 2021,
+    km: 22000,
+    fuel: 'Gasolina',
+    transmission: 'Automático',
+    price: 'R$ 419.900',
+    images: [
+      '/cars/audi-rs3-1.jpeg',
+      '/cars/audi-rs3-2.jpeg',
+      '/cars/audi-rs3-3.jpg',
+    ],
+    options: ['Motor 2.5 Turbo', 'Tração Quattro', 'Freios esportivos', 'Bancos Recaro'],
+  },
+  {
+    id: 1,
+    brand: 'BMW',
+    model: 'M3 Competition',
+    year: 2022,
+    km: 12000,
+    fuel: 'Gasolina',
+    transmission: 'Automático',
+    price: 'R$ 579.900',
+    images: [
+      '/cars/bmw-m3-1.jpg',
+      '/cars/bmw-m3-2.jpeg',
+      '/cars/bmw-m3-3.jpg',
+    ],
+    options: ['Motor 3.0 Biturbo', 'Câmbio 8 marchas', 'Teto Solar', 'Bancos em couro'],
+  },
 ];
 
 export default cars;
