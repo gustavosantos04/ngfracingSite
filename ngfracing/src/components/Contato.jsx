@@ -333,6 +333,7 @@ const SocialLink = styled.a`
 // Seção de Diferenciais
 const DifferentialsSection = styled.section`
   background: #0a0a0a;
+  font-family: 'Montserrat', sans-serif;
   padding: 80px 20px;
   color: white;
 `;
@@ -392,6 +393,7 @@ const DifferentialCard = styled.div`
 const MapSection = styled.section`
   background: #111;
   padding: 80px 20px;
+  font-family: 'Montserrat', sans-serif;
 `;
 
 const MapContainer = styled.div`
@@ -641,24 +643,24 @@ export default function ContatoMelhorado() {
       {/* Seção de Diferenciais */}
       <DifferentialsSection>
         <DifferentialsContainer>
-          <DifferentialsTitle>Por que escolher a NG Racing?</DifferentialsTitle>
+          <DifferentialsTitle>Por que escolher a NGF Racing?</DifferentialsTitle>
           <DifferentialsGrid>
             <DifferentialCard>
               <FaCar className="icon" />
-              <h3>Veículos Premium</h3>
-              <p>Seleção criteriosa de carros esportivos e de luxo com procedência garantida.</p>
+              <h3>Veículos com procêdencia</h3>
+              <p>Seleção criteriosa de carros com procedência garantida.</p>
             </DifferentialCard>
 
             <DifferentialCard>
-              <FaCalculator className="icon" />
-              <h3>Financiamento Facilitado</h3>
-              <p>Parcerias com os melhores bancos para oferecer as melhores condições de financiamento.</p>
+              <FaCar className="icon" />
+              <h3>Qualidade máxima</h3>
+              <p>Garantimos qualidade máxima no produto e no atendimento</p>
             </DifferentialCard>
 
             <DifferentialCard>
-              <FaCalendarAlt className="icon" />
-              <h3>Test Drive Agendado</h3>
-              <p>Agende seu test drive e sinta a emoção de dirigir o carro dos seus sonhos.</p>
+              <FaCar className="icon" />
+              <h3>Melhor pós venda</h3>
+              <p>Cuidamos de todas as etapas da negociação</p>
             </DifferentialCard>
           </DifferentialsGrid>
         </DifferentialsContainer>
@@ -670,7 +672,7 @@ export default function ContatoMelhorado() {
           <MapTitle>Nossa Localização</MapTitle>
           <Map>
             <iframe 
-              title="Localização NG Racing"
+              title="Localização NGF Racing"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3456.84218229986!2d-51.175150!3d-30.034647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x951978d6dd78cd7f%3A0x5bdf8d614fc199c0!2sPorto%20Alegre%2C%20RS!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr"
               allowFullScreen=""
               loading="lazy"
