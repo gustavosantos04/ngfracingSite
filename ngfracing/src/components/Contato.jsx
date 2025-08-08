@@ -493,6 +493,32 @@ export default function ContatoMelhorado() {
 
   return (
     <>
+    {/* Seção de Diferenciais */}
+      <DifferentialsSection>
+        <DifferentialsContainer>
+          <DifferentialsTitle>Por que escolher a NGF Racing?</DifferentialsTitle>
+          <DifferentialsGrid>
+            <DifferentialCard>
+              <FaCar className="icon" />
+              <h3>Veículos com procêdencia</h3>
+              <p>Seleção criteriosa de carros com procedência garantida.</p>
+            </DifferentialCard>
+
+            <DifferentialCard>
+              <FaCar className="icon" />
+              <h3>Qualidade máxima</h3>
+              <p>Garantimos qualidade máxima no produto e no atendimento</p>
+            </DifferentialCard>
+
+            <DifferentialCard>
+              <FaCar className="icon" />
+              <h3>Melhor pós venda</h3>
+              <p>Cuidamos de todas as etapas da negociação</p>
+            </DifferentialCard>
+          </DifferentialsGrid>
+        </DifferentialsContainer>
+      </DifferentialsSection>
+      
       {/* Hero Section */}
       <HeroSection>
         <HeroContent>
@@ -640,33 +666,9 @@ export default function ContatoMelhorado() {
         </Container>
       </MainSection>
 
-      {/* Seção de Diferenciais */}
-      <DifferentialsSection>
-        <DifferentialsContainer>
-          <DifferentialsTitle>Por que escolher a NGF Racing?</DifferentialsTitle>
-          <DifferentialsGrid>
-            <DifferentialCard>
-              <FaCar className="icon" />
-              <h3>Veículos com procêdencia</h3>
-              <p>Seleção criteriosa de carros com procedência garantida.</p>
-            </DifferentialCard>
+      
 
-            <DifferentialCard>
-              <FaCar className="icon" />
-              <h3>Qualidade máxima</h3>
-              <p>Garantimos qualidade máxima no produto e no atendimento</p>
-            </DifferentialCard>
-
-            <DifferentialCard>
-              <FaCar className="icon" />
-              <h3>Melhor pós venda</h3>
-              <p>Cuidamos de todas as etapas da negociação</p>
-            </DifferentialCard>
-          </DifferentialsGrid>
-        </DifferentialsContainer>
-      </DifferentialsSection>
-
-      {/* Seção do Mapa */}
+      {/* Seção do Mapa 
       <MapSection>
         <MapContainer>
           <MapTitle>Nossa Localização</MapTitle>
@@ -680,7 +682,7 @@ export default function ContatoMelhorado() {
             />
           </Map>
         </MapContainer>
-      </MapSection>
+      </MapSection>*/}
 
       {/* WhatsApp Flutuante */}
       <FloatingWhatsApp href="https://wa.me/5551999999999" target="_blank" title="Fale conosco no WhatsApp">

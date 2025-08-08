@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import logoImg from '../assets/www.ngfracing.com.br-logo.jpg';
+import logoImg from '../assets/logoNGFRACING.png';
 
 const Header = styled.header`
   position: fixed;

@@ -1,7 +1,8 @@
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Sobre from './components/Sobre';
-import Estoque from './components/Estoque';
+import EstoqueMelhorado from './components/Estoque';
+import ContatoMelhorado from './components/Contato';
 import Contato from './components/Contato';
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
       <Navbar />
       <Hero />
       <Sobre />
-      <Estoque />
+      <EstoqueMelhorado />
       <Contato />
     </>
   );

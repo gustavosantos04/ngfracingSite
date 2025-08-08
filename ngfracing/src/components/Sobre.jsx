@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import sobreBgImg from '../assets/carro-corrida-antigo.jpg';
-import sobreImg from '../assets/image.jpg';
+import sobreImg from '../../public/cars/carrocorrida.jpg';
 
 const SobreSection = styled.section`
   position: relative;
@@ -161,24 +160,24 @@ export default function Sobre() {
       <SobreBg />
       <SobreContainer>
         <SobreTexto>
-          <Titulo>Nossa História nas Pistas</Titulo>
+          <Titulo>Nossa História</Titulo>
           <Paragrafo>
-            Por mais de 10 anos, aceleramos forte nas pistas de arrancada pelo Brasil.
+            Por mais de 10 anos, aceleramos forte nas pistas de arrancada pelo Rio Grande do Sul, conquistando vários troféus na jornada com o carro 658.
             A paixão por performance começou nas pistas, com motores forjados e vitórias marcantes.
-            Hoje, essa mesma dedicação move a NGF Racing, agora como referência na venda de carros e peças de alta performance.
+            Hoje, essa mesma dedicação move a NGF Racing, agora como referência na venda de carros e peças de alta qualidade e procedência.
           </Paragrafo>
           <LinhaTempo>
             <Etapa>
-              <Ano>2009</Ano>
+              <Ano>2001</Ano>
               <p>Início nas corridas de arrancada</p>
             </Etapa>
             <Etapa>
-              <Ano>2019</Ano>
+              <Ano>2010</Ano>
               <p>Pausa da carreira nas pistas</p>
             </Etapa>
             <Etapa>
               <Ano>Hoje</Ano>
-              <p>Loja especializada em performance e veículos diferenciados</p>
+              <p>Loja referência em veículos diferenciados</p>
             </Etapa>
           </LinhaTempo>
           <BotaoConversao href="#contato">Venha nos conhecer</BotaoConversao>

@@ -35,27 +35,6 @@ const CarImage = styled.img`
   }
 `;
 
-const StatusBadge = styled.div`
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: ${props => {
-    switch (props.status) {
-      case 'disponivel': return '#10b981';
-      case 'reservado': return '#f59e0b';
-      case 'oferta': return '#dc2626';
-      default: return '#6b7280';
-    }
-  }};
-  color: #ffffff;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-`;
-
 const FavoriteButton = styled.button`
   position: absolute;
   top: 1rem;
@@ -156,28 +135,8 @@ const ViewDetailsButton = styled.button`
   }
 `;
 
-const CompareCheckbox = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #9ca3af;
-  font-size: 0.8rem;
-  cursor: pointer;
-  
-  input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: #dc2626;
-  }
-  
-  &:hover {
-    color: #ffffff;
-  }
-`;
-
 export default function CarCard({ car, onClick }) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isComparing, setIsComparing] = useState(false);
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
@@ -190,7 +149,7 @@ export default function CarCard({ car, onClick }) {
         <CarImage src={car.images[0]} alt={`${car.brand} ${car.model}`} />
       
         <FavoriteButton 
-          isFavorite={isFavorite} 
+          $isFavorite={isFavorite} 
           onClick={handleFavoriteClick}
           aria-label="Adicionar aos favoritos"
         >

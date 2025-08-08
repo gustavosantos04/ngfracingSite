@@ -199,7 +199,7 @@ const BasicInfo = styled.div`
 const InfoCard = styled.div`
   background: #1f1f1f;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.7rem;
   text-align: center;
   border: 1px solid #374151;
   
@@ -268,115 +268,6 @@ const OptionItem = styled.li`
   &::before {
     content: '✓';
     color: #10b981;
-    font-weight: bold;
-  }
-`;
-
-const CTASection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid #374151;
-`;
-
-const PrimaryButton = styled.button`
-  background: #dc2626;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: #b91c1c;
-    transform: translateY(-2px);
-  }
-`;
-
-const SecondaryButton = styled.button`
-  background: transparent;
-  color: #dc2626;
-  border: 1px solid #dc2626;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: #dc2626;
-    color: #ffffff;
-  }
-`;
-
-const ContactButtons = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-`;
-
-const WhatsAppButton = styled.button`
-  background: #25d366;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: #128c7e;
-  }
-`;
-
-const PhoneButton = styled.button`
-  background: #6366f1;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: #4f46e5;
-  }
-`;
-
-const FinancingSection = styled.div`
-  background: #1f1f1f;
-  border-radius: 8px;
-  padding: 1rem;
-  border: 1px solid #374151;
-  
-  h4 {
-    color: #ffffff;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-  }
-  
-  .financing-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    color: #9ca3af;
-    font-size: 0.9rem;
-  }
-  
-  .installment {
-    color: #10b981;
-    font-size: 1.2rem;
     font-weight: bold;
   }
 `;
@@ -511,30 +402,12 @@ export default function CarModal({ car, onClose }) {
           <Section>
             <h3>Especificações Técnicas</h3>
             <SpecsList>
-              <SpecItem>
-                <span className="label">Motor</span>
-                <span>3.0 Biturbo</span>
-              </SpecItem>
-              <SpecItem>
-                <span className="label">Potência</span>
-                <span>510 cv</span>
-              </SpecItem>
-              <SpecItem>
-                <span className="label">Torque</span>
-                <span>650 Nm</span>
-              </SpecItem>
-              <SpecItem>
-                <span className="label">0-100 km/h</span>
-                <span>3.9s</span>
-              </SpecItem>
-              <SpecItem>
-                <span className="label">Vel. Máxima</span>
-                <span>250 km/h</span>
-              </SpecItem>
-              <SpecItem>
-                <span className="label">Consumo</span>
-                <span>8.5 km/l</span>
-              </SpecItem>
+              {Object.entries(car.specs).map(([label, value]) => (
+                <SpecItem key={label}>
+                  <span className="label">{label.charAt(0).toUpperCase() + label.slice(1)}</span>
+                  <span>{value}</span>
+                </SpecItem>
+              ))}
             </SpecsList>
           </Section>
 
