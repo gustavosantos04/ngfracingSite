@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import sobreImg from '../../public/cars/carrocorrida.jpg';
+import sobreImg from '/cars/carrocorrida.jpg';
 
 const SobreSection = styled.section`
   position: relative;
