@@ -11,9 +11,12 @@ const ModalContent = styled.div`
   overflow: hidden;
   font-family: 'Montserrat', sans-serif;
   
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr; /* já tens no 1024, aqui só reforço */
     gap: 1rem;
+    max-height: none;
+    height: auto;
+    overflow-y: auto;
   }
 `;
 
@@ -36,6 +39,10 @@ const MainImage = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    min-height: 250px;
   }
 `;
 
@@ -145,6 +152,11 @@ const InfoSection = styled.div`
     background: #dc2626;
     border-radius: 3px;
   }
+
+  @media (max-width: 768px) {
+    overflow-y: visible;
+    padding-right: 0;
+  }
 `;
 
 const Header = styled.div`
@@ -160,6 +172,10 @@ const CarTitle = styled.h2`
   color: #ffffff;
   margin: 0;
   line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const CloseButton = styled.button`
@@ -187,6 +203,10 @@ const Price = styled.div`
   font-weight: bold;
   color: #dc2626;
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+  }
 `;
 
 const BasicInfo = styled.div`
@@ -199,7 +219,7 @@ const BasicInfo = styled.div`
 const InfoCard = styled.div`
   background: #1f1f1f;
   border-radius: 8px;
-  padding: 0.7rem;
+  padding: 1rem;
   text-align: center;
   border: 1px solid #374151;
   

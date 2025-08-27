@@ -99,23 +99,35 @@ const cars = [
   },
   {
     id: 4,
-    brand: "BMW",
-    model: "M3 Competition",
-    year: 2022,
-    km: 12000,
-    fuel: "Gasolina",
-    transmission: "Automático",
-    price: "R$ 579.900,00",
+    brand: "VW",
+    model: "FOX G2",
+    year: 2012,
+    km: 93678,
+    fuel: "Flex",
+    transmission: "Manual",
+    price: "R$ 35.900,00",
     images: [
-      "/cars/bmw-m3-1.jpg",
-      "/cars/bmw-m3-2.jpeg",
-      "/cars/bmw-m3-3.jpg"
+      "/cars/fox2.jpg",
+      "/cars/fox1.jpg",
+      "/cars/fox3.jpg",
+      "/cars/fox4.jpg",
+      "/cars/fox5.jpg"
     ],
+    specs: {
+      versão: "Trend",
+      motor: "1.0 8V",
+      consumo: "10 km/l",
+    },
     options: [
-      "Motor 3.0 Biturbo",
-      "Câmbio 8 marchas",
-      "Teto Solar",
-      "Bancos em couro"
+      "Raridade",
+      "IPVA2 025 Pago",
+      "Alarme",
+      "Ar Quente",
+      "Logo e Etiquetas(VW) de Fábrica",
+      "Segundo dono",
+      "ABS",
+      "Desembaçador Traseiro",
+      "Computador de Bordo",
     ]
   }
 ];

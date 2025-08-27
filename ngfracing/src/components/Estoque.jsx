@@ -63,7 +63,7 @@ export default function EstoqueMelhorado() {
       <Container>
         <Header>
           <h1>Nosso Estoque</h1>
-          <p>Carros com procedência e qualidade garantida</p>
+          <p>Carros com qualidade e procedência garantida</p>
           <div className="contador">{cars.length} veículos disponíveis</div>
         </Header>
 

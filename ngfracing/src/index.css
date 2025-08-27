@@ -4,3 +4,13 @@ html, body {
   height: 100%;
   overflow-x: hidden; /* previne scroll horizontal */
 }
+
+@media (max-width: 768px) {
+  .ReactModal__Content {
+    width: 100% !important;
+    height: 100% !important;
+    inset: 0 !important;
+    border-radius: 0 !important;
+    padding: 1rem !important;
+  }
+}
