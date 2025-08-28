@@ -325,6 +325,7 @@ export default function CarModal({ car, onClose }) {
     <Modal
       isOpen={!!car}
       onRequestClose={onClose}
+      shouldCloseOnOverlayClick={true}      // fecha ao clicar fora do modal
       contentLabel={`Detalhes do ${car.brand} ${car.model}`}
       style={{
         content: {
