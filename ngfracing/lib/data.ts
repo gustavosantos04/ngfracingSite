@@ -29,6 +29,10 @@ const defaultSettings: PublicSiteSettings = {
   businessHours: "Segunda a Sexta: 8h as 18h | Sabado: 9h as 15h"
 };
 
+function logDataFallback(scope: string, error: unknown) {
+  console.error(`[data:${scope}] fallback`, error);
+}
+
 function mapCar(
   car: Prisma.CarGetPayload<{
     include: { images: true };
@@ -64,67 +68,92 @@ function mapCar(
 }
 
 export async function getSiteSettings() {
-  const settings = await prisma.siteSettings.findUnique({
-    where: { id: "site_settings" }
-  });
+  try {
+    const settings = await prisma.siteSettings.findUnique({
+      where: { id: "site_settings" }
+    });
 
-  return settings ?? defaultSettings;
+    return settings ?? defaultSettings;
+  } catch (error) {
+    logDataFallback("getSiteSettings", error);
+    return defaultSettings;
+  }
 }
 
 export async function getAllCars() {
-  const cars = await prisma.car.findMany({
-    include: { images: true },
-    orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }]
-  });
+  try {
+    const cars = await prisma.car.findMany({
+      include: { images: true },
+      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }]
+    });
 
-  return cars.map(mapCar);
+    return cars.map(mapCar);
+  } catch (error) {
+    logDataFallback("getAllCars", error);
+    return [];
+  }
 }
 
 export async function getFeaturedCars(limit = 3) {
-  const cars = await prisma.car.findMany({
-    where: {
-      OR: [{ status: CarStatus.AVAILABLE }, { status: CarStatus.RESERVED }]
-    },
-    include: { images: true },
-    orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
-    take: limit
-  });
+  try {
+    const cars = await prisma.car.findMany({
+      where: {
+        OR: [{ status: CarStatus.AVAILABLE }, { status: CarStatus.RESERVED }]
+      },
+      include: { images: true },
+      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+      take: limit
+    });
 
-  return cars.map(mapCar);
+    return cars.map(mapCar);
+  } catch (error) {
+    logDataFallback("getFeaturedCars", error);
+    return [];
+  }
 }
 
 export async function getCarBySlug(slug: string) {
-  const car = await prisma.car.findUnique({
-    where: { slug },
-    include: { images: true }
-  });
+  try {
+    const car = await prisma.car.findUnique({
+      where: { slug },
+      include: { images: true }
+    });
 
-  return car ? mapCar(car) : null;
+    return car ? mapCar(car) : null;
+  } catch (error) {
+    logDataFallback("getCarBySlug", error);
+    return null;
+  }
 }
 
 export async function getPartCategories() {
-  const categories = await prisma.partCategory.findMany({
-    include: {
-      items: {
-        orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
-      }
-    },
-    orderBy: { name: "asc" }
-  });
+  try {
+    const categories = await prisma.partCategory.findMany({
+      include: {
+        items: {
+          orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
+        }
+      },
+      orderBy: { name: "asc" }
+    });
 
-  return categories.map(
-    (category): PublicPartCategory => ({
-      id: category.id,
-      name: category.name,
-      slug: category.slug,
-      items: category.items.map((item) => ({
-        id: item.id,
-        name: item.name,
-        slug: item.slug,
-        description: item.description,
-        imageUrl: item.imageUrl,
-        isFeatured: item.isFeatured
-      }))
-    })
-  );
+    return categories.map(
+      (category): PublicPartCategory => ({
+        id: category.id,
+        name: category.name,
+        slug: category.slug,
+        items: category.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          slug: item.slug,
+          description: item.description,
+          imageUrl: item.imageUrl,
+          isFeatured: item.isFeatured
+        }))
+      })
+    );
+  } catch (error) {
+    logDataFallback("getPartCategories", error);
+    return [];
+  }
 }

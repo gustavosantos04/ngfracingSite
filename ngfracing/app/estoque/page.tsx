@@ -24,6 +24,14 @@ export default async function InventoryPage() {
               Filtros e ordenacao no cliente, com pagina dedicada para cada carro e SEO via metadata e Schema.org.
             </p>
           </div>
+          {cars.length === 0 ? (
+            <div className="admin-card">
+              <strong style={{ display: "block", marginBottom: 8 }}>Em breve novos carros</strong>
+              <span className="muted">
+                Ainda nao temos veiculos publicados. Novas opcoes serao adicionadas em breve.
+              </span>
+            </div>
+          ) : null}
           <InventoryFilters cars={cars} />
         </div>
       </main>

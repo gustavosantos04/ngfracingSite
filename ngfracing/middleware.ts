@@ -1,36 +1,41 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// ✅ Edge-safe: sem imports externos/aliases.
-// Se o nome do cookie no teu projeto for diferente, ajusta aqui.
-// (Eu manteria "session" como padrão mais comum do Codex.)
-const AUTH_COOKIE_NAME = "session";
+const AUTH_COOKIE_CANDIDATES = ["session", "ngf_admin_session"] as const;
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  try {
+    const { pathname } = request.nextUrl;
 
-  // Não é /admin → segue normal
-  if (!pathname.startsWith("/admin")) {
+    if (pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+      return NextResponse.next();
+    }
+
+    if (!pathname.startsWith("/admin")) {
+      return NextResponse.next();
+    }
+
+    if (pathname === "/admin/login" || pathname.startsWith("/admin/login/")) {
+      return NextResponse.next();
+    }
+
+    const hasSessionCookie = AUTH_COOKIE_CANDIDATES.some((cookieName) => {
+      const value = request.cookies.get(cookieName)?.value;
+      return typeof value === "string" && value.length > 0;
+    });
+
+    if (hasSessionCookie) {
+      return NextResponse.next();
+    }
+
+    const loginUrl = new URL("/admin/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(loginUrl);
+  } catch {
     return NextResponse.next();
   }
-
-  // Libera a tela de login
-  if (pathname.startsWith("/admin/login")) {
-    return NextResponse.next();
-  }
-
-  // Verifica cookie de sessão
-  const hasSessionCookie = request.cookies.has(AUTH_COOKIE_NAME);
-  if (hasSessionCookie) {
-    return NextResponse.next();
-  }
-
-  // Redireciona pro login com "next"
-  const loginUrl = new URL("/admin/login", request.url);
-  loginUrl.searchParams.set("next", pathname);
-  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*"]
 };

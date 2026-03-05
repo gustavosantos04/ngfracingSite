@@ -25,47 +25,56 @@ export default async function PartsPage() {
             </p>
           </div>
           <div className="stack">
-            {categories.map((category) => (
-              <section key={category.id} className="admin-card">
-                <div className="inline-actions" style={{ justifyContent: "space-between" }}>
-                  <h2 style={{ margin: 0 }}>{category.name}</h2>
-                  <span className="chip">{category.items.length} item(ns)</span>
-                </div>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-                    gap: 16,
-                    marginTop: 18
-                  }}
-                >
-                  {category.items.map((item) => (
-                    <article key={item.id} className="surface-card">
-                      {item.imageUrl ? (
-                        <div style={{ position: "relative", minHeight: 180 }}>
-                          <Image
-                            src={item.imageUrl}
-                            alt={item.name}
-                            fill
-                            sizes="(max-width: 900px) 100vw, 25vw"
-                            style={{ objectFit: "cover" }}
-                          />
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <section key={category.id} className="admin-card">
+                  <div className="inline-actions" style={{ justifyContent: "space-between" }}>
+                    <h2 style={{ margin: 0 }}>{category.name}</h2>
+                    <span className="chip">{category.items.length} item(ns)</span>
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                      gap: 16,
+                      marginTop: 18
+                    }}
+                  >
+                    {category.items.map((item) => (
+                      <article key={item.id} className="surface-card">
+                        {item.imageUrl ? (
+                          <div style={{ position: "relative", minHeight: 180 }}>
+                            <Image
+                              src={item.imageUrl}
+                              alt={item.name}
+                              fill
+                              sizes="(max-width: 900px) 100vw, 25vw"
+                              style={{ objectFit: "cover" }}
+                            />
+                          </div>
+                        ) : null}
+                        <div style={{ padding: 18 }}>
+                          <div className="inline-actions" style={{ justifyContent: "space-between" }}>
+                            <h3 style={{ margin: 0 }}>{item.name}</h3>
+                            {item.isFeatured ? <span className="chip">Destaque</span> : null}
+                          </div>
+                          <p className="section-copy" style={{ marginTop: 12, fontSize: "0.95rem" }}>
+                            {item.description}
+                          </p>
                         </div>
-                      ) : null}
-                      <div style={{ padding: 18 }}>
-                        <div className="inline-actions" style={{ justifyContent: "space-between" }}>
-                          <h3 style={{ margin: 0 }}>{item.name}</h3>
-                          {item.isFeatured ? <span className="chip">Destaque</span> : null}
-                        </div>
-                        <p className="section-copy" style={{ marginTop: 12, fontSize: "0.95rem" }}>
-                          {item.description}
-                        </p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ))
+            ) : (
+              <section className="admin-card">
+                <h2 style={{ marginTop: 0 }}>Em breve novas pecas</h2>
+                <p className="section-copy" style={{ marginBottom: 0 }}>
+                  Nosso catalogo ainda nao possui itens publicados. Volte em breve para acompanhar as novidades.
+                </p>
               </section>
-            ))}
+            )}
           </div>
         </div>
       </main>

@@ -21,17 +21,26 @@ export async function PartsPreview() {
             gap: 16
           }}
         >
-          {categories.map((category) => (
-            <div key={category.id} className="admin-card">
-              <div style={{ color: "var(--yellow)", fontSize: "0.82rem", textTransform: "uppercase" }}>
-                Categoria
+          {categories.length > 0 ? (
+            categories.map((category) => (
+              <div key={category.id} className="admin-card">
+                <div style={{ color: "var(--yellow)", fontSize: "0.82rem", textTransform: "uppercase" }}>
+                  Categoria
+                </div>
+                <h3 style={{ margin: "10px 0 8px" }}>{category.name}</h3>
+                <p className="muted" style={{ margin: 0 }}>
+                  {category.items.length} item(ns) cadastrados
+                </p>
               </div>
-              <h3 style={{ margin: "10px 0 8px" }}>{category.name}</h3>
-              <p className="muted" style={{ margin: 0 }}>
-                {category.items.length} item(ns) cadastrados
+            ))
+          ) : (
+            <div className="admin-card">
+              <h3 style={{ marginTop: 0 }}>Catalogo em atualizacao</h3>
+              <p className="muted" style={{ marginBottom: 0 }}>
+                Em breve novas pecas de alta performance estarao disponiveis aqui.
               </p>
             </div>
-          ))}
+          )}
         </div>
         <div>
           <Link href="/pecas" className="button-primary">

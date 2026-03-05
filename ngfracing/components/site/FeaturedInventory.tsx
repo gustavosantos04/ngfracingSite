@@ -35,9 +35,16 @@ export async function FeaturedInventory() {
             gap: 18
           }}
         >
-          {cars.map((car) => (
-            <CarCard key={car.id} car={car} />
-          ))}
+          {cars.length > 0 ? (
+            cars.map((car) => <CarCard key={car.id} car={car} />)
+          ) : (
+            <article className="surface-card" style={{ padding: 24 }}>
+              <h3 style={{ marginTop: 0 }}>Em breve novos carros</h3>
+              <p className="section-copy" style={{ marginBottom: 0 }}>
+                Nosso estoque esta sendo atualizado. Fale com a equipe para receber as proximas oportunidades.
+              </p>
+            </article>
+          )}
         </div>
       </div>
     </section>
