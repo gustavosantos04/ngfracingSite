@@ -7,10 +7,10 @@ export default function NotFound() {
         <div className="stack">
           <span className="section-kicker">404</span>
           <h1 className="section-title" style={{ fontSize: "2rem" }}>
-            Conteudo nao encontrado
+            Conteúdo não encontrado
           </h1>
           <p className="section-copy">
-            A rota solicitada nao existe ou o item foi removido do catalogo.
+            A rota solicitada não existe ou o item foi removido do catálogo.
           </p>
           <div className="inline-actions">
             <Link href="/" className="button-primary">

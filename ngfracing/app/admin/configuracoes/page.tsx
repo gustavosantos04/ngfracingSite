@@ -16,26 +16,26 @@ export default async function AdminSettingsPage({ searchParams }: { searchParams
     <AdminShell>
       <div className="stack">
       <div>
-        <span className="section-kicker">Conteudo</span>
+        <span className="section-kicker">Conteúdo</span>
         <h1 className="section-title" style={{ marginBottom: 8 }}>
           Hero, sobre e contato
         </h1>
         <p className="section-copy">
-          Editor simples para o conteudo institucional da home sem tocar no codigo.
+          Editor simples para o conteúdo institucional da home sem tocar no código.
         </p>
       </div>
 
-      {saved ? <div className="admin-card">Configuracoes atualizadas com sucesso.</div> : null}
+      {saved ? <div className="admin-card">Configurações atualizadas com sucesso.</div> : null}
 
       <form action={saveSettingsAction} className="stack">
         <div className="admin-card stack">
           <h2 style={{ margin: 0 }}>Hero</h2>
           <div className="field">
-            <label htmlFor="heroTitle">Titulo</label>
+            <label htmlFor="heroTitle">Título</label>
             <input id="heroTitle" name="heroTitle" defaultValue={settings.heroTitle} required />
           </div>
           <div className="field">
-            <label htmlFor="heroSubtitle">Subtitulo</label>
+            <label htmlFor="heroSubtitle">Subtítulo</label>
             <textarea id="heroSubtitle" name="heroSubtitle" defaultValue={settings.heroSubtitle} required />
           </div>
           <div className="field-grid two">
@@ -54,12 +54,12 @@ export default async function AdminSettingsPage({ searchParams }: { searchParams
               <input id="heroPrimaryCtaLabel" name="heroPrimaryCtaLabel" defaultValue={settings.heroPrimaryCtaLabel} required />
             </div>
             <div className="field">
-              <label htmlFor="heroSecondaryCtaLabel">Texto CTA secundario</label>
+              <label htmlFor="heroSecondaryCtaLabel">Texto CTA secundário</label>
               <input id="heroSecondaryCtaLabel" name="heroSecondaryCtaLabel" defaultValue={settings.heroSecondaryCtaLabel} required />
             </div>
           </div>
           <div className="field">
-            <label htmlFor="heroSecondaryCtaHref">Link CTA secundario</label>
+            <label htmlFor="heroSecondaryCtaHref">Link CTA secundário</label>
             <input id="heroSecondaryCtaHref" name="heroSecondaryCtaHref" defaultValue={settings.heroSecondaryCtaHref} required />
           </div>
         </div>
@@ -67,7 +67,7 @@ export default async function AdminSettingsPage({ searchParams }: { searchParams
         <div className="admin-card stack">
           <h2 style={{ margin: 0 }}>Sobre</h2>
           <div className="field">
-            <label htmlFor="aboutTitle">Titulo</label>
+            <label htmlFor="aboutTitle">Título</label>
             <input id="aboutTitle" name="aboutTitle" defaultValue={settings.aboutTitle} required />
           </div>
           <div className="field">
@@ -84,7 +84,7 @@ export default async function AdminSettingsPage({ searchParams }: { searchParams
           <h2 style={{ margin: 0 }}>Contato</h2>
           <div className="field-grid two">
             <div className="field">
-              <label htmlFor="phoneWhatsapp">WhatsApp (somente numeros)</label>
+              <label htmlFor="phoneWhatsapp">WhatsApp (somente números)</label>
               <input id="phoneWhatsapp" name="phoneWhatsapp" defaultValue={settings.phoneWhatsapp} required />
             </div>
             <div className="field">
@@ -103,18 +103,18 @@ export default async function AdminSettingsPage({ searchParams }: { searchParams
             </div>
           </div>
           <div className="field">
-            <label htmlFor="address">Endereco</label>
-            <input id="address" name="address" defaultValue={settings.address} required />
+            <label htmlFor="address">Endereço</label>
+          <input id="address" name="address" defaultValue={settings.address} required />
           </div>
           <div className="field">
-            <label htmlFor="businessHours">Horario</label>
+            <label htmlFor="businessHours">Horário</label>
             <input id="businessHours" name="businessHours" defaultValue={settings.businessHours} required />
           </div>
         </div>
 
         <div>
           <button type="submit" className="button-primary">
-            Salvar configuracoes
+            Salvar configurações
           </button>
         </div>
       </form>

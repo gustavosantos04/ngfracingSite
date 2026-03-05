@@ -15,15 +15,15 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"),
   title: {
-    default: "NGF Racing | Seminovos, Projetos e Pecas de Alta Performance",
+    default: "NGF Racing | Seminovos, Projetos e Peças de Alta Performance",
     template: "%s | NGF Racing"
   },
   description:
-    "NGF Racing: loja de carros seminovos, projetos diferenciados e pecas FuelTech de alta performance.",
+    "NGF Racing: loja de carros seminovos, projetos diferenciados e peças FuelTech de alta performance.",
   openGraph: {
     title: "NGF Racing",
     description:
-      "Seminovos, carros diferenciados e pecas de alta performance com procedencia.",
+      "Seminovos, carros diferenciados e peças de alta performance com procedência.",
     url: "/",
     siteName: "NGF Racing",
     locale: "pt_BR",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "NGF Racing",
-    description: "Seminovos, projetos diferenciados e pecas de alta performance.",
+    description: "Seminovos, projetos diferenciados e peças de alta performance.",
     images: ["/branding/hero-car.jpg"]
   },
   icons: {

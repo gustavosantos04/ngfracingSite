@@ -25,12 +25,12 @@ export default async function AdminLoginPage({
               Entrar no CMS
             </h1>
             <p className="section-copy">
-              Login por usuario e senha com hash bcrypt e sessao via cookie seguro.
+              Login por usuário e senha com hash bcrypt e sessão via cookie seguro.
             </p>
           </div>
           {error ? (
             <div className="admin-card" style={{ padding: 14, borderColor: "rgba(215,0,0,0.3)" }}>
-              Credenciais invalidas.
+              Credenciais inválidas.
             </div>
           ) : null}
           <form action={loginAction} className="stack">

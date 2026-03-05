@@ -1,7 +1,7 @@
 import type { CarStatus } from "@prisma/client";
 
 const labels: Record<CarStatus, string> = {
-  AVAILABLE: "Disponivel",
+  AVAILABLE: "Disponível",
   RESERVED: "Reservado",
   SOLD: "Vendido"
 };

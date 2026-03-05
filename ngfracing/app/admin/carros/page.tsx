@@ -64,7 +64,7 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
           <h1 className="section-title" style={{ marginBottom: 8 }}>
             Gerenciar carros
           </h1>
-          <p className="section-copy">Busca, filtros e paginacao para manter o estoque sem editar codigo.</p>
+          <p className="section-copy">Busca, filtros e paginação para manter o estoque sem editar código.</p>
         </div>
         <Link href="/admin/carros/new" className="button-primary">
           Adicionar carro
@@ -75,13 +75,13 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
         <div className="field-grid three">
           <div className="field">
             <label htmlFor="q">Busca</label>
-            <input id="q" name="q" defaultValue={query} placeholder="Titulo, marca, modelo" />
+            <input id="q" name="q" defaultValue={query} placeholder="Título, marca, modelo" />
           </div>
           <div className="field">
             <label htmlFor="status">Status</label>
             <select id="status" name="status" defaultValue={status}>
               <option value="">Todos</option>
-              <option value="AVAILABLE">Disponivel</option>
+              <option value="AVAILABLE">Disponível</option>
               <option value="RESERVED">Reservado</option>
               <option value="SOLD">Vendido</option>
             </select>
@@ -97,7 +97,7 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
             <input id="year" name="year" type="number" defaultValue={year ?? ""} />
           </div>
           <div className="field">
-            <label htmlFor="priceMax">Preco maximo (BRL)</label>
+            <label htmlFor="priceMax">Preço máximo (BRL)</label>
             <input id="priceMax" name="priceMax" type="number" defaultValue={priceMax ?? ""} />
           </div>
         </div>
@@ -119,8 +119,8 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
               <th>Status</th>
               <th>Ano</th>
               <th>KM</th>
-              <th>Preco</th>
-              <th>Acoes</th>
+              <th>Preço</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -166,7 +166,7 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
 
       <div className="inline-actions" style={{ justifyContent: "space-between" }}>
         <div className="muted">
-          Pagina {page} de {totalPages}
+          Página {page} de {totalPages}
         </div>
         <div className="inline-actions">
           {page > 1 ? (
@@ -176,7 +176,7 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
           ) : null}
           {page < totalPages ? (
             <Link href={`/admin/carros?page=${page + 1}`} className="button-secondary">
-              Proxima
+              Próxima
             </Link>
           ) : null}
         </div>

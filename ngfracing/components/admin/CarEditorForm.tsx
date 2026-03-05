@@ -15,7 +15,7 @@ export function CarEditorForm({ action, car }: Props) {
       <div className="admin-card stack">
         <div className="field-grid two">
           <div className="field">
-            <label htmlFor="title">Titulo</label>
+            <label htmlFor="title">Título</label>
             <input id="title" name="title" defaultValue={car?.title ?? ""} required />
           </div>
           <div className="field">
@@ -42,7 +42,7 @@ export function CarEditorForm({ action, car }: Props) {
           <div className="field">
             <label htmlFor="status">Status</label>
             <select id="status" name="status" defaultValue={(car?.status ?? "AVAILABLE") as CarStatus}>
-              <option value="AVAILABLE">Disponivel</option>
+              <option value="AVAILABLE">Disponível</option>
               <option value="RESERVED">Reservado</option>
               <option value="SOLD">Vendido</option>
             </select>
@@ -59,7 +59,7 @@ export function CarEditorForm({ action, car }: Props) {
             <input id="km" name="km" type="number" defaultValue={car?.km ?? ""} required />
           </div>
           <div className="field">
-            <label htmlFor="price">Preco (BRL)</label>
+            <label htmlFor="price">Preço (BRL)</label>
             <input
               id="price"
               name="price"
@@ -73,23 +73,23 @@ export function CarEditorForm({ action, car }: Props) {
 
         <div className="field-grid two">
           <div className="field">
-            <label htmlFor="fuel">Combustivel</label>
+            <label htmlFor="fuel">Combustível</label>
             <input id="fuel" name="fuel" defaultValue={car?.fuel ?? ""} />
           </div>
           <div className="field">
-            <label htmlFor="transmission">Cambio</label>
+            <label htmlFor="transmission">Câmbio</label>
             <input id="transmission" name="transmission" defaultValue={car?.transmission ?? ""} />
           </div>
         </div>
 
         <div className="field">
-          <label htmlFor="description">Descricao</label>
+          <label htmlFor="description">Descrição</label>
           <textarea id="description" name="description" defaultValue={car?.description ?? ""} required />
         </div>
 
         <div className="field-grid three">
           <div className="field">
-            <label htmlFor="mods">Modificacoes (uma por linha)</label>
+            <label htmlFor="mods">Modificações (uma por linha)</label>
             <textarea id="mods" name="mods" defaultValue={car?.mods.join("\n") ?? ""} />
           </div>
           <div className="field">
@@ -123,12 +123,12 @@ export function CarEditorForm({ action, car }: Props) {
       </div>
 
       <div className="inline-actions">
-        <button type="submit" className="button-primary">
-          {car ? "Salvar alteracoes" : "Criar carro"}
+          <button type="submit" className="button-primary">
+          {car ? "Salvar alterações" : "Criar carro"}
         </button>
         {car ? (
           <div className="muted" style={{ alignSelf: "center" }}>
-            Preco atual: {formatCurrency(car.priceCents)}
+            Preço atual: {formatCurrency(car.priceCents)}
           </div>
         ) : null}
       </div>

@@ -19,13 +19,13 @@ export async function FeaturedInventory() {
         >
           <div>
             <span className="section-kicker">Estoque</span>
-            <h2 className="section-title">Nosso estoque</h2>
+            <h2 className="section-title">Seleção de destaque</h2>
             <p className="section-copy">
-              Mantivemos a estrutura do site atual, com cards, CTA e foco em procedencia, mas agora os dados vem do banco e nao do codigo.
+              Veículos escolhidos com critério técnico, histórico confiável e preparo para quem busca performance de verdade.
             </p>
           </div>
           <Link href="/estoque" className="button-ghost">
-            Ver todos os carros
+            Ver todo o estoque
           </Link>
         </div>
         <div
@@ -41,7 +41,7 @@ export async function FeaturedInventory() {
             <article className="surface-card" style={{ padding: 24 }}>
               <h3 style={{ marginTop: 0 }}>Em breve novos carros</h3>
               <p className="section-copy" style={{ marginBottom: 0 }}>
-                Nosso estoque esta sendo atualizado. Fale com a equipe para receber as proximas oportunidades.
+                Nosso estoque está sendo atualizado. Fale com a equipe para receber as próximas oportunidades.
               </p>
             </article>
           )}

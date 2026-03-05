@@ -55,14 +55,14 @@ export function InventoryFilters({ cars }: { cars: PublicCar[] }) {
               id="query"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Marca, modelo, tag..."
+              placeholder="Marca, modelo ou palavra-chave"
             />
           </div>
           <div className="field">
             <label htmlFor="status">Status</label>
             <select id="status" value={status} onChange={(event) => setStatus(event.target.value)}>
               <option value="ALL">Todos</option>
-              <option value="AVAILABLE">Disponivel</option>
+              <option value="AVAILABLE">Disponível</option>
               <option value="RESERVED">Reservado</option>
               <option value="SOLD">Vendido</option>
             </select>
@@ -75,8 +75,8 @@ export function InventoryFilters({ cars }: { cars: PublicCar[] }) {
               onChange={(event) => setSortBy(event.target.value as SortKey)}
             >
               <option value="featured">Destaques</option>
-              <option value="price-asc">Menor preco</option>
-              <option value="price-desc">Maior preco</option>
+              <option value="price-asc">Menor preço</option>
+              <option value="price-desc">Maior preço</option>
               <option value="year-desc">Mais novo</option>
               <option value="km-asc">Menor km</option>
             </select>
@@ -84,7 +84,7 @@ export function InventoryFilters({ cars }: { cars: PublicCar[] }) {
         </div>
       </div>
 
-      <div className="muted">{filtered.length} veiculo(s) encontrado(s)</div>
+      <div className="muted">{filtered.length} veículo(s) encontrado(s)</div>
 
       <div
         style={{
@@ -93,9 +93,16 @@ export function InventoryFilters({ cars }: { cars: PublicCar[] }) {
           gap: 18
         }}
       >
-        {filtered.map((car) => (
-          <CarCard key={car.id} car={car} />
-        ))}
+        {filtered.length > 0 ? (
+          filtered.map((car) => <CarCard key={car.id} car={car} />)
+        ) : (
+          <article className="surface-card" style={{ padding: 24 }}>
+            <h3 style={{ marginTop: 0 }}>Nenhum carro encontrado</h3>
+            <p className="section-copy" style={{ marginBottom: 0 }}>
+              Ajuste os filtros ou chame a NGF Racing no WhatsApp para encontrar uma opção sob medida.
+            </p>
+          </article>
+        )}
       </div>
     </div>
   );

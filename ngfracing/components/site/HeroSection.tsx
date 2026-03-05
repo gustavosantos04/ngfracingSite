@@ -43,10 +43,10 @@ export async function HeroSection() {
           </p>
           <div className="inline-actions">
             <Link href={settings.heroPrimaryCtaHref} className="button-primary">
-              {settings.heroPrimaryCtaLabel}
+              Quero meu carro
             </Link>
             <a href={settings.heroSecondaryCtaHref} className="button-secondary">
-              {settings.heroSecondaryCtaLabel}
+              Falar com a NGF
             </a>
           </div>
         </div>

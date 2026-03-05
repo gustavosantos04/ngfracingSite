@@ -6,7 +6,7 @@ import { getAllCars } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Estoque de Carros",
-  description: "Lista publica de carros disponiveis, reservados e vendidos da NGF Racing."
+  description: "Seleção de carros da NGF Racing com procedência e foco em performance."
 };
 
 export default async function InventoryPage() {
@@ -19,16 +19,16 @@ export default async function InventoryPage() {
         <div className="container stack">
           <div>
             <span className="section-kicker">Estoque</span>
-            <h1 className="section-title">Carros com procedencia e performance</h1>
+            <h1 className="section-title">Carros com procedência comprovada</h1>
             <p className="section-copy">
-              Filtros e ordenacao no cliente, com pagina dedicada para cada carro e SEO via metadata e Schema.org.
+              Explore nossa seleção, compare detalhes e fale com a equipe para encontrar o carro ideal para o seu perfil.
             </p>
           </div>
           {cars.length === 0 ? (
             <div className="admin-card">
               <strong style={{ display: "block", marginBottom: 8 }}>Em breve novos carros</strong>
               <span className="muted">
-                Ainda nao temos veiculos publicados. Novas opcoes serao adicionadas em breve.
+                Ainda não temos veículos publicados. Novas opções serão adicionadas em breve.
               </span>
             </div>
           ) : null}

@@ -1,35 +1,28 @@
-import Link from "next/link";
 import { getSiteSettings } from "@/lib/data";
 
 export async function SiteFooter() {
   const settings = await getSiteSettings();
+  const fixedAddress = "R. Ver\u00edssimo Rosa, 452 - Partenon";
 
   return (
-    <footer style={{ borderTop: "1px solid rgba(255,255,255,0.08)", background: "#080808" }}>
-      <div className="container" style={{ display: "grid", gap: 18, padding: "28px 0 38px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 16,
-            flexWrap: "wrap",
-            alignItems: "center"
-          }}
-        >
+    <footer className="site-footer">
+      <div className="container site-footer-inner">
+        <div className="site-footer-main">
           <div>
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem" }}>NGF Racing</div>
-            <div className="muted">{settings.address}</div>
+            <div className="site-footer-brand">NGF Racing</div>
+            <div className="muted">{fixedAddress}</div>
           </div>
           <div className="inline-actions">
-            <a href={`https://wa.me/${settings.phoneWhatsapp}`}>{settings.phoneDisplay}</a>
-            <a href={settings.instagramUrl} target="_blank" rel="noreferrer">
+            <a href={`https://wa.me/${settings.phoneWhatsapp}`} className="button-secondary">
+              Chamar no WhatsApp
+            </a>
+            <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="button-ghost">
               Instagram
             </a>
-            <Link href="/admin/login">Admin</Link>
           </div>
         </div>
-        <div className="muted" style={{ fontSize: "0.9rem" }}>
-          Seminovos, carros modificados e pecas de alta performance. Site migrado para Next.js com CMS.
+        <div className="muted site-footer-copy">
+          Seleção premium de seminovos e projetos preparados com procedência, transparência e atendimento direto.
         </div>
       </div>
     </footer>

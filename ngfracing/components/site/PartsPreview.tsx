@@ -9,9 +9,9 @@ export async function PartsPreview() {
       <div className="container stack">
         <div>
           <span className="section-kicker">FuelTech</span>
-          <h2 className="section-title">Pecas de alta performance</h2>
+          <h2 className="section-title">Peças de alta performance</h2>
           <p className="section-copy">
-            MVP sem checkout, com catalogo administravel. Ideal para publicar rapido e evoluir depois.
+            Soluções selecionadas para setups de rua e pista, com orientação da equipe para cada objetivo.
           </p>
         </div>
         <div
@@ -35,16 +35,16 @@ export async function PartsPreview() {
             ))
           ) : (
             <div className="admin-card">
-              <h3 style={{ marginTop: 0 }}>Catalogo em atualizacao</h3>
+              <h3 style={{ marginTop: 0 }}>Catálogo em atualização</h3>
               <p className="muted" style={{ marginBottom: 0 }}>
-                Em breve novas pecas de alta performance estarao disponiveis aqui.
+                Em breve novas peças de alta performance estarão disponíveis aqui.
               </p>
             </div>
           )}
         </div>
         <div>
           <Link href="/pecas" className="button-primary">
-            Abrir catalogo de pecas
+            Ver catálogo de peças
           </Link>
         </div>
       </div>

@@ -50,7 +50,7 @@ export function CarCard({ car }: { car: PublicCar }) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(94px, 1fr))",
             gap: 8,
             fontSize: "0.9rem"
           }}
@@ -84,7 +84,7 @@ export function CarCard({ car }: { car: PublicCar }) {
             Ver detalhes
           </Link>
           <a href={car.whatsappLink ?? "https://wa.me/5551999866578"} className="button-secondary">
-            Tenho interesse
+            Quero meu carro
           </a>
         </div>
       </div>

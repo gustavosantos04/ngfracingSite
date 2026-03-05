@@ -24,7 +24,7 @@ async function extractImageUrls(formData: FormData, existing: string[] = []) {
     .filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
   if (uploadedFiles.length + existing.length > 8) {
-    throw new Error("Limite maximo de 8 imagens por carro.");
+    throw new Error("Limite máximo de 8 imagens por carro.");
   }
 
   const uploadedUrls = await Promise.all(uploadedFiles.map((file) => saveUploadedFile(file)));

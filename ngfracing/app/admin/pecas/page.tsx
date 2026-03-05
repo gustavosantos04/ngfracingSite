@@ -10,18 +10,18 @@ export default async function AdminPartsPage({ searchParams }: { searchParams: S
 
   const categories = await getPartCategories();
   const params = await searchParams;
-  const notice = params.saved === "1" ? "Alteracoes salvas." : params.deleted === "1" ? "Item removido." : "";
+  const notice = params.saved === "1" ? "Alterações salvas." : params.deleted === "1" ? "Item removido." : "";
 
   return (
     <AdminShell>
       <div className="stack">
       <div>
-        <span className="section-kicker">Pecas</span>
+        <span className="section-kicker">Peças</span>
         <h1 className="section-title" style={{ marginBottom: 8 }}>
-          Catalogo FuelTech
+          Catálogo FuelTech
         </h1>
         <p className="section-copy">
-          CRUD simples para categorias e itens informativos, sem checkout no MVP.
+          Gestão simples para categorias e itens informativos.
         </p>
       </div>
 
@@ -74,7 +74,7 @@ export default async function AdminPartsPage({ searchParams }: { searchParams: S
                 </label>
               </div>
               <div className="field">
-                <label htmlFor={`description-${category.id}`}>Descricao</label>
+                <label htmlFor={`description-${category.id}`}>Descrição</label>
                 <textarea id={`description-${category.id}`} name="description" required />
               </div>
               <div>
@@ -90,15 +90,15 @@ export default async function AdminPartsPage({ searchParams }: { searchParams: S
                   <tr>
                     <th>Item</th>
                     <th>Destaque</th>
-                    <th>Descricao</th>
-                    <th>Acoes</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {category.items.map((item) => (
                     <tr key={item.id}>
                       <td>{item.name}</td>
-                      <td>{item.isFeatured ? "Sim" : "Nao"}</td>
+                      <td>{item.isFeatured ? "Sim" : "Não"}</td>
                       <td className="muted">{item.description}</td>
                       <td>
                         <form action={deletePartItemAction}>
@@ -143,7 +143,7 @@ export default async function AdminPartsPage({ searchParams }: { searchParams: S
                       </label>
                     </div>
                     <div className="field">
-                      <label htmlFor={`edit-description-${item.id}`}>Descricao</label>
+                      <label htmlFor={`edit-description-${item.id}`}>Descrição</label>
                       <textarea
                         id={`edit-description-${item.id}`}
                         name="description"

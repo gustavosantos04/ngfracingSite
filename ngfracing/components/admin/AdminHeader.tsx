@@ -19,10 +19,10 @@ export function AdminHeader() {
         <div>
           <div style={{ fontFamily: "var(--font-display)", fontSize: "1.45rem" }}>NGF Racing Admin</div>
           <div className="muted" style={{ fontSize: "0.9rem" }}>
-            CMS para estoque, conteudo e catalogo FuelTech
+            CMS para estoque, conteúdo e catálogo FuelTech
           </div>
         </div>
-        <nav className="inline-actions" aria-label="Navegacao do admin">
+        <nav className="inline-actions" aria-label="Navegação do admin">
           <Link href="/admin" className="button-ghost">
             Dashboard
           </Link>
@@ -30,10 +30,10 @@ export function AdminHeader() {
             Carros
           </Link>
           <Link href="/admin/pecas" className="button-ghost">
-            Pecas
+            Peças
           </Link>
           <Link href="/admin/configuracoes" className="button-ghost">
-            Configuracoes
+            Configurações
           </Link>
           <form action={logoutAction}>
             <button type="submit" className="button-danger">

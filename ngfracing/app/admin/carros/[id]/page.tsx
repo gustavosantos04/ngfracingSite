@@ -31,7 +31,7 @@ export default async function AdminEditCarPage({ params }: Params) {
           Voltar
         </Link>
         <Link href={`/estoque/${car.slug}`} className="button-ghost">
-          Ver pagina publica
+          Ver página pública
         </Link>
       </div>
       <div>
@@ -40,7 +40,7 @@ export default async function AdminEditCarPage({ params }: Params) {
           Editar carro
         </h1>
         <p className="section-copy">
-          Ajuste conteudo, imagens, tags, status e CTA do WhatsApp no mesmo formulario.
+          Ajuste conteúdo, imagens, tags, status e CTA do WhatsApp no mesmo formulário.
         </p>
       </div>
         <CarEditorForm action={saveCarAction} car={car} />

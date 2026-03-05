@@ -5,8 +5,8 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { getPartCategories } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Pecas de Alta Performance",
-  description: "Catalogo informativo de pecas FuelTech e acessorios de performance."
+  title: "Peças de Alta Performance",
+  description: "Catálogo de peças e acessórios de alta performance para projetos especiais."
 };
 
 export default async function PartsPage() {
@@ -19,9 +19,9 @@ export default async function PartsPage() {
         <div className="container stack">
           <div>
             <span className="section-kicker">FuelTech</span>
-            <h1 className="section-title">Catalogo de pecas de alta performance</h1>
+            <h1 className="section-title">Catálogo de peças de alta performance</h1>
             <p className="section-copy">
-              Secao informativa gerenciavel pelo Admin. Sem checkout no MVP, focada em captar interesse e organizar o catalogo.
+              Componentes selecionados para elevar seu projeto com confiabilidade, desempenho e suporte especializado.
             </p>
           </div>
           <div className="stack">
@@ -69,9 +69,9 @@ export default async function PartsPage() {
               ))
             ) : (
               <section className="admin-card">
-                <h2 style={{ marginTop: 0 }}>Em breve novas pecas</h2>
+                <h2 style={{ marginTop: 0 }}>Em breve novas peças</h2>
                 <p className="section-copy" style={{ marginBottom: 0 }}>
-                  Nosso catalogo ainda nao possui itens publicados. Volte em breve para acompanhar as novidades.
+                  Nosso catálogo ainda não possui itens publicados. Volte em breve para acompanhar as novidades.
                 </p>
               </section>
             )}

@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const car = await getCarBySlug(slug);
 
   if (!car) {
-    return { title: "Carro nao encontrado" };
+    return { title: "Carro não encontrado" };
   }
 
   return {
@@ -100,15 +100,15 @@ export default async function CarDetailsPage({ params }: Params) {
                 >
                   <div className="chip">Ano: {car.year}</div>
                   <div className="chip">KM: {formatKilometers(car.km)}</div>
-                  <div className="chip">Combustivel: {car.fuel ?? "Nao informado"}</div>
-                  <div className="chip">Cambio: {car.transmission ?? "Nao informado"}</div>
+                  <div className="chip">Combustível: {car.fuel ?? "Não informado"}</div>
+                  <div className="chip">Câmbio: {car.transmission ?? "Não informado"}</div>
                 </div>
                 <p className="section-copy" style={{ marginTop: 22 }}>
                   {car.description}
                 </p>
                 <div className="inline-actions" style={{ marginTop: 24 }}>
                   <a href={car.whatsappLink ?? "https://wa.me/5551999866578"} className="button-primary">
-                    Tenho interesse
+                    Quero meu carro
                   </a>
                   <Link href="/estoque" className="button-secondary">
                     Voltar ao estoque
@@ -116,21 +116,27 @@ export default async function CarDetailsPage({ params }: Params) {
                 </div>
               </div>
               <div className="admin-card">
-                <h2 style={{ marginTop: 0 }}>Modificacoes</h2>
+                <h2 style={{ marginTop: 0 }}>Modificações</h2>
                 <div className="inline-actions">
-                  {car.mods.map((mod) => (
-                    <span key={mod} className="chip">
-                      {mod}
-                    </span>
-                  ))}
+                  {car.mods.length > 0 ? (
+                    car.mods.map((mod) => (
+                      <span key={mod} className="chip">
+                        {mod}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="muted">Detalhes técnicos em atualização.</span>
+                  )}
                 </div>
               </div>
               <div className="admin-card">
                 <h2 style={{ marginTop: 0 }}>Opcionais</h2>
                 <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.9 }}>
-                  {car.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
+                  {car.features.length > 0 ? (
+                    car.features.map((feature) => <li key={feature}>{feature}</li>)
+                  ) : (
+                    <li>Consulte a equipe para a lista completa de opcionais.</li>
+                  )}
                 </ul>
               </div>
             </div>
