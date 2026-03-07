@@ -8,7 +8,7 @@ type TimelineItem = {
   copy: string;
 };
 
-export function AboutTimeline({ items }: { items: TimelineItem[] }) {
+export function AboutTimeline({ items }: { items: readonly TimelineItem[] }) {
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({

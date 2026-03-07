@@ -1,9 +1,9 @@
 import { getSiteSettings } from "@/lib/data";
+import { siteCopy } from "@/lib/siteContent";
 
 export async function ContactSection() {
   const settings = await getSiteSettings();
-  const fixedAddress = "R. Ver\u00edssimo Rosa, 452 - Partenon";
-  const mapsQuery = encodeURIComponent("R. Ver\u00edssimo Rosa, 452 - Partenon");
+  const mapsQuery = encodeURIComponent(settings.address);
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
   return (
@@ -11,17 +11,15 @@ export async function ContactSection() {
       <div className="container">
         <div className="surface-card contact-shell">
           <div className="contact-content">
-            <span className="section-kicker">Contato</span>
-            <h2 className="section-title">Sua próxima conquista começa aqui</h2>
-            <p className="section-copy">
-              Atendimento próximo, resposta rápida e orientação completa para você escolher com segurança. Fale com a NGF Racing e acelere para o carro certo.
-            </p>
+            <span className="section-kicker">{siteCopy.contact.kicker}</span>
+            <h2 className="section-title">{siteCopy.contact.title}</h2>
+            <p className="section-copy">{siteCopy.contact.copy}</p>
             <div className="inline-actions contact-cta-group">
               <a href={`https://wa.me/${settings.phoneWhatsapp}`} className="button-primary">
-                Chamar no WhatsApp
+                {siteCopy.contact.primaryCtaLabel}
               </a>
               <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="button-secondary">
-                Falar com a NGF
+                {siteCopy.contact.secondaryCtaLabel}
               </a>
             </div>
           </div>
@@ -30,44 +28,44 @@ export async function ContactSection() {
             <article className="fueltech-card">
               <div className="fueltech-card-head">
                 <span className="fueltech-icon">WA</span>
-                <strong>WhatsApp</strong>
+                <strong>{siteCopy.contact.cards.whatsapp.title}</strong>
               </div>
               <p>{settings.phoneDisplay}</p>
               <a href={`https://wa.me/${settings.phoneWhatsapp}`} className="button-primary">
-                Chamar agora
+                {siteCopy.contact.cards.whatsapp.ctaLabel}
               </a>
             </article>
 
             <article className="fueltech-card">
               <div className="fueltech-card-head">
                 <span className="fueltech-icon">MAP</span>
-                <strong>Endereço</strong>
+                <strong>{siteCopy.contact.cards.address.title}</strong>
               </div>
-              <p>{fixedAddress}</p>
+              <p>{settings.address}</p>
               <a href={mapsUrl} target="_blank" rel="noreferrer" className="button-secondary">
-                Abrir no Maps
+                {siteCopy.contact.cards.address.ctaLabel}
               </a>
             </article>
 
             <article className="fueltech-card">
               <div className="fueltech-card-head">
                 <span className="fueltech-icon">IG</span>
-                <strong>Instagram</strong>
+                <strong>{siteCopy.contact.cards.instagram.title}</strong>
               </div>
-              <p>Conteúdo diário e novidades em tempo real.</p>
+              <p>{siteCopy.contact.cards.instagram.copy}</p>
               <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="button-secondary">
-                Ver perfil
+                {siteCopy.contact.cards.instagram.ctaLabel}
               </a>
             </article>
 
             <article className="fueltech-card">
               <div className="fueltech-card-head">
                 <span className="fueltech-icon">HRS</span>
-                <strong>Horários</strong>
+                <strong>{siteCopy.contact.cards.hours.title}</strong>
               </div>
               <p>{settings.businessHours}</p>
               <a href={`mailto:${settings.contactEmail}`} className="button-ghost">
-                Enviar e-mail
+                {siteCopy.contact.cards.hours.ctaLabel}
               </a>
             </article>
           </div>

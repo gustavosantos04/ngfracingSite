@@ -1,123 +1,36 @@
-import { saveSettingsAction } from "@/app/admin/actions";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { requireAdminSession } from "@/lib/auth";
-import { getSiteSettings } from "@/lib/data";
+import { siteCopy, siteSettings } from "@/lib/siteContent";
 
-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
-
-export default async function AdminSettingsPage({ searchParams }: { searchParams: SearchParams }) {
+export default async function AdminSettingsPage() {
   await requireAdminSession();
-
-  const settings = await getSiteSettings();
-  const params = await searchParams;
-  const saved = params.saved === "1";
 
   return (
     <AdminShell>
       <div className="stack">
-      <div>
-        <span className="section-kicker">Conteúdo</span>
-        <h1 className="section-title" style={{ marginBottom: 8 }}>
-          Hero, sobre e contato
-        </h1>
-        <p className="section-copy">
-          Editor simples para o conteúdo institucional da home sem tocar no código.
-        </p>
-      </div>
-
-      {saved ? <div className="admin-card">Configurações atualizadas com sucesso.</div> : null}
-
-      <form action={saveSettingsAction} className="stack">
         <div className="admin-card stack">
-          <h2 style={{ margin: 0 }}>Hero</h2>
-          <div className="field">
-            <label htmlFor="heroTitle">Título</label>
-            <input id="heroTitle" name="heroTitle" defaultValue={settings.heroTitle} required />
-          </div>
-          <div className="field">
-            <label htmlFor="heroSubtitle">Subtítulo</label>
-            <textarea id="heroSubtitle" name="heroSubtitle" defaultValue={settings.heroSubtitle} required />
-          </div>
-          <div className="field-grid two">
-            <div className="field">
-              <label htmlFor="heroBgImage">Imagem de fundo</label>
-              <input id="heroBgImage" name="heroBgImage" defaultValue={settings.heroBgImage} required />
-            </div>
-            <div className="field">
-              <label htmlFor="heroPrimaryCtaHref">Link CTA principal</label>
-              <input id="heroPrimaryCtaHref" name="heroPrimaryCtaHref" defaultValue={settings.heroPrimaryCtaHref} required />
-            </div>
-          </div>
-          <div className="field-grid two">
-            <div className="field">
-              <label htmlFor="heroPrimaryCtaLabel">Texto CTA principal</label>
-              <input id="heroPrimaryCtaLabel" name="heroPrimaryCtaLabel" defaultValue={settings.heroPrimaryCtaLabel} required />
-            </div>
-            <div className="field">
-              <label htmlFor="heroSecondaryCtaLabel">Texto CTA secundário</label>
-              <input id="heroSecondaryCtaLabel" name="heroSecondaryCtaLabel" defaultValue={settings.heroSecondaryCtaLabel} required />
-            </div>
-          </div>
-          <div className="field">
-            <label htmlFor="heroSecondaryCtaHref">Link CTA secundário</label>
-            <input id="heroSecondaryCtaHref" name="heroSecondaryCtaHref" defaultValue={settings.heroSecondaryCtaHref} required />
-          </div>
+          <span className="section-kicker">Conteúdo</span>
+          <h1 className="section-title" style={{ marginBottom: 8 }}>
+            Hero, sobre e contato
+          </h1>
+          <p className="section-copy">
+            O conteúdo institucional da home agora fica centralizado em `lib/siteContent.ts`.
+            Para alterar textos, CTAs, timeline, endereço e horários, edite esse arquivo.
+          </p>
         </div>
 
         <div className="admin-card stack">
-          <h2 style={{ margin: 0 }}>Sobre</h2>
-          <div className="field">
-            <label htmlFor="aboutTitle">Título</label>
-            <input id="aboutTitle" name="aboutTitle" defaultValue={settings.aboutTitle} required />
-          </div>
-          <div className="field">
-            <label htmlFor="aboutText">Texto</label>
-            <textarea id="aboutText" name="aboutText" defaultValue={settings.aboutText} required />
-          </div>
-          <div className="field">
-            <label htmlFor="aboutImage">Imagem</label>
-            <input id="aboutImage" name="aboutImage" defaultValue={settings.aboutImage} required />
-          </div>
+          <h2 style={{ margin: 0 }}>Resumo atual</h2>
+          <p className="section-copy" style={{ marginTop: 0 }}>
+            Hero: {siteCopy.hero.kicker} / {siteSettings.heroTitle}
+          </p>
+          <p className="section-copy" style={{ marginTop: 0 }}>
+            Sobre: {siteCopy.about.kicker} / {siteSettings.aboutTitle}
+          </p>
+          <p className="section-copy" style={{ marginTop: 0 }}>
+            Contato: {siteCopy.contact.kicker} / {siteCopy.contact.title}
+          </p>
         </div>
-
-        <div className="admin-card stack">
-          <h2 style={{ margin: 0 }}>Contato</h2>
-          <div className="field-grid two">
-            <div className="field">
-              <label htmlFor="phoneWhatsapp">WhatsApp (somente números)</label>
-              <input id="phoneWhatsapp" name="phoneWhatsapp" defaultValue={settings.phoneWhatsapp} required />
-            </div>
-            <div className="field">
-              <label htmlFor="phoneDisplay">WhatsApp exibido</label>
-              <input id="phoneDisplay" name="phoneDisplay" defaultValue={settings.phoneDisplay} required />
-            </div>
-          </div>
-          <div className="field-grid two">
-            <div className="field">
-              <label htmlFor="contactEmail">E-mail</label>
-              <input id="contactEmail" name="contactEmail" type="email" defaultValue={settings.contactEmail} required />
-            </div>
-            <div className="field">
-              <label htmlFor="instagramUrl">Instagram</label>
-              <input id="instagramUrl" name="instagramUrl" type="url" defaultValue={settings.instagramUrl} required />
-            </div>
-          </div>
-          <div className="field">
-            <label htmlFor="address">Endereço</label>
-          <input id="address" name="address" defaultValue={settings.address} required />
-          </div>
-          <div className="field">
-            <label htmlFor="businessHours">Horário</label>
-            <input id="businessHours" name="businessHours" defaultValue={settings.businessHours} required />
-          </div>
-        </div>
-
-        <div>
-          <button type="submit" className="button-primary">
-            Salvar configurações
-          </button>
-        </div>
-      </form>
       </div>
     </AdminShell>
   );

@@ -6,25 +6,6 @@ export const loginSchema = z.object({
   password: z.string().min(6)
 });
 
-export const settingsSchema = z.object({
-  heroTitle: z.string().min(8),
-  heroSubtitle: z.string().min(8),
-  heroBgImage: z.string().min(1),
-  heroPrimaryCtaLabel: z.string().min(2),
-  heroPrimaryCtaHref: z.string().min(1),
-  heroSecondaryCtaLabel: z.string().min(2),
-  heroSecondaryCtaHref: z.string().min(1),
-  aboutTitle: z.string().min(2),
-  aboutText: z.string().min(20),
-  aboutImage: z.string().min(1),
-  phoneWhatsapp: z.string().min(10),
-  phoneDisplay: z.string().min(8),
-  contactEmail: z.string().email(),
-  address: z.string().min(4),
-  instagramUrl: z.string().url(),
-  businessHours: z.string().min(8)
-});
-
 export const carPayloadSchema = z.object({
   title: z.string().min(3),
   brand: z.string().min(2),

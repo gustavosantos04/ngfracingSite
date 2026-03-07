@@ -8,8 +8,8 @@ import { authenticateAdmin, requireAdminSession, signAdminToken } from "@/lib/au
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 import { saveUploadedFile } from "@/lib/upload";
-import { carPayloadSchema, loginSchema, partItemPayloadSchema, settingsSchema } from "@/lib/validators";
-import { normalizePhoneDigits, slugify } from "@/lib/utils";
+import { carPayloadSchema, loginSchema, partItemPayloadSchema } from "@/lib/validators";
+import { slugify } from "@/lib/utils";
 
 function splitLines(value: FormDataEntryValue | null) {
   return String(value ?? "")
@@ -68,41 +68,6 @@ export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete(AUTH_COOKIE_NAME);
   redirect("/admin/login");
-}
-
-export async function saveSettingsAction(formData: FormData) {
-  await requireAdminSession();
-
-  const payload = settingsSchema.parse({
-    heroTitle: formData.get("heroTitle"),
-    heroSubtitle: formData.get("heroSubtitle"),
-    heroBgImage: formData.get("heroBgImage"),
-    heroPrimaryCtaLabel: formData.get("heroPrimaryCtaLabel"),
-    heroPrimaryCtaHref: formData.get("heroPrimaryCtaHref"),
-    heroSecondaryCtaLabel: formData.get("heroSecondaryCtaLabel"),
-    heroSecondaryCtaHref: formData.get("heroSecondaryCtaHref"),
-    aboutTitle: formData.get("aboutTitle"),
-    aboutText: formData.get("aboutText"),
-    aboutImage: formData.get("aboutImage"),
-    phoneWhatsapp: normalizePhoneDigits(String(formData.get("phoneWhatsapp") ?? "")),
-    phoneDisplay: formData.get("phoneDisplay"),
-    contactEmail: formData.get("contactEmail"),
-    address: formData.get("address"),
-    instagramUrl: formData.get("instagramUrl"),
-    businessHours: formData.get("businessHours")
-  });
-
-  await prisma.siteSettings.upsert({
-    where: { id: "site_settings" },
-    update: payload,
-    create: { id: "site_settings", ...payload }
-  });
-
-  revalidatePath("/");
-  revalidatePath("/estoque");
-  revalidatePath("/pecas");
-  revalidatePath("/admin/configuracoes");
-  redirect("/admin/configuracoes?saved=1");
 }
 
 export async function saveCarAction(formData: FormData) {

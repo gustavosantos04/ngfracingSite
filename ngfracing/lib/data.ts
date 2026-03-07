@@ -1,29 +1,8 @@
 import { CarStatus, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { PublicCar, PublicPartCategory, PublicSiteSettings } from "@/lib/types";
+import { siteSettings as defaultSettings } from "@/lib/siteContent";
 import { parseJsonList } from "@/lib/utils";
-
-const defaultSettings: PublicSiteSettings = {
-  id: "site_settings",
-  heroTitle: "Sele\u00e7\u00e3o premium para quem vive performance de verdade.",
-  heroSubtitle:
-    "Seminovos selecionados, projetos preparados e atendimento pr\u00f3ximo para voc\u00ea comprar com seguran\u00e7a.",
-  heroBgImage: "/branding/hero-car.jpg",
-  heroPrimaryCtaLabel: "Quero meu carro",
-  heroPrimaryCtaHref: "/estoque",
-  heroSecondaryCtaLabel: "Falar com a NGF",
-  heroSecondaryCtaHref: "https://wa.me/5551999866578",
-  aboutTitle: "Paix\u00e3o por velocidade, compromisso com proced\u00eancia",
-  aboutText:
-    "Da pista para as ruas, a NGF Racing entrega curadoria especializada, transpar\u00eancia e projetos que unem confiabilidade e desempenho.",
-  aboutImage: "/branding/carro-corrida-antigo.jpg",
-  phoneWhatsapp: "5551999866578",
-  phoneDisplay: "(51) 99986-6578",
-  contactEmail: "ngfracing@hotmail.com",
-  address: "R. Ver\u00edssimo Rosa, 452 - Partenon",
-  instagramUrl: "https://instagram.com/ngfracing",
-  businessHours: "Segunda a Sexta: 8h \u00e0s 18h | S\u00e1bado: 9h \u00e0s 15h"
-};
 
 const copyReplacements: Array<[RegExp, string]> = [
   [/\bselecao\b/gi, "sele\u00e7\u00e3o"],
@@ -128,16 +107,7 @@ function mapCar(
 }
 
 export async function getSiteSettings() {
-  try {
-    const settings = await prisma.siteSettings.findUnique({
-      where: { id: "site_settings" }
-    });
-
-    return normalizeSettingsText(settings ?? defaultSettings);
-  } catch (error) {
-    logDataFallback("getSiteSettings", error);
-    return normalizeSettingsText(defaultSettings);
-  }
+  return normalizeSettingsText(defaultSettings);
 }
 
 export async function getAllCars() {

@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
-import { PrismaClient, CarStatus } from "@prisma/client";
+import { CarStatus, PrismaClient } from "@prisma/client";
+import { siteSettings } from "../lib/siteContent";
 
 const prisma = new PrismaClient();
 
@@ -29,26 +30,42 @@ async function main() {
 
   await prisma.siteSettings.upsert({
     where: { id: "site_settings" },
-    update: {},
+    update: {
+      heroTitle: siteSettings.heroTitle,
+      heroSubtitle: siteSettings.heroSubtitle,
+      heroBgImage: siteSettings.heroBgImage,
+      heroPrimaryCtaLabel: siteSettings.heroPrimaryCtaLabel,
+      heroPrimaryCtaHref: siteSettings.heroPrimaryCtaHref,
+      heroSecondaryCtaLabel: siteSettings.heroSecondaryCtaLabel,
+      heroSecondaryCtaHref: siteSettings.heroSecondaryCtaHref,
+      aboutTitle: siteSettings.aboutTitle,
+      aboutText: siteSettings.aboutText,
+      aboutImage: siteSettings.aboutImage,
+      phoneWhatsapp: siteSettings.phoneWhatsapp,
+      phoneDisplay: siteSettings.phoneDisplay,
+      contactEmail: siteSettings.contactEmail,
+      address: siteSettings.address,
+      instagramUrl: siteSettings.instagramUrl,
+      businessHours: siteSettings.businessHours
+    },
     create: {
-      id: "site_settings",
-      heroTitle: "Acelerando rumo a sua melhor conquista sobre quatro rodas.",
-      heroSubtitle: "NGF Racing: seminovos, projetos diferenciados e pecas de alta performance com procedencia.",
-      heroBgImage: "/branding/hero-car.jpg",
-      heroPrimaryCtaLabel: "Ver estoque",
-      heroPrimaryCtaHref: "/estoque",
-      heroSecondaryCtaLabel: "Chamar no WhatsApp",
-      heroSecondaryCtaHref: "https://wa.me/5551999866578",
-      aboutTitle: "Nossa historia",
-      aboutText:
-        "Por mais de 10 anos, a NGF Racing acelerou nas pistas de arrancada e transformou essa experiencia em curadoria de carros diferenciados, seminovos confiaveis e pecas FuelTech para quem leva performance a serio.",
-      aboutImage: "/branding/carro-corrida-antigo.jpg",
-      phoneWhatsapp: "5551999866578",
-      phoneDisplay: "(51) 99986-6578",
-      contactEmail: "ngfracing@hotmail.com",
-      address: "Porto Alegre, RS",
-      instagramUrl: "https://instagram.com/ngfracing",
-      businessHours: "Segunda a Sexta: 8h as 18h | Sabado: 9h as 15h"
+      id: siteSettings.id,
+      heroTitle: siteSettings.heroTitle,
+      heroSubtitle: siteSettings.heroSubtitle,
+      heroBgImage: siteSettings.heroBgImage,
+      heroPrimaryCtaLabel: siteSettings.heroPrimaryCtaLabel,
+      heroPrimaryCtaHref: siteSettings.heroPrimaryCtaHref,
+      heroSecondaryCtaLabel: siteSettings.heroSecondaryCtaLabel,
+      heroSecondaryCtaHref: siteSettings.heroSecondaryCtaHref,
+      aboutTitle: siteSettings.aboutTitle,
+      aboutText: siteSettings.aboutText,
+      aboutImage: siteSettings.aboutImage,
+      phoneWhatsapp: siteSettings.phoneWhatsapp,
+      phoneDisplay: siteSettings.phoneDisplay,
+      contactEmail: siteSettings.contactEmail,
+      address: siteSettings.address,
+      instagramUrl: siteSettings.instagramUrl,
+      businessHours: siteSettings.businessHours
     }
   });
 
@@ -154,14 +171,7 @@ async function main() {
       features: ["Ar quente", "Trava eletrica", "Vidros eletricos"],
       description:
         "Hatch economico e pronto para uso. Bom custo-beneficio para primeira compra ou carro de apoio.",
-      images: [
-        "/cars/palio.jpg",
-        "/cars/palio_1.jpg",
-        "/cars/palio_2.jpg",
-        "/cars/palio_3.jpg",
-        "/cars/palio_4.jpg",
-        "/cars/palio_5.jpg"
-      ]
+      images: ["/cars/palio.jpg", "/cars/palio_1.jpg", "/cars/palio_2.jpg", "/cars/palio_3.jpg", "/cars/palio_4.jpg", "/cars/palio_5.jpg"]
     },
     {
       title: "VW Fox G2 Trend",
@@ -179,13 +189,7 @@ async function main() {
       features: ["ABS", "Computador de bordo", "Desembacador traseiro"],
       description:
         "Exemplar diferenciado, preservado e com configuracao rara. Excelente para clientes que valorizam originalidade.",
-      images: [
-        "/cars/fox1.jpg",
-        "/cars/fox2.jpg",
-        "/cars/fox3.jpg",
-        "/cars/fox4.jpg",
-        "/cars/fox5.jpg"
-      ]
+      images: ["/cars/fox1.jpg", "/cars/fox2.jpg", "/cars/fox3.jpg", "/cars/fox4.jpg", "/cars/fox5.jpg"]
     }
   ];
 

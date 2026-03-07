@@ -4,20 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
+import { siteCopy } from "@/lib/siteContent";
 
 type SiteHeaderClientProps = {
   settings: {
     phoneWhatsapp: string;
   };
 };
-
-const navItems = [
-  { href: "/", label: "Início" },
-  { href: "/#sobre", label: "Sobre" },
-  { href: "/estoque", label: "Estoque" },
-  { href: "/pecas", label: "Peças" },
-  { href: "/#contato", label: "Contato" }
-];
 
 export function SiteHeaderClient({ settings }: SiteHeaderClientProps) {
   const [open, setOpen] = useState(false);
@@ -51,13 +44,13 @@ export function SiteHeaderClient({ settings }: SiteHeaderClientProps) {
         </Link>
 
         <nav aria-label="Navegação principal" className="desktop-nav">
-          {navItems.map((item) => (
+          {siteCopy.header.navItems.map((item) => (
             <Link key={item.href} href={item.href} className="site-nav-link">
               {item.label}
             </Link>
           ))}
           <a href={`https://wa.me/${settings.phoneWhatsapp}`} className="button-primary">
-            Falar com a NGF
+            {siteCopy.header.desktopCtaLabel}
           </a>
         </nav>
 
@@ -103,7 +96,7 @@ export function SiteHeaderClient({ settings }: SiteHeaderClientProps) {
               transition={drawerTransition}
             >
               <div className="mobile-nav-list">
-                {navItems.map((item, index) => (
+                {siteCopy.header.navItems.map((item, index) => (
                   <motion.div
                     key={item.href}
                     initial={reduceMotion ? false : { opacity: 0, y: 14 }}
@@ -119,7 +112,7 @@ export function SiteHeaderClient({ settings }: SiteHeaderClientProps) {
               </div>
 
               <a href={`https://wa.me/${settings.phoneWhatsapp}`} className="button-primary mobile-nav-cta" onClick={() => setOpen(false)}>
-                Chamar no WhatsApp
+                {siteCopy.header.mobileCtaLabel}
               </a>
             </motion.nav>
           </motion.div>

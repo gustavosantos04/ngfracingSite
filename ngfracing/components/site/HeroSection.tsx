@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { HeroParallaxMedia } from "@/components/site/HeroParallaxMedia";
 import { getSiteSettings } from "@/lib/data";
+import { siteCopy } from "@/lib/siteContent";
 
 export async function HeroSection() {
   const settings = await getSiteSettings();
@@ -7,19 +9,15 @@ export async function HeroSection() {
   return (
     <section
       id="home"
-      className="section"
+      className="section hero-section"
       style={{
-        minHeight: "calc(100vh - 78px)",
-        display: "flex",
-        alignItems: "center",
-        backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.82), rgba(0,0,0,0.5)), url(${settings.heroBgImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
+        minHeight: "calc(100vh - 78px)"
       }}
     >
+      <HeroParallaxMedia imageUrl={settings.heroBgImage} />
       <div className="container">
-        <div style={{ width: "min(760px, 100%)", padding: "36px 0" }}>
-          <span className="section-kicker">NGF Racing</span>
+        <div className="hero-content" style={{ width: "min(760px, 100%)", padding: "36px 0" }}>
+          <span className="section-kicker">{siteCopy.hero.kicker}</span>
           <h1
             style={{
               margin: "0 0 18px",
@@ -43,10 +41,10 @@ export async function HeroSection() {
           </p>
           <div className="inline-actions">
             <Link href={settings.heroPrimaryCtaHref} className="button-primary">
-              Quero meu carro
+              {settings.heroPrimaryCtaLabel}
             </Link>
             <a href={settings.heroSecondaryCtaHref} className="button-secondary">
-              Falar com a NGF
+              {settings.heroSecondaryCtaLabel}
             </a>
           </div>
         </div>
