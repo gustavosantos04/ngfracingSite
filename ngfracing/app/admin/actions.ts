@@ -33,7 +33,7 @@ async function extractImageUrls(formData: FormData, existing: string[] = []) {
 
 export async function loginAction(formData: FormData) {
   const parsed = loginSchema.safeParse({
-    email: formData.get("email"),
+    identifier: formData.get("identifier"),
     password: formData.get("password")
   });
 
@@ -41,7 +41,7 @@ export async function loginAction(formData: FormData) {
     redirect("/admin/login?error=Credenciais-invalidas");
   }
 
-  const user = await authenticateAdmin(parsed.data.email, parsed.data.password);
+  const user = await authenticateAdmin(parsed.data.identifier, parsed.data.password);
   if (!user) {
     redirect("/admin/login?error=Credenciais-invalidas");
   }

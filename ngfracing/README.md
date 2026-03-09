@@ -46,7 +46,7 @@ Copy-Item .env.example .env
 
 - `DATABASE_URL`
 - `JWT_SECRET`
-- `ADMIN_EMAIL`
+- `ADMIN_USER`
 - `ADMIN_PASSWORD`
 - `NEXT_PUBLIC_BASE_URL`
 
@@ -107,7 +107,7 @@ npm run start
 
 O seed cria 1 usuario admin usando:
 
-- `ADMIN_EMAIL`
+- `ADMIN_USER`
 - `ADMIN_PASSWORD`
 
 Defina esses valores no `.env` antes de rodar o seed.

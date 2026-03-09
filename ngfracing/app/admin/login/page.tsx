@@ -24,23 +24,21 @@ export default async function AdminLoginPage({
             <h1 className="section-title" style={{ fontSize: "2rem" }}>
               Entrar no CMS
             </h1>
-            <p className="section-copy">
-              Login por usuário e senha com hash bcrypt e sessão via cookie seguro.
-            </p>
+            <p className="section-copy">Login por usuario ou e-mail e senha com sessao via cookie seguro.</p>
           </div>
           {error ? (
             <div className="admin-card" style={{ padding: 14, borderColor: "rgba(215,0,0,0.3)" }}>
-              Credenciais inválidas.
+              Credenciais invalidas.
             </div>
           ) : null}
           <form action={loginAction} className="stack">
             <div className="field">
-              <label htmlFor="email">E-mail</label>
-              <input id="email" name="email" type="email" required />
+              <label htmlFor="identifier">Usuario ou e-mail</label>
+              <input id="identifier" name="identifier" type="text" autoComplete="username" required />
             </div>
             <div className="field">
               <label htmlFor="password">Senha</label>
-              <input id="password" name="password" type="password" required />
+              <input id="password" name="password" type="password" autoComplete="current-password" required />
             </div>
             <button type="submit" className="button-primary">
               Entrar

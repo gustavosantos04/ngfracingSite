@@ -11,6 +11,20 @@ function getJwtSecret() {
   return encoder.encode(process.env.JWT_SECRET ?? "ngf-racing-dev-secret");
 }
 
+function getConfiguredAdminCredentials() {
+  const identifier = process.env.ADMIN_USER ?? process.env.ADMIN_EMAIL ?? null;
+  const password = process.env.ADMIN_PASSWORD ?? null;
+
+  if (!identifier || !password) {
+    return null;
+  }
+
+  return {
+    identifier: identifier.trim().toLowerCase(),
+    password
+  };
+}
+
 export async function signAdminToken(payload: {
   userId: string;
   email: string;
@@ -33,9 +47,24 @@ export async function verifyAdminToken(token: string) {
   };
 }
 
-export async function authenticateAdmin(email: string, password: string) {
+export async function authenticateAdmin(identifier: string, password: string) {
+  const normalizedIdentifier = identifier.trim().toLowerCase();
+  const configuredAdmin = getConfiguredAdminCredentials();
+
+  if (
+    configuredAdmin &&
+    normalizedIdentifier === configuredAdmin.identifier &&
+    password === configuredAdmin.password
+  ) {
+    return {
+      id: "env-admin",
+      email: configuredAdmin.identifier,
+      role: "ADMIN"
+    };
+  }
+
   const user = await prisma.user.findUnique({
-    where: { email }
+    where: { email: normalizedIdentifier }
   });
 
   if (!user) {

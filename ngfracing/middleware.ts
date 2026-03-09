@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-const AUTH_COOKIE_CANDIDATES = ["session", "ngf_admin_session"] as const;
+import { AUTH_COOKIE_CANDIDATES } from "@/lib/constants";
 
 export function middleware(request: NextRequest) {
   try {
