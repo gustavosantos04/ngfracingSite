@@ -18,6 +18,19 @@ enum CarStatus {
   SOLD
 }
 
+enum ProductCategory {
+  PART
+  APPAREL
+  ACCESSORY
+}
+
+enum OrderStatus {
+  NEW
+  CONTACTED
+  CLOSED
+  CANCELED
+}
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -81,26 +94,41 @@ model CarImage {
   @@index([carId, sortOrder])
 }
 
-model PartCategory {
-  id        String     @id @default(cuid())
-  name      String
-  slug      String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  items     PartItem[]
+model Product {
+  id              String          @id @default(cuid())
+  name            String
+  slug            String          @unique
+  category        ProductCategory
+  description     String
+  priceCents      Int
+  primaryImageUrl String
+  galleryJson     String          @default("[]")
+  stockQuantity   Int?
+  sizeStockJson   String          @default("[]")
+  isFeatured      Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([category, createdAt])
 }
 
-model PartItem {
-  id          String       @id @default(cuid())
-  categoryId  String
-  name        String
-  slug        String       @unique
-  description String
-  imageUrl    String?
-  isFeatured  Boolean      @default(false)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  category    PartCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+model Order {
+  id                      String      @id @default(cuid())
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+  status                  OrderStatus @default(NEW)
+  customerName            String
+  customerEmail           String
+  customerPhone           String
+  customerAddress         String
+  productId               String
+  productNameSnapshot     String
+  productCategorySnapshot String
+  productPriceSnapshot    Int
+  quantity                Int
+  selectedSize            String?
+  notes                   String?
 
-  @@index([categoryId])
+  @@index([status, createdAt])
+  @@index([productId, createdAt])
 }

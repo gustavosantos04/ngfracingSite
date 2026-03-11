@@ -67,7 +67,7 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
           <p className="section-copy">Busca, filtros e paginação para manter o estoque sem editar código.</p>
         </div>
         <Link href="/admin/carros/new" className="button-primary">
-          Adicionar carro
+          Novo carro
         </Link>
       </div>
 

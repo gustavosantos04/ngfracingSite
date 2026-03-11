@@ -10,7 +10,11 @@ export async function SiteFooter() {
         <div className="site-footer-main">
           <div>
             <div className="site-footer-brand">{siteCopy.footer.brand}</div>
-            <div className="muted">{settings.address}</div>
+            <div className="site-footer-address">
+              <div className="muted">{settings.addressLine}</div>
+              <div className="muted">{settings.addressRegion}</div>
+              <div className="muted">{settings.addressCountry}</div>
+            </div>
           </div>
           <div className="inline-actions">
             <a href={`https://wa.me/${settings.phoneWhatsapp}`} className="button-secondary">
@@ -21,7 +25,13 @@ export async function SiteFooter() {
             </a>
           </div>
         </div>
-        <div className="muted site-footer-copy">{siteCopy.footer.copy}</div>
+        <div className="site-footer-meta">
+          <div className="muted site-footer-copy">{siteCopy.footer.copy}</div>
+          <div className="site-footer-credit">
+            <span className="muted">{siteCopy.footer.creditPrefix}</span>
+            <span className="site-footer-credit-name">{siteCopy.footer.creditName}</span>
+          </div>
+        </div>
       </div>
     </footer>
   );

@@ -1,14 +1,14 @@
 "use server";
 
-import { CarStatus } from "@prisma/client";
+import { CarStatus, OrderStatus, ProductCategory } from "@prisma/client";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { authenticateAdmin, requireAdminSession, signAdminToken } from "@/lib/auth";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
+import { parseSizeStocksInput } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
-import { saveUploadedFile } from "@/lib/upload";
-import { carPayloadSchema, loginSchema, partItemPayloadSchema } from "@/lib/validators";
+import { carPayloadSchema, loginSchema, orderStatusSchema, productPayloadSchema } from "@/lib/validators";
 import { slugify } from "@/lib/utils";
 
 function splitLines(value: FormDataEntryValue | null) {
@@ -18,17 +18,38 @@ function splitLines(value: FormDataEntryValue | null) {
     .filter(Boolean);
 }
 
-async function extractImageUrls(formData: FormData, existing: string[] = []) {
-  const uploadedFiles = formData
-    .getAll("images")
-    .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+function getSelectedImageUrls(formData: FormData, primaryFieldName: string, galleryFieldName: string) {
+  const primaryImage = String(formData.get(primaryFieldName) ?? "").trim();
+  const galleryImages = formData
+    .getAll(galleryFieldName)
+    .map((entry) => String(entry).trim())
+    .filter(Boolean);
 
-  if (uploadedFiles.length + existing.length > 8) {
-    throw new Error("Limite máximo de 8 imagens por carro.");
+  return [primaryImage, ...galleryImages].filter((url, index, list) => Boolean(url) && list.indexOf(url) === index);
+}
+
+function getCarImageUrls(formData: FormData) {
+  const selectedImages = getSelectedImageUrls(formData, "selectedPrimaryImage", "selectedGalleryImages");
+  if (selectedImages.length > 0) {
+    return selectedImages;
   }
 
-  const uploadedUrls = await Promise.all(uploadedFiles.map((file) => saveUploadedFile(file)));
-  return [...existing, ...uploadedUrls].slice(0, 8);
+  return splitLines(formData.get("existingImageUrls"));
+}
+
+function getProductImageSelection(formData: FormData) {
+  const primaryImageUrl =
+    String(formData.get("selectedPrimaryImage") ?? "").trim() ||
+    String(formData.get("primaryImageUrl") ?? "").trim();
+  const galleryUrls = formData
+    .getAll("selectedGalleryImages")
+    .map((entry) => String(entry).trim())
+    .filter(Boolean);
+
+  return {
+    primaryImageUrl,
+    galleryUrls: galleryUrls.filter((url, index, list) => url !== primaryImageUrl && list.indexOf(url) === index)
+  };
 }
 
 export async function loginAction(formData: FormData) {
@@ -74,8 +95,7 @@ export async function saveCarAction(formData: FormData) {
   await requireAdminSession();
 
   const carId = String(formData.get("carId") ?? "").trim();
-  const existingUrls = splitLines(formData.get("existingImageUrls"));
-  const imageUrls = await extractImageUrls(formData, existingUrls);
+  const imageUrls = getCarImageUrls(formData);
 
   const payload = carPayloadSchema.parse({
     title: formData.get("title"),
@@ -152,67 +172,104 @@ export async function deleteCarAction(formData: FormData) {
   redirect("/admin/carros?deleted=1");
 }
 
-export async function savePartCategoryAction(formData: FormData) {
-  await requireAdminSession();
-  const name = String(formData.get("name") ?? "").trim();
-
-  if (!name) {
-    redirect("/admin/pecas?error=Categoria-invalida");
-  }
-
-  const slug = slugify(name);
-  await prisma.partCategory.upsert({
-    where: { slug },
-    update: { name },
-    create: { name, slug }
-  });
-
-  revalidatePath("/pecas");
-  revalidatePath("/admin/pecas");
-  redirect("/admin/pecas?saved=1");
-}
-
-export async function savePartItemAction(formData: FormData) {
+export async function saveProductAction(formData: FormData) {
   await requireAdminSession();
 
-  const itemId = String(formData.get("itemId") ?? "").trim();
-  const payload = partItemPayloadSchema.parse({
-    categoryId: formData.get("categoryId"),
+  const productId = String(formData.get("productId") ?? "").trim();
+  const existingProduct = productId
+    ? await prisma.product.findUnique({ where: { id: productId }, select: { slug: true } })
+    : null;
+  const { primaryImageUrl, galleryUrls } = getProductImageSelection(formData);
+  const category = (String(formData.get("category") ?? "").trim().toUpperCase() || "PART") as ProductCategory;
+  const parsedSizeStocks = parseSizeStocksInput(String(formData.get("sizeStocks") ?? ""));
+  const rawStock = String(formData.get("stockQuantity") ?? "").trim();
+
+  const payload = productPayloadSchema.parse({
     name: formData.get("name"),
+    category,
     description: formData.get("description"),
-    imageUrl: String(formData.get("imageUrl") ?? "") || null,
+    priceCents: Math.round(Number(formData.get("price") ?? 0) * 100),
+    primaryImageUrl,
+    galleryUrls,
+    stockQuantity:
+      category === ProductCategory.APPAREL
+        ? null
+        : rawStock === ""
+          ? null
+          : Number.parseInt(rawStock, 10),
+    sizeStocks: category === ProductCategory.APPAREL ? parsedSizeStocks : [],
     isFeatured: formData.get("isFeatured") === "on"
   });
 
   const data = {
-    categoryId: payload.categoryId,
     name: payload.name,
+    slug: slugify(payload.name),
+    category: payload.category,
     description: payload.description,
-    imageUrl: payload.imageUrl,
-    isFeatured: payload.isFeatured,
-    slug: slugify(payload.name)
+    priceCents: payload.priceCents,
+    primaryImageUrl: payload.primaryImageUrl,
+    galleryJson: JSON.stringify(payload.galleryUrls),
+    stockQuantity: payload.category === ProductCategory.APPAREL ? null : payload.stockQuantity,
+    sizeStockJson: JSON.stringify(payload.category === ProductCategory.APPAREL ? payload.sizeStocks : []),
+    isFeatured: payload.isFeatured
   };
 
-  if (itemId) {
-    await prisma.partItem.update({ where: { id: itemId }, data });
+  if (productId) {
+    await prisma.product.update({ where: { id: productId }, data });
   } else {
-    await prisma.partItem.create({ data });
+    await prisma.product.create({ data });
   }
 
-  revalidatePath("/pecas");
-  revalidatePath("/admin/pecas");
-  redirect("/admin/pecas?saved=1");
+  revalidatePath("/produtos");
+  revalidatePath(`/produtos/${data.slug}`);
+  if (existingProduct?.slug && existingProduct.slug !== data.slug) {
+    revalidatePath(`/produtos/${existingProduct.slug}`);
+  }
+  revalidatePath("/admin");
+  revalidatePath("/admin/produtos");
+  redirect("/admin/produtos?saved=1");
 }
 
-export async function deletePartItemAction(formData: FormData) {
+export async function deleteProductAction(formData: FormData) {
   await requireAdminSession();
-  const itemId = String(formData.get("itemId") ?? "");
+  const productId = String(formData.get("productId") ?? "");
 
-  if (itemId) {
-    await prisma.partItem.delete({ where: { id: itemId } });
+  if (productId) {
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: productId },
+      select: { slug: true }
+    });
+    await prisma.product.delete({ where: { id: productId } });
+    if (existingProduct?.slug) {
+      revalidatePath(`/produtos/${existingProduct.slug}`);
+    }
   }
 
-  revalidatePath("/pecas");
-  revalidatePath("/admin/pecas");
-  redirect("/admin/pecas?deleted=1");
+  revalidatePath("/produtos");
+  revalidatePath("/admin");
+  revalidatePath("/admin/produtos");
+  redirect("/admin/produtos?deleted=1");
+}
+
+export async function updateOrderStatusAction(formData: FormData) {
+  await requireAdminSession();
+
+  const parsed = orderStatusSchema.parse({
+    orderId: formData.get("orderId"),
+    status: formData.get("status") as OrderStatus,
+    notes: String(formData.get("notes") ?? "").trim() || null
+  });
+
+  await prisma.order.update({
+    where: { id: parsed.orderId },
+    data: {
+      status: parsed.status,
+      notes: parsed.notes
+    }
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/pedidos");
+  revalidatePath(`/admin/pedidos/${parsed.orderId}`);
+  redirect(`/admin/pedidos/${parsed.orderId}?saved=1`);
 }

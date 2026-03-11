@@ -1,4 +1,4 @@
-import type { CarStatus } from "@prisma/client";
+import type { CarStatus, OrderStatus, ProductCategory } from "@prisma/client";
 
 export type PublicCar = {
   id: string;
@@ -26,20 +26,30 @@ export type PublicCar = {
   }>;
 };
 
-export type PublicPart = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  imageUrl: string | null;
-  isFeatured: boolean;
+export type PublicProductSizeStock = {
+  size: string;
+  stock: number;
 };
 
-export type PublicPartCategory = {
+export type PublicProduct = {
   id: string;
-  name: string;
   slug: string;
-  items: PublicPart[];
+  name: string;
+  category: ProductCategory;
+  categoryLabel: string;
+  description: string;
+  priceCents: number;
+  primaryImageUrl: string;
+  images: Array<{
+    id: string;
+    url: string;
+    alt: string;
+    sortOrder: number;
+  }>;
+  stockQuantity: number | null;
+  sizeStocks: PublicProductSizeStock[];
+  totalStock: number;
+  isFeatured: boolean;
 };
 
 export type PublicSiteSettings = {
@@ -58,6 +68,27 @@ export type PublicSiteSettings = {
   phoneDisplay: string;
   contactEmail: string;
   address: string;
+  addressLine: string;
+  addressRegion: string;
+  addressCountry: string;
   instagramUrl: string;
   businessHours: string;
+};
+
+export type AdminOrder = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  status: OrderStatus;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  customerAddress: string;
+  productId: string;
+  productNameSnapshot: string;
+  productCategorySnapshot: string;
+  productPriceSnapshot: number;
+  quantity: number;
+  selectedSize: string | null;
+  notes: string | null;
 };

@@ -1,13 +1,19 @@
 import type { CarStatus } from "@prisma/client";
+import { RepositoryImagePicker } from "@/components/admin/RepositoryImagePicker";
+import type { RepositoryImageOption } from "@/lib/image-library";
 import type { PublicCar } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
 type Props = {
   action: (formData: FormData) => void | Promise<void>;
+  availableImages: RepositoryImageOption[];
   car?: PublicCar | null;
 };
 
-export function CarEditorForm({ action, car }: Props) {
+export function CarEditorForm({ action, availableImages, car }: Props) {
+  const primaryImage = car?.images[0]?.url ?? "";
+  const galleryImages = car?.images.slice(1).map((image) => image.url) ?? [];
+
   return (
     <form action={action} className="stack">
       <input type="hidden" name="carId" defaultValue={car?.id ?? ""} />
@@ -15,7 +21,7 @@ export function CarEditorForm({ action, car }: Props) {
       <div className="admin-card stack">
         <div className="field-grid two">
           <div className="field">
-            <label htmlFor="title">Título</label>
+            <label htmlFor="title">Titulo</label>
             <input id="title" name="title" defaultValue={car?.title ?? ""} required />
           </div>
           <div className="field">
@@ -42,7 +48,7 @@ export function CarEditorForm({ action, car }: Props) {
           <div className="field">
             <label htmlFor="status">Status</label>
             <select id="status" name="status" defaultValue={(car?.status ?? "AVAILABLE") as CarStatus}>
-              <option value="AVAILABLE">Disponível</option>
+              <option value="AVAILABLE">Disponivel</option>
               <option value="RESERVED">Reservado</option>
               <option value="SOLD">Vendido</option>
             </select>
@@ -59,7 +65,7 @@ export function CarEditorForm({ action, car }: Props) {
             <input id="km" name="km" type="number" defaultValue={car?.km ?? ""} required />
           </div>
           <div className="field">
-            <label htmlFor="price">Preço (BRL)</label>
+            <label htmlFor="price">Preco (BRL)</label>
             <input
               id="price"
               name="price"
@@ -73,23 +79,23 @@ export function CarEditorForm({ action, car }: Props) {
 
         <div className="field-grid two">
           <div className="field">
-            <label htmlFor="fuel">Combustível</label>
+            <label htmlFor="fuel">Combustivel</label>
             <input id="fuel" name="fuel" defaultValue={car?.fuel ?? ""} />
           </div>
           <div className="field">
-            <label htmlFor="transmission">Câmbio</label>
+            <label htmlFor="transmission">Cambio</label>
             <input id="transmission" name="transmission" defaultValue={car?.transmission ?? ""} />
           </div>
         </div>
 
         <div className="field">
-          <label htmlFor="description">Descrição</label>
+          <label htmlFor="description">Descricao</label>
           <textarea id="description" name="description" defaultValue={car?.description ?? ""} required />
         </div>
 
         <div className="field-grid three">
           <div className="field">
-            <label htmlFor="mods">Modificações (uma por linha)</label>
+            <label htmlFor="mods">Modificacoes (uma por linha)</label>
             <textarea id="mods" name="mods" defaultValue={car?.mods.join("\n") ?? ""} />
           </div>
           <div className="field">
@@ -102,18 +108,21 @@ export function CarEditorForm({ action, car }: Props) {
           </div>
         </div>
 
-        <div className="field">
-          <label htmlFor="existingImageUrls">URLs de imagens atuais (uma por linha)</label>
-          <textarea
-            id="existingImageUrls"
-            name="existingImageUrls"
-            defaultValue={car?.images.map((image) => image.url).join("\n") ?? ""}
+        <div className="stack">
+          <div>
+            <h3 style={{ marginBottom: 8 }}>Imagens do repositorio</h3>
+            <p className="muted" style={{ margin: 0 }}>
+              Escolha uma imagem principal e monte a galeria a partir dos arquivos presentes em `public/images/carros`.
+            </p>
+          </div>
+          <RepositoryImagePicker
+            images={availableImages}
+            initialPrimary={primaryImage}
+            initialGallery={galleryImages}
+            primaryInputName="selectedPrimaryImage"
+            galleryInputName="selectedGalleryImages"
+            emptyMessage="Selecione uma imagem principal para o carro."
           />
-        </div>
-
-        <div className="field">
-          <label htmlFor="images">Upload de novas imagens (max. 8 no total)</label>
-          <input id="images" name="images" type="file" accept="image/*" multiple />
         </div>
 
         <label style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700 }}>
@@ -123,12 +132,12 @@ export function CarEditorForm({ action, car }: Props) {
       </div>
 
       <div className="inline-actions">
-          <button type="submit" className="button-primary">
-          {car ? "Salvar alterações" : "Criar carro"}
+        <button type="submit" className="button-primary">
+          {car ? "Salvar alteracoes" : "Criar carro"}
         </button>
         {car ? (
           <div className="muted" style={{ alignSelf: "center" }}>
-            Preço atual: {formatCurrency(car.priceCents)}
+            Preco atual: {formatCurrency(car.priceCents)}
           </div>
         ) : null}
       </div>

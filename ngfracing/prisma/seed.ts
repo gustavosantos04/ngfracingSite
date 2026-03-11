@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { CarStatus, PrismaClient } from "@prisma/client";
+import { CarStatus, PrismaClient, ProductCategory } from "@prisma/client";
 import { siteSettings } from "../lib/siteContent";
 
 const prisma = new PrismaClient();
@@ -69,63 +69,54 @@ async function main() {
     }
   });
 
-  const categories = [
-    { name: "ECU", slug: "ecu" },
-    { name: "Wideband", slug: "wideband" },
-    { name: "Chicotes e Acessorios", slug: "chicotes-e-acessorios" }
-  ];
-
-  for (const category of categories) {
-    await prisma.partCategory.upsert({
-      where: { slug: category.slug },
-      update: { name: category.name },
-      create: category
-    });
-  }
-
-  const allCategories = await prisma.partCategory.findMany();
-  const categoryBySlug = Object.fromEntries(allCategories.map((item) => [item.slug, item.id]));
-
-  const partItems = [
+  const products = [
     {
-      categorySlug: "ecu",
       name: "FuelTech FT550",
-      description: "Modulo de injecao programavel para projetos street e pista.",
-      imageUrl: "/cars/audi-rs3-1.jpeg",
+      category: ProductCategory.PART,
+      description: "Modulo de injecao programavel para projetos street e pista com resposta rapida e excelente controle.",
+      priceCents: 689000,
+      primaryImageUrl: "/cars/audi-rs3-1.jpeg",
+      galleryJson: JSON.stringify(["/cars/audi-rs3-1.jpeg", "/cars/bmw-m3-1.jpg"]),
+      stockQuantity: 4,
+      sizeStockJson: JSON.stringify([]),
       isFeatured: true
     },
     {
-      categorySlug: "wideband",
-      name: "Wideband Nano",
-      description: "Leitura precisa de mistura para ajuste fino e monitoramento.",
-      imageUrl: "/cars/bmw-m3-1.jpg",
+      name: "Camiseta NGF Racing Track",
+      category: ProductCategory.APPAREL,
+      description: "Camiseta premium em algodao com estampa frontal e modelagem confortavel para o dia a dia.",
+      priceCents: 12990,
+      primaryImageUrl: "/cars/supra-1.jpg",
+      galleryJson: JSON.stringify(["/cars/supra-1.jpg", "/cars/voyage_cinza.jpg"]),
+      stockQuantity: null,
+      sizeStockJson: JSON.stringify([
+        { size: "P", stock: 3 },
+        { size: "M", stock: 5 },
+        { size: "G", stock: 4 },
+        { size: "GG", stock: 2 }
+      ]),
       isFeatured: true
     },
     {
-      categorySlug: "chicotes-e-acessorios",
-      name: "Chicote Plug and Play",
-      description: "Chicotes, sensores e acessorios para instalacao rapida e limpa.",
-      imageUrl: "/cars/supra-1.jpg",
+      name: "Bone NGF Racing Garage",
+      category: ProductCategory.ACCESSORY,
+      description: "Bone estruturado com aba curva, ajuste traseiro e identidade visual da NGF Racing.",
+      priceCents: 8990,
+      primaryImageUrl: "/cars/voyage_cinza_1.jpg",
+      galleryJson: JSON.stringify(["/cars/voyage_cinza_1.jpg"]),
+      stockQuantity: 7,
+      sizeStockJson: JSON.stringify([]),
       isFeatured: false
     }
   ];
 
-  for (const item of partItems) {
-    await prisma.partItem.upsert({
-      where: { slug: slugify(item.name) },
-      update: {
-        description: item.description,
-        imageUrl: item.imageUrl,
-        isFeatured: item.isFeatured,
-        categoryId: categoryBySlug[item.categorySlug]
-      },
+  for (const product of products) {
+    await prisma.product.upsert({
+      where: { slug: slugify(product.name) },
+      update: product,
       create: {
-        categoryId: categoryBySlug[item.categorySlug],
-        name: item.name,
-        slug: slugify(item.name),
-        description: item.description,
-        imageUrl: item.imageUrl,
-        isFeatured: item.isFeatured
+        ...product,
+        slug: slugify(product.name)
       }
     });
   }

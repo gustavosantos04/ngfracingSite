@@ -4,13 +4,13 @@ Migracao do site da NGF Racing de React/Vite para Next.js (App Router) com TypeS
 
 - Estoque de carros
 - Conteudo do site (Hero, Sobre, Contato)
-- Catalogo informativo de pecas FuelTech
+- Catalogo de produtos com pecas, roupas e acessorios
 
 ## Stack aplicada no codigo
 
 - Framework: Next.js 15 (App Router) + React 19 + TypeScript
 - Banco: Prisma + SQLite
-- Upload de imagens: Opcao B aplicada no codigo, com salvamento local em `public/uploads`
+- Biblioteca de imagens do admin baseada em arquivos versionados dentro de `public/images`
 - Auth Admin: login por e-mail/senha, hash com `bcryptjs`, sessao por cookie assinado
 - SEO: metadata, OpenGraph, `robots.ts`, `sitemap.ts`, Schema.org `Vehicle`
 
@@ -95,6 +95,10 @@ Admin:
 
 - `http://localhost:3000/admin/login`
 
+Produtos:
+
+- `http://localhost:3000/produtos`
+
 ## Build de producao
 
 ```bash
@@ -112,14 +116,14 @@ O seed cria 1 usuario admin usando:
 
 Defina esses valores no `.env` antes de rodar o seed.
 
-## Upload de imagens
+## Biblioteca de imagens
 
 Implementacao aplicada:
 
-- Salva arquivos em `public/uploads`
-- Aceita `jpg`, `png`, `webp`, `avif`
-- Limite de 5MB por arquivo
-- Limite de 8 imagens por carro
+- Carros: `public/images/carros`
+- Produtos: `public/images/produtos`
+- Compatibilidade legada: `public/cars` ainda aparece no seletor enquanto houver arquivos antigos em uso
+- O admin lista essas imagens server-side e permite escolher principal e galeria visualmente
 
 ## Deploy
 
@@ -148,6 +152,15 @@ Para Vercel, troque a implementacao de `lib/upload.ts` para:
 - R2 / S3 compativel
 
 O restante do projeto (App Router, Prisma, rotas, CMS) ja esta preparado para essa adaptacao.
+
+## Pedidos de produtos
+
+O fluxo de compra dos produtos nao processa pagamento no site.
+
+- O cliente escolhe produto, quantidade e tamanho quando aplicavel
+- O sistema abre um formulario de solicitacao
+- Ao enviar, a aplicacao grava um pedido no banco
+- O time acompanha esses pedidos em `/admin/pedidos`
 
 ## Scripts
 

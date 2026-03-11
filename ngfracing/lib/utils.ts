@@ -23,6 +23,19 @@ export function parseJsonList(value: string): string[] {
   }
 }
 
+export function parseJsonObjectList<T>(value: string, isValidItem: (item: unknown) => item is T): T[] {
+  if (!value) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter(isValidItem) : [];
+  } catch {
+    return [];
+  }
+}
+
 export function formatCurrency(valueInCents: number) {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -36,4 +49,40 @@ export function formatKilometers(value: number) {
 
 export function normalizePhoneDigits(value: string) {
   return value.replace(/\D/g, "");
+}
+
+export function productCategoryLabel(category: "PART" | "APPAREL" | "ACCESSORY") {
+  switch (category) {
+    case "PART":
+      return "Peça";
+    case "APPAREL":
+      return "Roupa";
+    case "ACCESSORY":
+      return "Acessório";
+    default:
+      return category;
+  }
+}
+
+export function orderStatusLabel(status: "NEW" | "CONTACTED" | "CLOSED" | "CANCELED") {
+  switch (status) {
+    case "NEW":
+      return "Novo";
+    case "CONTACTED":
+      return "Contatado";
+    case "CLOSED":
+      return "Fechado";
+    case "CANCELED":
+      return "Cancelado";
+    default:
+      return status;
+  }
+}
+
+export function formatDateTime(value: Date) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "America/Sao_Paulo"
+  }).format(value);
 }

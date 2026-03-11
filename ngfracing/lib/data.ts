@@ -1,8 +1,8 @@
 import { CarStatus, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import type { PublicCar, PublicPartCategory, PublicSiteSettings } from "@/lib/types";
+import type { AdminOrder, PublicCar, PublicProduct, PublicProductSizeStock, PublicSiteSettings } from "@/lib/types";
 import { siteSettings as defaultSettings } from "@/lib/siteContent";
-import { parseJsonList } from "@/lib/utils";
+import { parseJsonList, parseJsonObjectList, productCategoryLabel } from "@/lib/utils";
 
 const copyReplacements: Array<[RegExp, string]> = [
   [/\bselecao\b/gi, "sele\u00e7\u00e3o"],
@@ -64,6 +64,9 @@ function normalizeSettingsText(settings: PublicSiteSettings): PublicSiteSettings
     aboutText: applyCopyFixes(settings.aboutText),
     phoneDisplay: applyCopyFixes(settings.phoneDisplay),
     address: applyCopyFixes(settings.address),
+    addressLine: applyCopyFixes(settings.addressLine),
+    addressRegion: applyCopyFixes(settings.addressRegion),
+    addressCountry: applyCopyFixes(settings.addressCountry),
     businessHours: applyCopyFixes(settings.businessHours)
   };
 }
@@ -103,6 +106,73 @@ function mapCar(
         alt: image.alt,
         sortOrder: image.sortOrder
       }))
+  };
+}
+
+function isProductSizeStock(value: unknown): value is PublicProductSizeStock {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  return typeof candidate.size === "string" && typeof candidate.stock === "number";
+}
+
+function mapProduct(product: Prisma.ProductGetPayload<Record<string, never>>): PublicProduct {
+  const galleryUrls = parseJsonList(product.galleryJson);
+  const images = [product.primaryImageUrl, ...galleryUrls]
+    .filter((url, index, list) => Boolean(url) && list.indexOf(url) === index)
+    .map((url, index) => ({
+      id: `${product.id}-${index}`,
+      url,
+      alt: `${product.name} - foto ${index + 1}`,
+      sortOrder: index
+    }));
+  const sizeStocks = parseJsonObjectList(product.sizeStockJson, isProductSizeStock)
+    .map((item) => ({
+      size: item.size.trim().toUpperCase(),
+      stock: Math.max(0, Math.floor(item.stock))
+    }))
+    .filter((item) => item.size.length > 0);
+  const totalStock =
+    product.category === "APPAREL"
+      ? sizeStocks.reduce((sum, item) => sum + item.stock, 0)
+      : Math.max(0, product.stockQuantity ?? 0);
+
+  return {
+    id: product.id,
+    slug: product.slug,
+    name: product.name,
+    category: product.category,
+    categoryLabel: productCategoryLabel(product.category),
+    description: product.description,
+    priceCents: product.priceCents,
+    primaryImageUrl: product.primaryImageUrl,
+    images,
+    stockQuantity: product.stockQuantity,
+    sizeStocks,
+    totalStock,
+    isFeatured: product.isFeatured
+  };
+}
+
+function mapOrder(order: Prisma.OrderGetPayload<Record<string, never>>): AdminOrder {
+  return {
+    id: order.id,
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
+    status: order.status,
+    customerName: order.customerName,
+    customerEmail: order.customerEmail,
+    customerPhone: order.customerPhone,
+    customerAddress: order.customerAddress,
+    productId: order.productId,
+    productNameSnapshot: order.productNameSnapshot,
+    productCategorySnapshot: order.productCategorySnapshot,
+    productPriceSnapshot: order.productPriceSnapshot,
+    quantity: order.quantity,
+    selectedSize: order.selectedSize,
+    notes: order.notes
   };
 }
 
@@ -156,34 +226,81 @@ export async function getCarBySlug(slug: string) {
   }
 }
 
-export async function getPartCategories() {
+export async function getAllProducts() {
   try {
-    const categories = await prisma.partCategory.findMany({
-      include: {
-        items: {
-          orderBy: [{ isFeatured: "desc" }, { name: "asc" }]
-        }
-      },
-      orderBy: { name: "asc" }
+    const products = await prisma.product.findMany({
+      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }]
     });
 
-    return categories.map(
-      (category): PublicPartCategory => ({
-        id: category.id,
-        name: category.name,
-        slug: category.slug,
-        items: category.items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          slug: item.slug,
-          description: item.description,
-          imageUrl: item.imageUrl,
-          isFeatured: item.isFeatured
-        }))
-      })
-    );
+    return products.map(mapProduct);
   } catch (error) {
-    logDataFallback("getPartCategories", error);
+    logDataFallback("getAllProducts", error);
     return [];
+  }
+}
+
+export async function getFeaturedProducts(limit = 6) {
+  try {
+    const products = await prisma.product.findMany({
+      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+      take: limit
+    });
+
+    return products.map(mapProduct);
+  } catch (error) {
+    logDataFallback("getFeaturedProducts", error);
+    return [];
+  }
+}
+
+export async function getProductBySlug(slug: string) {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { slug }
+    });
+
+    return product ? mapProduct(product) : null;
+  } catch (error) {
+    logDataFallback("getProductBySlug", error);
+    return null;
+  }
+}
+
+export async function getProductById(id: string) {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id }
+    });
+
+    return product ? mapProduct(product) : null;
+  } catch (error) {
+    logDataFallback("getProductById", error);
+    return null;
+  }
+}
+
+export async function getAllOrders() {
+  try {
+    const orders = await prisma.order.findMany({
+      orderBy: [{ createdAt: "desc" }]
+    });
+
+    return orders.map(mapOrder);
+  } catch (error) {
+    logDataFallback("getAllOrders", error);
+    return [];
+  }
+}
+
+export async function getOrderById(id: string) {
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id }
+    });
+
+    return order ? mapOrder(order) : null;
+  } catch (error) {
+    logDataFallback("getOrderById", error);
+    return null;
   }
 }

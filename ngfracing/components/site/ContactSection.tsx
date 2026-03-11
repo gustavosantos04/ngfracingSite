@@ -41,7 +41,11 @@ export async function ContactSection() {
                 <span className="fueltech-icon">MAP</span>
                 <strong>{siteCopy.contact.cards.address.title}</strong>
               </div>
-              <p>{settings.address}</p>
+              <div className="contact-address-block">
+                <p>{settings.addressLine}</p>
+                <p>{settings.addressRegion}</p>
+                <p>{settings.addressCountry}</p>
+              </div>
               <a href={mapsUrl} target="_blank" rel="noreferrer" className="button-secondary">
                 {siteCopy.contact.cards.address.ctaLabel}
               </a>
