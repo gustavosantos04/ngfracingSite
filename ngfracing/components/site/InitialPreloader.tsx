@@ -19,18 +19,20 @@ export function InitialPreloader() {
     }
 
     let cancelled = false;
-    let timer: ReturnType<typeof setInterval> | null = null;
+    let intervalTimer: number | null = null;
+    let exitTimer: number | null = null;
+    let loadHandler: (() => void) | null = null;
 
     const completeLoading = () => {
       setProgress(100);
-      window.setTimeout(() => {
+      exitTimer = window.setTimeout(() => {
         if (!cancelled) {
           setVisible(false);
         }
       }, reduceMotion ? 0 : 460);
     };
 
-    timer = window.setInterval(() => {
+    intervalTimer = window.setInterval(() => {
       setProgress((current) => {
         if (current >= 92) {
           return current;
@@ -44,14 +46,20 @@ export function InitialPreloader() {
     if (ready) {
       completeLoading();
     } else {
-      const handleLoad = () => completeLoading();
-      window.addEventListener("load", handleLoad, { once: true });
+      loadHandler = () => completeLoading();
+      window.addEventListener("load", loadHandler, { once: true });
     }
 
     return () => {
       cancelled = true;
-      if (timer) {
-        window.clearInterval(timer);
+      if (intervalTimer) {
+        window.clearInterval(intervalTimer);
+      }
+      if (exitTimer) {
+        window.clearTimeout(exitTimer);
+      }
+      if (loadHandler) {
+        window.removeEventListener("load", loadHandler);
       }
     };
   }, [isAdminRoute, reduceMotion]);
