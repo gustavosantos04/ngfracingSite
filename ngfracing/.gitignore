@@ -16,8 +16,11 @@ coverage
 public/uploads
 prisma/*.db
 prisma/*.db-journal
-!.env.example
 .env
+.env.*
+*.env
+*.env.*
+*.env.example
 
 # Editor directories and files
 .vscode/*

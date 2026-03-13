@@ -15,8 +15,13 @@ function slugify(value: string) {
 }
 
 async function main() {
-  const adminEmail = process.env.ADMIN_USER ?? process.env.ADMIN_EMAIL ?? "admin@ngfracing.com";
-  const adminPassword = process.env.ADMIN_PASSWORD ?? "ChangeMe123!";
+  const adminEmail = process.env.ADMIN_USER?.trim().toLowerCase();
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (!adminEmail || !adminPassword) {
+    throw new Error("Missing ADMIN_USER or ADMIN_PASSWORD in environment");
+  }
+
   const passwordHash = await bcrypt.hash(adminPassword, 12);
 
   await prisma.user.upsert({

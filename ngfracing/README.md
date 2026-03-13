@@ -9,9 +9,9 @@ Migracao do site da NGF Racing de React/Vite para Next.js (App Router) com TypeS
 ## Stack aplicada no codigo
 
 - Framework: Next.js 15 (App Router) + React 19 + TypeScript
-- Banco: Prisma + SQLite
+- Banco: Prisma + PostgreSQL
 - Biblioteca de imagens do admin baseada em arquivos versionados dentro de `public/images`
-- Auth Admin: login por e-mail/senha, hash com `bcryptjs`, sessao por cookie assinado
+- Auth Admin: login por variaveis de ambiente e sessao por cookie assinado
 - SEO: metadata, OpenGraph, `robots.ts`, `sitemap.ts`, Schema.org `Vehicle`
 
 ## Estrutura principal
@@ -44,7 +44,8 @@ Copy-Item .env.example .env
 
 3. Ajuste as credenciais em `.env`:
 
-- `DATABASE_URL`
+- `POSTGRES_PRISMA_URL`
+- `POSTGRES_URL_NON_POOLING`
 - `JWT_SECRET`
 - `ADMIN_USER`
 - `ADMIN_PASSWORD`
@@ -109,12 +110,12 @@ npm run start
 
 ## Login inicial do Admin
 
-O seed cria 1 usuario admin usando:
+O login admin usa:
 
 - `ADMIN_USER`
 - `ADMIN_PASSWORD`
 
-Defina esses valores no `.env` antes de rodar o seed.
+Defina esses valores no `.env` antes de iniciar o app.
 
 ## Biblioteca de imagens
 

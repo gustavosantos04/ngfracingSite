@@ -1,18 +1,21 @@
-import bcrypt from "bcryptjs";
+import { timingSafeEqual } from "node:crypto";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
-import { prisma } from "@/lib/prisma";
 
 const encoder = new TextEncoder();
 
 function getJwtSecret() {
-  return encoder.encode(process.env.JWT_SECRET ?? "ngf-racing-dev-secret");
+  const jwtSecret = process.env.JWT_SECRET?.trim();
+  if (!jwtSecret) {
+    throw new Error("Missing JWT_SECRET environment variable");
+  }
+  return encoder.encode(jwtSecret);
 }
 
 function getConfiguredAdminCredentials() {
-  const identifier = process.env.ADMIN_USER ?? process.env.ADMIN_EMAIL ?? null;
+  const identifier = process.env.ADMIN_USER ?? null;
   const password = process.env.ADMIN_PASSWORD ?? null;
 
   if (!identifier || !password) {
@@ -23,6 +26,17 @@ function getConfiguredAdminCredentials() {
     identifier: identifier.trim().toLowerCase(),
     password
   };
+}
+
+function safeEqual(a: string, b: string) {
+  const left = Buffer.from(a);
+  const right = Buffer.from(b);
+
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  return timingSafeEqual(left, right);
 }
 
 export async function signAdminToken(payload: {
@@ -50,33 +64,25 @@ export async function verifyAdminToken(token: string) {
 export async function authenticateAdmin(identifier: string, password: string) {
   const normalizedIdentifier = identifier.trim().toLowerCase();
   const configuredAdmin = getConfiguredAdminCredentials();
+  const jwtSecretConfigured = Boolean(process.env.JWT_SECRET?.trim());
 
-  if (
-    configuredAdmin &&
-    normalizedIdentifier === configuredAdmin.identifier &&
-    password === configuredAdmin.password
-  ) {
-    return {
-      id: "env-admin",
-      email: configuredAdmin.identifier,
-      role: "ADMIN"
-    };
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { email: normalizedIdentifier }
-  });
-
-  if (!user) {
+  if (!configuredAdmin || !jwtSecretConfigured) {
     return null;
   }
 
-  const matches = await bcrypt.compare(password, user.passwordHash);
-  if (!matches) {
+  if (!safeEqual(normalizedIdentifier, configuredAdmin.identifier)) {
     return null;
   }
 
-  return user;
+  if (!safeEqual(password, configuredAdmin.password)) {
+    return null;
+  }
+
+  return {
+    id: "env-admin",
+    email: configuredAdmin.identifier,
+    role: "ADMIN" as const
+  };
 }
 
 export async function getAdminSession() {
