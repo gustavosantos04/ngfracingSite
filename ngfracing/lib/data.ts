@@ -1,4 +1,5 @@
 import { CarStatus, Prisma } from "@prisma/client";
+import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { AdminOrder, PublicCar, PublicProduct, PublicProductSizeStock, PublicSiteSettings } from "@/lib/types";
 import { siteSettings as defaultSettings } from "@/lib/siteContent";
@@ -73,6 +74,17 @@ function normalizeSettingsText(settings: PublicSiteSettings): PublicSiteSettings
 
 function logDataFallback(scope: string, error: unknown) {
   console.error(`[data:${scope}] fallback`, error);
+}
+
+function shuffleArray<T>(items: T[]) {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+  }
+
+  return shuffled;
 }
 
 function mapCar(
@@ -241,12 +253,13 @@ export async function getAllProducts() {
 
 export async function getFeaturedProducts(limit = 6) {
   try {
+    noStore();
+
     const products = await prisma.product.findMany({
-      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
-      take: limit
+      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }]
     });
 
-    return products.map(mapProduct);
+    return shuffleArray(products).slice(0, limit).map(mapProduct);
   } catch (error) {
     logDataFallback("getFeaturedProducts", error);
     return [];

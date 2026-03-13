@@ -23,23 +23,12 @@ function getCardsPerPage(width: number) {
   return 3;
 }
 
-function shuffleProducts(products: PublicProduct[]) {
-  const shuffled = [...products];
-
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
-  }
-
-  return shuffled;
-}
-
 export function ProductsCarousel({ products }: Props) {
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(1);
   const [cardsPerPage, setCardsPerPage] = useState(3);
   const [isPaused, setIsPaused] = useState(false);
-  const shuffledProducts = useMemo(() => shuffleProducts(products), [products]);
+  const shuffledProducts = useMemo(() => products, [products]);
 
   useEffect(() => {
     const syncViewport = () => {

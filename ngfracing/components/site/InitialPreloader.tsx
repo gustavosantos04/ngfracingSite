@@ -22,31 +22,47 @@ export function InitialPreloader() {
     let intervalTimer: number | null = null;
     let exitTimer: number | null = null;
     let loadHandler: (() => void) | null = null;
+    let minimumTimer: number | null = null;
+    let hasLoaded = document.readyState === "complete";
+    let minimumElapsed = false;
+    let hasCompleted = false;
 
-    const completeLoading = () => {
+    const tryComplete = () => {
+      if (hasCompleted || !hasLoaded || !minimumElapsed) {
+        return;
+      }
+
+      hasCompleted = true;
       setProgress(100);
       exitTimer = window.setTimeout(() => {
         if (!cancelled) {
           setVisible(false);
         }
-      }, reduceMotion ? 0 : 460);
+      }, reduceMotion ? 0 : 640);
     };
+
+    minimumTimer = window.setTimeout(() => {
+      minimumElapsed = true;
+      tryComplete();
+    }, reduceMotion ? 0 : 2450);
 
     intervalTimer = window.setInterval(() => {
       setProgress((current) => {
-        if (current >= 92) {
+        if (current >= 96 || hasCompleted) {
           return current;
         }
-        const step = current > 80 ? 1 : current > 55 ? 2 : 3;
-        return Math.min(92, current + step);
+        const step = current > 86 ? 1 : current > 62 ? 1.6 : 2.2;
+        return Math.min(96, current + step);
       });
-    }, 46);
+    }, 84);
 
-    const ready = document.readyState === "complete";
-    if (ready) {
-      completeLoading();
+    if (hasLoaded) {
+      tryComplete();
     } else {
-      loadHandler = () => completeLoading();
+      loadHandler = () => {
+        hasLoaded = true;
+        tryComplete();
+      };
       window.addEventListener("load", loadHandler, { once: true });
     }
 
@@ -57,6 +73,9 @@ export function InitialPreloader() {
       }
       if (exitTimer) {
         window.clearTimeout(exitTimer);
+      }
+      if (minimumTimer) {
+        window.clearTimeout(minimumTimer);
       }
       if (loadHandler) {
         window.removeEventListener("load", loadHandler);

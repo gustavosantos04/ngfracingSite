@@ -18,22 +18,22 @@ export function CarGallery({ car }: { car: PublicCar }) {
   const imageVariants = useMemo(
     () => ({
       enter: (dir: number) => ({
-        x: reduceMotion ? 0 : dir > 0 ? 48 : -48,
-        opacity: 0,
-        scale: reduceMotion ? 1 : 1.03,
-        filter: "blur(10px)"
+        x: reduceMotion ? 0 : dir > 0 ? 64 : -64,
+        opacity: reduceMotion ? 1 : 0.86,
+        scale: reduceMotion ? 1 : 1.08,
+        clipPath: reduceMotion ? "inset(0 0 0 0)" : dir > 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)"
       }),
       center: {
         x: 0,
         opacity: 1,
         scale: 1,
-        filter: "blur(0px)"
+        clipPath: "inset(0 0 0 0)"
       },
       exit: (dir: number) => ({
-        x: reduceMotion ? 0 : dir > 0 ? -40 : 40,
-        opacity: 0,
-        scale: reduceMotion ? 1 : 0.985,
-        filter: "blur(10px)"
+        x: reduceMotion ? 0 : dir > 0 ? -52 : 52,
+        opacity: reduceMotion ? 1 : 0.78,
+        scale: reduceMotion ? 1 : 0.96,
+        clipPath: reduceMotion ? "inset(0 0 0 0)" : dir > 0 ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)"
       })
     }),
     [reduceMotion]
@@ -94,7 +94,7 @@ export function CarGallery({ car }: { car: PublicCar }) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={reduceMotion ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.55, ease: [0.19, 1, 0.22, 1] }}
           >
             <Image
               src={activeImage.url}
@@ -106,8 +106,6 @@ export function CarGallery({ car }: { car: PublicCar }) {
             />
           </motion.div>
         </AnimatePresence>
-
-        <div className="car-gallery-overlay" aria-hidden="true" />
 
         <div className="car-gallery-hud">
           <div className="car-gallery-counter">

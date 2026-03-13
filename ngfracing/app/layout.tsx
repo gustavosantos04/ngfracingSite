@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Orbitron } from "next/font/google";
+import { GlobalRouteTransition } from "@/components/site/GlobalRouteTransition";
 import { InitialPreloader } from "@/components/site/InitialPreloader";
 import "./globals.css";
 
@@ -56,6 +57,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${montserrat.variable} ${orbitron.variable}`}>
         <InitialPreloader />
+        <GlobalRouteTransition />
         {children}
       </body>
     </html>
