@@ -4,7 +4,7 @@ import { CarStatus, OrderStatus, ProductCategory } from "@prisma/client";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { authenticateAdmin, requireAdminSession, signAdminToken } from "@/lib/auth";
+import { authenticateAdmin, getAdminAuthConfigStatus, requireAdminSession, signAdminToken } from "@/lib/auth";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import { parseSizeStocksInput } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
@@ -53,6 +53,11 @@ function getProductImageSelection(formData: FormData) {
 }
 
 export async function loginAction(formData: FormData) {
+  const authConfig = getAdminAuthConfigStatus();
+  if (!authConfig.ok) {
+    redirect("/admin/login?error=configuracao-invalida");
+  }
+
   const parsed = loginSchema.safeParse({
     identifier: formData.get("identifier"),
     password: formData.get("password")

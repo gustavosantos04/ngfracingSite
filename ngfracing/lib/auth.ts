@@ -6,25 +6,62 @@ import { AUTH_COOKIE_NAME } from "@/lib/constants";
 
 const encoder = new TextEncoder();
 
+function stripWrappingQuotes(value: string) {
+  if (
+    (value.startsWith("\"") && value.endsWith("\"")) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1);
+  }
+
+  return value;
+}
+
 function getJwtSecret() {
   const jwtSecret = process.env.JWT_SECRET?.trim();
   if (!jwtSecret) {
     throw new Error("Missing JWT_SECRET environment variable");
   }
-  return encoder.encode(jwtSecret);
+
+  return encoder.encode(stripWrappingQuotes(jwtSecret));
+}
+
+export function getAdminAuthConfigStatus() {
+  const identifierRaw = process.env.ADMIN_USER ?? null;
+  const passwordRaw = process.env.ADMIN_PASSWORD ?? null;
+  const jwtSecretRaw = process.env.JWT_SECRET ?? null;
+
+  if (!identifierRaw || !passwordRaw || !jwtSecretRaw?.trim()) {
+    return {
+      ok: false as const
+    };
+  }
+
+  const identifier = stripWrappingQuotes(identifierRaw).trim().toLowerCase();
+  const password = stripWrappingQuotes(passwordRaw);
+
+  if (!identifier || !password) {
+    return {
+      ok: false as const
+    };
+  }
+
+  return {
+    ok: true as const,
+    identifier,
+    password
+  };
 }
 
 function getConfiguredAdminCredentials() {
-  const identifier = process.env.ADMIN_USER ?? null;
-  const password = process.env.ADMIN_PASSWORD ?? null;
-
-  if (!identifier || !password) {
+  const config = getAdminAuthConfigStatus();
+  if (!config.ok) {
     return null;
   }
 
   return {
-    identifier: identifier.trim().toLowerCase(),
-    password
+    identifier: config.identifier,
+    password: config.password
   };
 }
 
@@ -64,9 +101,8 @@ export async function verifyAdminToken(token: string) {
 export async function authenticateAdmin(identifier: string, password: string) {
   const normalizedIdentifier = identifier.trim().toLowerCase();
   const configuredAdmin = getConfiguredAdminCredentials();
-  const jwtSecretConfigured = Boolean(process.env.JWT_SECRET?.trim());
 
-  if (!configuredAdmin || !jwtSecretConfigured) {
+  if (!configuredAdmin) {
     return null;
   }
 

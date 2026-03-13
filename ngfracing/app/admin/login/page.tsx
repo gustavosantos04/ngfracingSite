@@ -14,6 +14,7 @@ export default async function AdminLoginPage({
 }) {
   const params = await searchParams;
   const error = typeof params.error === "string" ? params.error : "";
+  const isConfigError = error === "configuracao-invalida";
 
   return (
     <div className="admin-shell" style={{ display: "grid", placeItems: "center", padding: 24 }}>
@@ -28,7 +29,7 @@ export default async function AdminLoginPage({
           </div>
           {error ? (
             <div className="admin-card" style={{ padding: 14, borderColor: "rgba(215,0,0,0.3)" }}>
-              Credenciais invalidas.
+              {isConfigError ? "Configuracao de login ausente ou invalida." : "Credenciais invalidas."}
             </div>
           ) : null}
           <form action={loginAction} className="stack">
