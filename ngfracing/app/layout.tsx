@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Orbitron } from "next/font/google";
+import { InitialPreloader } from "@/components/site/InitialPreloader";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -53,7 +54,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${montserrat.variable} ${orbitron.variable}`}>{children}</body>
+      <body className={`${montserrat.variable} ${orbitron.variable}`}>
+        <InitialPreloader />
+        {children}
+      </body>
     </html>
   );
 }

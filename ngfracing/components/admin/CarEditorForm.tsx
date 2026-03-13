@@ -1,4 +1,9 @@
+"use client";
+
 import type { CarStatus } from "@prisma/client";
+import type { FormEvent } from "react";
+import { useMemo, useState } from "react";
+import { AdminPendingState, AdminSubmitButton } from "@/components/admin/AdminFormControls";
 import { RepositoryImagePicker } from "@/components/admin/RepositoryImagePicker";
 import type { RepositoryImageOption } from "@/lib/image-library";
 import type { PublicCar } from "@/lib/types";
@@ -11,18 +16,102 @@ type Props = {
 };
 
 export function CarEditorForm({ action, availableImages, car }: Props) {
+  const [kmDigits, setKmDigits] = useState(car ? String(car.km) : "");
+  const [priceDigits, setPriceDigits] = useState(car ? String(car.priceCents) : "");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const primaryImage = car?.images[0]?.url ?? "";
   const galleryImages = car?.images.slice(1).map((image) => image.url) ?? [];
+  const kmDisplay = useMemo(() => {
+    if (!kmDigits) {
+      return "";
+    }
+
+    return new Intl.NumberFormat("pt-BR").format(Number(kmDigits));
+  }, [kmDigits]);
+  const priceDisplay = useMemo(() => {
+    if (!priceDigits) {
+      return "";
+    }
+
+    return new Intl.NumberFormat("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(Number(priceDigits) / 100);
+  }, [priceDigits]);
+  const priceValue = priceDigits ? (Number(priceDigits) / 100).toFixed(2) : "";
+
+  const handleKmChange = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 8);
+    setKmDigits(digits);
+    if (errors.km) {
+      setErrors((previous) => ({ ...previous, km: "" }));
+    }
+  };
+
+  const handlePriceChange = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 12);
+    setPriceDigits(digits);
+    if (errors.price) {
+      setErrors((previous) => ({ ...previous, price: "" }));
+    }
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const nextErrors: Record<string, string> = {};
+    const title = String(formData.get("title") ?? "").trim();
+    const brand = String(formData.get("brand") ?? "").trim();
+    const model = String(formData.get("model") ?? "").trim();
+    const year = String(formData.get("year") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    const selectedPrimaryImage = String(formData.get("selectedPrimaryImage") ?? "").trim();
+
+    if (!title) {
+      nextErrors.title = "Informe o titulo do carro.";
+    }
+    if (!brand) {
+      nextErrors.brand = "Informe a marca.";
+    }
+    if (!model) {
+      nextErrors.model = "Informe o modelo.";
+    }
+    if (!year) {
+      nextErrors.year = "Informe o ano.";
+    }
+    if (!kmDigits) {
+      nextErrors.km = "Informe a quilometragem.";
+    }
+    if (!priceDigits) {
+      nextErrors.price = "Informe o valor.";
+    }
+    if (description.length < 20) {
+      nextErrors.description = "A descricao precisa ter ao menos 20 caracteres.";
+    }
+    if (!selectedPrimaryImage) {
+      nextErrors.images = "Selecione ao menos uma imagem principal.";
+    }
+
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      event.preventDefault();
+    }
+  };
 
   return (
-    <form action={action} className="stack">
+    <form action={action} className="stack" onSubmit={handleSubmit} noValidate>
       <input type="hidden" name="carId" defaultValue={car?.id ?? ""} />
+      <input type="hidden" name="km" value={kmDigits} />
+      <input type="hidden" name="price" value={priceValue} />
 
       <div className="admin-card stack">
         <div className="field-grid two">
           <div className="field">
             <label htmlFor="title">Titulo</label>
-            <input id="title" name="title" defaultValue={car?.title ?? ""} required />
+            <input id="title" name="title" defaultValue={car?.title ?? ""} required aria-invalid={Boolean(errors.title)} />
+            {errors.title ? <span className="field-error">{errors.title}</span> : null}
           </div>
           <div className="field">
             <label htmlFor="whatsappLink">Link do WhatsApp</label>
@@ -32,18 +121,22 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
               type="url"
               defaultValue={car?.whatsappLink ?? "https://wa.me/5551999866578"}
               required
+              aria-invalid={Boolean(errors.whatsappLink)}
             />
+            {errors.whatsappLink ? <span className="field-error">{errors.whatsappLink}</span> : null}
           </div>
         </div>
 
         <div className="field-grid three">
           <div className="field">
             <label htmlFor="brand">Marca</label>
-            <input id="brand" name="brand" defaultValue={car?.brand ?? ""} required />
+            <input id="brand" name="brand" defaultValue={car?.brand ?? ""} required aria-invalid={Boolean(errors.brand)} />
+            {errors.brand ? <span className="field-error">{errors.brand}</span> : null}
           </div>
           <div className="field">
             <label htmlFor="model">Modelo</label>
-            <input id="model" name="model" defaultValue={car?.model ?? ""} required />
+            <input id="model" name="model" defaultValue={car?.model ?? ""} required aria-invalid={Boolean(errors.model)} />
+            {errors.model ? <span className="field-error">{errors.model}</span> : null}
           </div>
           <div className="field">
             <label htmlFor="status">Status</label>
@@ -58,22 +151,46 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
         <div className="field-grid three">
           <div className="field">
             <label htmlFor="year">Ano</label>
-            <input id="year" name="year" type="number" defaultValue={car?.year ?? ""} required />
+            <input id="year" name="year" type="number" defaultValue={car?.year ?? ""} required aria-invalid={Boolean(errors.year)} />
+            {errors.year ? <span className="field-error">{errors.year}</span> : null}
           </div>
           <div className="field">
             <label htmlFor="km">KM</label>
-            <input id="km" name="km" type="number" defaultValue={car?.km ?? ""} required />
+            <div className="input-with-suffix">
+              <input
+                id="km"
+                name="kmDisplay"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                value={kmDisplay}
+                onChange={(event) => handleKmChange(event.target.value)}
+                placeholder="0"
+                required
+                aria-invalid={Boolean(errors.km)}
+              />
+              <span className="input-suffix">km</span>
+            </div>
+            {errors.km ? <span className="field-error">{errors.km}</span> : null}
           </div>
           <div className="field">
             <label htmlFor="price">Preco (BRL)</label>
-            <input
-              id="price"
-              name="price"
-              type="number"
-              step="0.01"
-              defaultValue={car ? (car.priceCents / 100).toFixed(2) : ""}
-              required
-            />
+            <div className="input-with-prefix">
+              <span className="input-prefix">R$</span>
+              <input
+                id="price"
+                name="priceDisplay"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                value={priceDisplay}
+                onChange={(event) => handlePriceChange(event.target.value)}
+                placeholder="0,00"
+                required
+                aria-invalid={Boolean(errors.price)}
+              />
+            </div>
+            {errors.price ? <span className="field-error">{errors.price}</span> : null}
           </div>
         </div>
 
@@ -90,14 +207,17 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
 
         <div className="field">
           <label htmlFor="description">Descricao</label>
-          <textarea id="description" name="description" defaultValue={car?.description ?? ""} required />
+          <textarea
+            id="description"
+            name="description"
+            defaultValue={car?.description ?? ""}
+            required
+            aria-invalid={Boolean(errors.description)}
+          />
+          {errors.description ? <span className="field-error">{errors.description}</span> : null}
         </div>
 
-        <div className="field-grid three">
-          <div className="field">
-            <label htmlFor="mods">Modificacoes (uma por linha)</label>
-            <textarea id="mods" name="mods" defaultValue={car?.mods.join("\n") ?? ""} />
-          </div>
+        <div className="field-grid two">
           <div className="field">
             <label htmlFor="features">Opcionais (uma por linha)</label>
             <textarea id="features" name="features" defaultValue={car?.features.join("\n") ?? ""} />
@@ -123,6 +243,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
             galleryInputName="selectedGalleryImages"
             emptyMessage="Selecione uma imagem principal para o carro."
           />
+          {errors.images ? <span className="field-error">{errors.images}</span> : null}
         </div>
 
         <label style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700 }}>
@@ -132,15 +253,18 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
       </div>
 
       <div className="inline-actions">
-        <button type="submit" className="button-primary">
-          {car ? "Salvar alteracoes" : "Criar carro"}
-        </button>
+        <AdminSubmitButton
+          className="button-primary"
+          idleLabel={car ? "Salvar alteracoes" : "Criar carro"}
+          pendingLabel={car ? "Salvando alteracoes..." : "Criando carro..."}
+        />
         {car ? (
           <div className="muted" style={{ alignSelf: "center" }}>
             Preco atual: {formatCurrency(car.priceCents)}
           </div>
         ) : null}
       </div>
+      <AdminPendingState copy="Processando cadastro do carro..." />
     </form>
   );
 }

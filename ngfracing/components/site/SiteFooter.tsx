@@ -29,7 +29,15 @@ export async function SiteFooter() {
           <div className="muted site-footer-copy">{siteCopy.footer.copy}</div>
           <div className="site-footer-credit">
             <span className="muted">{siteCopy.footer.creditPrefix}</span>
-            <span className="site-footer-credit-name">{siteCopy.footer.creditName}</span>
+            <a
+              href="https://instagram.com/titaniumagencylegacy"
+              target="_blank"
+              rel="noreferrer"
+              className="site-footer-credit-name"
+              aria-label="Instagram da Titanium Agency Legacy"
+            >
+              {siteCopy.footer.creditName} (@titaniumagencylegacy)
+            </a>
           </div>
         </div>
       </div>

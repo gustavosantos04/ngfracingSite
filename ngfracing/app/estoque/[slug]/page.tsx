@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const car = await getCarBySlug(slug);
 
   if (!car) {
-    return { title: "Carro não encontrado" };
+    return { title: "Carro nao encontrado" };
   }
 
   return {
@@ -55,10 +55,7 @@ export default async function CarDetailsPage({ params }: Params) {
       "@type": "Offer",
       priceCurrency: "BRL",
       price: (car.priceCents / 100).toFixed(2),
-      availability:
-        car.status === "SOLD"
-          ? "https://schema.org/SoldOut"
-          : "https://schema.org/InStock"
+      availability: car.status === "SOLD" ? "https://schema.org/SoldOut" : "https://schema.org/InStock"
     },
     image: car.images.map((image) => image.url),
     description: car.description
@@ -69,10 +66,14 @@ export default async function CarDetailsPage({ params }: Params) {
       <SiteHeader />
       <main className="section">
         <div className="container stack">
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(vehicleSchema) }}
-          />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(vehicleSchema) }} />
+
+          <div>
+            <Link href="/estoque" className="button-ghost car-back-button">
+              {"<"} Voltar ao estoque
+            </Link>
+          </div>
+
           <div className="field-grid two" style={{ alignItems: "start" }}>
             <CarGallery car={car} />
             <div className="stack">
@@ -100,8 +101,8 @@ export default async function CarDetailsPage({ params }: Params) {
                 >
                   <div className="chip">Ano: {car.year}</div>
                   <div className="chip">KM: {formatKilometers(car.km)}</div>
-                  <div className="chip">Combustível: {car.fuel ?? "Não informado"}</div>
-                  <div className="chip">Câmbio: {car.transmission ?? "Não informado"}</div>
+                  <div className="chip">Combustivel: {car.fuel ?? "Nao informado"}</div>
+                  <div className="chip">Cambio: {car.transmission ?? "Nao informado"}</div>
                 </div>
                 <p className="section-copy" style={{ marginTop: 22 }}>
                   {car.description}
@@ -115,20 +116,7 @@ export default async function CarDetailsPage({ params }: Params) {
                   </Link>
                 </div>
               </div>
-              <div className="admin-card">
-                <h2 style={{ marginTop: 0 }}>Modificações</h2>
-                <div className="inline-actions">
-                  {car.mods.length > 0 ? (
-                    car.mods.map((mod) => (
-                      <span key={mod} className="chip">
-                        {mod}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="muted">Detalhes técnicos em atualização.</span>
-                  )}
-                </div>
-              </div>
+
               <div className="admin-card">
                 <h2 style={{ marginTop: 0 }}>Opcionais</h2>
                 <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.9 }}>

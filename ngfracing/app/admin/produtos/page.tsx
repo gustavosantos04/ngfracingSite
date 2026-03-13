@@ -30,7 +30,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
           </Link>
         </div>
 
-        {notice ? <div className="admin-card">{notice}</div> : null}
+        {notice ? <div className="admin-card form-feedback form-feedback-success">{notice}</div> : null}
 
         <div className="surface-card table-wrap">
           <table className="table">

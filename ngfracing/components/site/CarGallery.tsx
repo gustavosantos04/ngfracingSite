@@ -13,26 +13,27 @@ export function CarGallery({ car }: { car: PublicCar }) {
 
   const activeImage = car.images[activeIndex] ?? car.images[0];
   const totalImages = car.images.length;
+  const progress = totalImages > 1 ? ((activeIndex + 1) / totalImages) * 100 : 100;
 
   const imageVariants = useMemo(
     () => ({
       enter: (dir: number) => ({
-        x: reduceMotion ? 0 : dir > 0 ? 32 : -32,
+        x: reduceMotion ? 0 : dir > 0 ? 48 : -48,
         opacity: 0,
-        filter: "blur(8px)",
-        clipPath: "inset(0 0 100% 0)"
+        scale: reduceMotion ? 1 : 1.03,
+        filter: "blur(10px)"
       }),
       center: {
         x: 0,
         opacity: 1,
-        filter: "blur(0px)",
-        clipPath: "inset(0 0 0% 0)"
+        scale: 1,
+        filter: "blur(0px)"
       },
       exit: (dir: number) => ({
-        x: reduceMotion ? 0 : dir > 0 ? -26 : 26,
+        x: reduceMotion ? 0 : dir > 0 ? -40 : 40,
         opacity: 0,
-        filter: "blur(8px)",
-        clipPath: "inset(100% 0 0 0)"
+        scale: reduceMotion ? 1 : 0.985,
+        filter: "blur(10px)"
       })
     }),
     [reduceMotion]
@@ -46,6 +47,7 @@ export function CarGallery({ car }: { car: PublicCar }) {
     if (nextIndex === activeIndex) {
       return;
     }
+
     setDirection(nextIndex > activeIndex ? 1 : -1);
     setActiveIndex(nextIndex);
   };
@@ -77,9 +79,9 @@ export function CarGallery({ car }: { car: PublicCar }) {
   };
 
   return (
-    <div className="stack">
+    <div className="stack car-gallery-shell">
       <div
-        className="surface-card car-gallery-main"
+        className="surface-card car-gallery-main premium-gallery"
         onTouchStart={(event) => handleTouchStart(event.touches[0]?.clientX ?? 0)}
         onTouchEnd={(event) => handleTouchEnd(event.changedTouches[0]?.clientX ?? 0)}
       >
@@ -92,7 +94,7 @@ export function CarGallery({ car }: { car: PublicCar }) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={reduceMotion ? { duration: 0 } : { duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image
               src={activeImage.url}
@@ -105,18 +107,36 @@ export function CarGallery({ car }: { car: PublicCar }) {
           </motion.div>
         </AnimatePresence>
 
+        <div className="car-gallery-overlay" aria-hidden="true" />
+
+        <div className="car-gallery-hud">
+          <div className="car-gallery-counter">
+            <strong>{String(activeIndex + 1).padStart(2, "0")}</strong>
+            <span>/ {String(totalImages).padStart(2, "0")}</span>
+          </div>
+          <div className="car-gallery-progress-track" role="presentation">
+            <motion.div
+              className="car-gallery-progress-fill"
+              initial={false}
+              animate={{ width: `${progress}%` }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </div>
+        </div>
+
         {totalImages > 1 ? (
           <>
             <button type="button" className="gallery-nav gallery-nav-prev" onClick={() => moveBy(-1)} aria-label="Imagem anterior">
               {"<"}
             </button>
-            <button type="button" className="gallery-nav gallery-nav-next" onClick={() => moveBy(1)} aria-label="Próxima imagem">
+            <button type="button" className="gallery-nav gallery-nav-next" onClick={() => moveBy(1)} aria-label="Proxima imagem">
               {">"}
             </button>
           </>
         ) : null}
       </div>
-      <div className="car-gallery-thumbs">
+
+      <div className="car-gallery-thumbs premium-thumbs" role="list" aria-label="Miniaturas da galeria">
         {car.images.map((image, index) => (
           <button
             key={image.id}
@@ -125,7 +145,8 @@ export function CarGallery({ car }: { car: PublicCar }) {
             aria-label={`Selecionar foto ${index + 1}`}
             className={`car-gallery-thumb ${index === activeIndex ? "is-active" : ""}`}
           >
-            <Image src={image.url} alt={image.alt} fill sizes="100px" style={{ objectFit: "cover" }} />
+            <Image src={image.url} alt={image.alt} fill sizes="120px" style={{ objectFit: "cover" }} />
+            <span className="car-gallery-thumb-index">{String(index + 1).padStart(2, "0")}</span>
           </button>
         ))}
       </div>

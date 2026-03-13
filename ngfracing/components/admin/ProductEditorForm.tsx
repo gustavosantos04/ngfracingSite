@@ -1,7 +1,9 @@
 "use client";
 
 import { ProductCategory } from "@prisma/client";
+import type { FormEvent } from "react";
 import { useState } from "react";
+import { AdminPendingState, AdminSubmitButton } from "@/components/admin/AdminFormControls";
 import { RepositoryImagePicker } from "@/components/admin/RepositoryImagePicker";
 import type { RepositoryImageOption } from "@/lib/image-library";
 import { serializeSizeStocks } from "@/lib/products";
@@ -43,29 +45,91 @@ const categoryOptions = [
 
 export function ProductEditorForm({ action, availableImages, product }: Props) {
   const [category, setCategory] = useState<ProductCategory>(product?.category ?? ProductCategory.PART);
+  const [priceDigits, setPriceDigits] = useState(product ? String(product.priceCents) : "");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const priceDisplay = priceDigits
+    ? new Intl.NumberFormat("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(Number(priceDigits) / 100)
+    : "";
+  const priceValue = priceDigits ? (Number(priceDigits) / 100).toFixed(2) : "";
+
+  const handlePriceChange = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 12);
+    setPriceDigits(digits);
+    if (errors.price) {
+      setErrors((previous) => ({ ...previous, price: "" }));
+    }
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(event.currentTarget);
+    const nextErrors: Record<string, string> = {};
+    const name = String(formData.get("name") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    const selectedPrimaryImage = String(formData.get("selectedPrimaryImage") ?? "").trim();
+    const sizeStocks = String(formData.get("sizeStocks") ?? "").trim();
+    const stockQuantity = String(formData.get("stockQuantity") ?? "").trim();
+
+    if (!name) {
+      nextErrors.name = "Informe o nome do produto.";
+    }
+    if (!priceDigits) {
+      nextErrors.price = "Informe o preco do produto.";
+    }
+    if (description.length < 10) {
+      nextErrors.description = "A descricao precisa ter ao menos 10 caracteres.";
+    }
+    if (!selectedPrimaryImage) {
+      nextErrors.images = "Selecione uma imagem principal.";
+    }
+    if (category === ProductCategory.APPAREL && !sizeStocks) {
+      nextErrors.sizeStocks = "Informe ao menos um tamanho com estoque.";
+    }
+    if (category !== ProductCategory.APPAREL && (stockQuantity === "" || Number(stockQuantity) < 0)) {
+      nextErrors.stockQuantity = "Informe o estoque disponivel.";
+    }
+
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      event.preventDefault();
+    }
+  };
 
   return (
-    <form action={action} className="stack">
+    <form action={action} className="stack" onSubmit={handleSubmit} noValidate>
       <input type="hidden" name="productId" defaultValue={product?.id ?? ""} />
       <input type="hidden" name="category" value={category} />
+      <input type="hidden" name="price" value={priceValue} />
 
       <div className="admin-card stack">
         <div className="field-grid two">
           <div className="field">
             <label htmlFor="name">Nome do produto</label>
-            <input id="name" name="name" defaultValue={product?.name ?? ""} required />
+            <input id="name" name="name" defaultValue={product?.name ?? ""} required aria-invalid={Boolean(errors.name)} />
+            {errors.name ? <span className="field-error">{errors.name}</span> : null}
           </div>
           <div className="field">
             <label htmlFor="price">Preco (BRL)</label>
-            <input
-              id="price"
-              name="price"
-              type="number"
-              step="0.01"
-              min="0"
-              defaultValue={product ? (product.priceCents / 100).toFixed(2) : ""}
-              required
-            />
+            <div className="input-with-prefix">
+              <span className="input-prefix">R$</span>
+              <input
+                id="price"
+                name="priceDisplay"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                placeholder="0,00"
+                value={priceDisplay}
+                onChange={(event) => handlePriceChange(event.target.value)}
+                required
+                aria-invalid={Boolean(errors.price)}
+              />
+            </div>
+            {errors.price ? <span className="field-error">{errors.price}</span> : null}
           </div>
         </div>
 
@@ -102,7 +166,14 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
 
         <div className="field">
           <label htmlFor="description">Descricao</label>
-          <textarea id="description" name="description" defaultValue={product?.description ?? ""} required />
+          <textarea
+            id="description"
+            name="description"
+            defaultValue={product?.description ?? ""}
+            required
+            aria-invalid={Boolean(errors.description)}
+          />
+          {errors.description ? <span className="field-error">{errors.description}</span> : null}
         </div>
 
         <div className="stack">
@@ -120,6 +191,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
             galleryInputName="selectedGalleryImages"
             emptyMessage="Selecione uma imagem principal para o produto."
           />
+          {errors.images ? <span className="field-error">{errors.images}</span> : null}
         </div>
 
         {category === ProductCategory.APPAREL ? (
@@ -131,7 +203,9 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
               defaultValue={serializeSizeStocks(product?.sizeStocks ?? [])}
               placeholder={"PP:2\nP:5\nM:4\nG:3\nGG:1"}
               required
+              aria-invalid={Boolean(errors.sizeStocks)}
             />
+            {errors.sizeStocks ? <span className="field-error">{errors.sizeStocks}</span> : null}
           </div>
         ) : (
           <div className="field">
@@ -143,7 +217,9 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
               min="0"
               defaultValue={product?.stockQuantity ?? ""}
               required
+              aria-invalid={Boolean(errors.stockQuantity)}
             />
+            {errors.stockQuantity ? <span className="field-error">{errors.stockQuantity}</span> : null}
           </div>
         )}
 
@@ -154,15 +230,18 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
       </div>
 
       <div className="inline-actions">
-        <button type="submit" className="button-primary">
-          {product ? "Salvar produto" : "Criar produto"}
-        </button>
+        <AdminSubmitButton
+          className="button-primary"
+          idleLabel={product ? "Salvar produto" : "Criar produto"}
+          pendingLabel={product ? "Salvando produto..." : "Criando produto..."}
+        />
         {product ? (
           <div className="muted" style={{ alignSelf: "center" }}>
             Preco atual: {formatCurrency(product.priceCents)}
           </div>
         ) : null}
       </div>
+      <AdminPendingState copy="Processando cadastro do produto..." />
     </form>
   );
 }

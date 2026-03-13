@@ -19,6 +19,7 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
   const brand = typeof params.brand === "string" ? params.brand.trim() : "";
   const year = Number(params.year ?? 0) || undefined;
   const priceMax = Number(params.priceMax ?? 0) || undefined;
+  const notice = params.saved === "1" ? "Carro salvo com sucesso." : params.deleted === "1" ? "Carro removido." : "";
   const where = {
     ...(query
       ? {
@@ -70,6 +71,8 @@ export default async function AdminCarsPage({ searchParams }: { searchParams: Se
           Novo carro
         </Link>
       </div>
+
+      {notice ? <div className="admin-card form-feedback form-feedback-success">{notice}</div> : null}
 
       <form method="get" className="admin-card">
         <div className="field-grid three">
