@@ -8,7 +8,9 @@ export function GlobalRouteTransition() {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
   const isFirstRender = useRef(true);
+  const hideTimerRef = useRef<number | null>(null);
   const [transitionKey, setTransitionKey] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -17,11 +19,28 @@ export function GlobalRouteTransition() {
     }
 
     setTransitionKey((current) => current + 1);
-  }, [pathname]);
+    setIsVisible(true);
+
+    if (hideTimerRef.current !== null) {
+      window.clearTimeout(hideTimerRef.current);
+    }
+
+    hideTimerRef.current = window.setTimeout(() => {
+      setIsVisible(false);
+    }, reduceMotion ? 0 : 620);
+  }, [pathname, reduceMotion]);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current !== null) {
+        window.clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <AnimatePresence mode="wait">
-      {transitionKey > 0 ? (
+      {isVisible ? (
         <motion.div
           key={transitionKey}
           className="route-transition"
@@ -49,4 +68,3 @@ export function GlobalRouteTransition() {
     </AnimatePresence>
   );
 }
-
