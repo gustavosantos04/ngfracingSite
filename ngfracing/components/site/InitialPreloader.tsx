@@ -11,6 +11,7 @@ export function InitialPreloader() {
   const [progress, setProgress] = useState(0);
 
   const isAdminRoute = useMemo(() => pathname.startsWith("/admin"), [pathname]);
+  const displayProgress = progress >= 100 ? 100 : Math.max(0, Math.floor(progress));
 
   useEffect(() => {
     if (isAdminRoute) {
@@ -103,7 +104,7 @@ export function InitialPreloader() {
         >
           <div className="initial-preloader-inner">
             <span className="initial-preloader-kicker">NGF Racing</span>
-            <h2 className="initial-preloader-title">Ajustando telemetria da pista</h2>
+            <h2 className="initial-preloader-title">Ligando o motor do carro</h2>
 
             <div className="initial-preloader-track-wrap">
               <div className="initial-preloader-track" />
@@ -128,7 +129,7 @@ export function InitialPreloader() {
               </motion.div>
             </div>
 
-            <p className="initial-preloader-progress">{progress}%</p>
+            <p className="initial-preloader-progress">{displayProgress}%</p>
           </div>
         </motion.div>
       ) : null}

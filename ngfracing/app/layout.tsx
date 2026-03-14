@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Montserrat, Orbitron } from "next/font/google";
+import { GlobalBackdrop3D } from "@/components/site/GlobalBackdrop3D";
 import { GlobalRouteTransition } from "@/components/site/GlobalRouteTransition";
 import { InitialPreloader } from "@/components/site/InitialPreloader";
+import { PageTransitionShell } from "@/components/site/PageTransitionShell";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -56,9 +58,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${montserrat.variable} ${orbitron.variable}`}>
+        <GlobalBackdrop3D />
         <InitialPreloader />
         <GlobalRouteTransition />
-        {children}
+        <PageTransitionShell>{children}</PageTransitionShell>
       </body>
     </html>
   );

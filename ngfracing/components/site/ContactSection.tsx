@@ -1,5 +1,4 @@
 import { getSiteSettings } from "@/lib/data";
-import { ContactTechBackground } from "@/components/site/ContactTechBackground";
 import { siteCopy } from "@/lib/siteContent";
 
 export async function ContactSection() {
@@ -11,9 +10,7 @@ export async function ContactSection() {
     <section className="section" id="contato">
       <div className="container">
         <div className="surface-card contact-shell">
-          <ContactTechBackground />
-
-          <div className="contact-content contact-foreground">
+          <div className="contact-content">
             <span className="section-kicker">{siteCopy.contact.kicker}</span>
             <h2 className="section-title">{siteCopy.contact.title}</h2>
             <p className="section-copy">{siteCopy.contact.copy}</p>
@@ -27,7 +24,7 @@ export async function ContactSection() {
             </div>
           </div>
 
-          <div className="contact-cards contact-foreground">
+          <div className="contact-cards">
             <article className="fueltech-card">
               <div className="fueltech-card-head">
                 <span className="fueltech-icon">WA</span>
