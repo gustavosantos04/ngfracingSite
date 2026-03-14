@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import type { RepositoryImageOption } from "@/lib/image-library";
+import { sharedImageBlurDataUrl } from "@/lib/images";
 
 type Props = {
   images: RepositoryImageOption[];
@@ -138,7 +139,15 @@ export function RepositoryImagePicker({
           </div>
           {primaryItem ? (
             <div className="picker-focus-preview">
-              <Image src={primaryItem.url} alt={primaryItem.label} fill sizes="(max-width: 900px) 100vw, 30vw" style={{ objectFit: "cover" }} />
+              <Image
+                src={primaryItem.url}
+                alt={primaryItem.label}
+                fill
+                sizes="(max-width: 900px) 100vw, 30vw"
+                placeholder="blur"
+                blurDataURL={sharedImageBlurDataUrl}
+                style={{ objectFit: "cover" }}
+              />
               <div className="picker-focus-meta">
                 <strong>{primaryItem.label}</strong>
                 <span>{normalizeGroupLabel(primaryItem.group)}</span>
@@ -169,7 +178,15 @@ export function RepositoryImagePicker({
                   onClick={() => toggleGalleryImage(image.url)}
                 >
                   <span className="picker-gallery-chip-media">
-                    <Image src={image.url} alt={image.label} fill sizes="92px" style={{ objectFit: "cover" }} />
+                    <Image
+                      src={image.url}
+                      alt={image.label}
+                      fill
+                      sizes="92px"
+                      placeholder="blur"
+                      blurDataURL={sharedImageBlurDataUrl}
+                      style={{ objectFit: "cover" }}
+                    />
                   </span>
                   <span className="picker-gallery-chip-copy">
                     <strong>{image.label}</strong>
@@ -232,7 +249,15 @@ export function RepositoryImagePicker({
                     className={`picker-library-card ${isPrimary ? "is-primary" : ""} ${isGallery ? "is-gallery" : ""}`}
                   >
                     <div className="picker-library-media">
-                      <Image src={image.url} alt={image.label} fill sizes="(max-width: 900px) 50vw, 20vw" style={{ objectFit: "cover" }} />
+                      <Image
+                        src={image.url}
+                        alt={image.label}
+                        fill
+                        sizes="(max-width: 900px) 50vw, 20vw"
+                        placeholder="blur"
+                        blurDataURL={sharedImageBlurDataUrl}
+                        style={{ objectFit: "cover" }}
+                      />
                       <div className="picker-library-badges">
                         {isPrimary ? <span className="picker-flag picker-flag-primary">Principal</span> : null}
                         {isGallery ? <span className="picker-flag picker-flag-gallery">Galeria</span> : null}

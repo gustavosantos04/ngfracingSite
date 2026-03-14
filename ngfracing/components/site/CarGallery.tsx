@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { sharedImageBlurDataUrl } from "@/lib/images";
 import type { PublicCar } from "@/lib/types";
 
 export function CarGallery({ car }: { car: PublicCar }) {
@@ -100,8 +101,10 @@ export function CarGallery({ car }: { car: PublicCar }) {
               src={activeImage.url}
               alt={activeImage.alt}
               fill
-              priority
-              sizes="(max-width: 900px) 100vw, 60vw"
+              priority={activeIndex === 0}
+              placeholder="blur"
+              blurDataURL={sharedImageBlurDataUrl}
+              sizes="(max-width: 900px) 100vw, 50vw"
               style={{ objectFit: "cover" }}
             />
           </motion.div>
@@ -143,7 +146,15 @@ export function CarGallery({ car }: { car: PublicCar }) {
             aria-label={`Selecionar foto ${index + 1}`}
             className={`car-gallery-thumb ${index === activeIndex ? "is-active" : ""}`}
           >
-            <Image src={image.url} alt={image.alt} fill sizes="120px" style={{ objectFit: "cover" }} />
+            <Image
+              src={image.url}
+              alt={image.alt}
+              fill
+              sizes="120px"
+              placeholder="blur"
+              blurDataURL={sharedImageBlurDataUrl}
+              style={{ objectFit: "cover" }}
+            />
             <span className="car-gallery-thumb-index">{String(index + 1).padStart(2, "0")}</span>
           </button>
         ))}

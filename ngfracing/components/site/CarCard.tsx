@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PublicCar } from "@/lib/types";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { sharedImageBlurDataUrl } from "@/lib/images";
 import { formatCurrency, formatKilometers } from "@/lib/utils";
 
 export function CarCard({ car }: { car: PublicCar }) {
@@ -18,7 +19,9 @@ export function CarCard({ car }: { car: PublicCar }) {
             src={heroImage.url}
             alt={heroImage.alt}
             fill
-            sizes="(max-width: 900px) 100vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 380px"
+            placeholder="blur"
+            blurDataURL={sharedImageBlurDataUrl}
             style={{ objectFit: "cover" }}
           />
         ) : null}

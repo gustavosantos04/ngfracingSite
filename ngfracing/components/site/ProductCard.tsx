@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { sharedImageBlurDataUrl } from "@/lib/images";
 import type { PublicProduct } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
@@ -11,7 +12,9 @@ export function ProductCard({ product }: { product: PublicProduct }) {
           src={product.primaryImageUrl}
           alt={product.name}
           fill
-          sizes="(max-width: 900px) 100vw, 33vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 380px"
+          placeholder="blur"
+          blurDataURL={sharedImageBlurDataUrl}
           style={{ objectFit: "cover" }}
         />
       </div>

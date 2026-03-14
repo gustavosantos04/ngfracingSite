@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { sharedImageBlurDataUrl } from "@/lib/images";
 
 export function HeroParallaxMedia({ imageUrl }: { imageUrl: string }) {
   const reduceMotion = useReducedMotion();
@@ -10,12 +12,20 @@ export function HeroParallaxMedia({ imageUrl }: { imageUrl: string }) {
 
   if (reduceMotion) {
     return (
-      <div
-        className="hero-media"
-        style={{
-          backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.82), rgba(0,0,0,0.5)), url(${imageUrl})`
-        }}
-      />
+      <div className="hero-media">
+        <Image
+          src={imageUrl}
+          alt=""
+          aria-hidden="true"
+          fill
+          priority
+          placeholder="blur"
+          blurDataURL={sharedImageBlurDataUrl}
+          sizes="100vw"
+          className="hero-media-image"
+        />
+        <div className="hero-media-overlay" />
+      </div>
     );
   }
 
@@ -24,9 +34,21 @@ export function HeroParallaxMedia({ imageUrl }: { imageUrl: string }) {
       className="hero-media"
       style={{
         y,
-        scale,
-        backgroundImage: `linear-gradient(120deg, rgba(0,0,0,0.82), rgba(0,0,0,0.5)), url(${imageUrl})`
+        scale
       }}
-    />
+    >
+      <Image
+        src={imageUrl}
+        alt=""
+        aria-hidden="true"
+        fill
+        priority
+        placeholder="blur"
+        blurDataURL={sharedImageBlurDataUrl}
+        sizes="100vw"
+        className="hero-media-image"
+      />
+      <div className="hero-media-overlay" />
+    </motion.div>
   );
 }

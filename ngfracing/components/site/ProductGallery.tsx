@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { sharedImageBlurDataUrl } from "@/lib/images";
 import type { PublicProduct } from "@/lib/types";
 
 export function ProductGallery({ product }: { product: PublicProduct }) {
@@ -20,8 +21,10 @@ export function ProductGallery({ product }: { product: PublicProduct }) {
             src={activeImage.url}
             alt={activeImage.alt}
             fill
-            priority
-            sizes="(max-width: 900px) 100vw, 60vw"
+            priority={activeIndex === 0}
+            placeholder="blur"
+            blurDataURL={sharedImageBlurDataUrl}
+            sizes="(max-width: 900px) 100vw, 50vw"
             style={{ objectFit: "cover" }}
           />
         </div>
@@ -36,7 +39,15 @@ export function ProductGallery({ product }: { product: PublicProduct }) {
               aria-label={`Selecionar foto ${index + 1}`}
               className={`car-gallery-thumb ${index === activeIndex ? "is-active" : ""}`}
             >
-              <Image src={image.url} alt={image.alt} fill sizes="100px" style={{ objectFit: "cover" }} />
+              <Image
+                src={image.url}
+                alt={image.alt}
+                fill
+                sizes="96px"
+                placeholder="blur"
+                blurDataURL={sharedImageBlurDataUrl}
+                style={{ objectFit: "cover" }}
+              />
             </button>
           ))}
         </div>

@@ -98,9 +98,23 @@ textarea {
 .hero-media {
   position: absolute;
   inset: -8% 0;
-  background-size: cover;
-  background-position: center;
   will-change: transform;
+  overflow: hidden;
+  background: #080808;
+}
+
+.hero-media-image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-media-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(0, 0, 0, 0.84), rgba(0, 0, 0, 0.5)),
+    radial-gradient(circle at 78% 18%, rgba(246, 201, 14, 0.08), transparent 24%);
+  pointer-events: none;
 }
 
 .section-title {
@@ -299,6 +313,7 @@ textarea {
 .product-card-media {
   position: relative;
   min-height: 240px;
+  background: linear-gradient(180deg, rgba(14, 14, 14, 0.9), rgba(8, 8, 8, 0.75));
 }
 
 .category-card-grid {
@@ -625,6 +640,7 @@ textarea {
 .about-media {
   min-height: 360px;
   position: relative;
+  background: linear-gradient(180deg, rgba(14, 14, 14, 0.88), rgba(8, 8, 8, 0.74));
 }
 
 .timeline {
@@ -1008,6 +1024,7 @@ textarea {
   min-height: 80px;
   overflow: hidden;
   border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .picker-gallery-chip-copy {
@@ -1159,6 +1176,7 @@ textarea {
   position: relative;
   min-height: 480px;
   overflow: hidden;
+  background: linear-gradient(180deg, rgba(14, 14, 14, 0.92), rgba(8, 8, 8, 0.78));
 }
 
 .car-gallery-stage {
@@ -1255,6 +1273,7 @@ textarea {
   background: transparent;
   cursor: pointer;
   transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .car-gallery-thumb.is-active {

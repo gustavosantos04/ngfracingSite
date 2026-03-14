@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { AboutTimeline } from "@/components/site/AboutTimeline";
 import { getSiteSettings } from "@/lib/data";
+import { sharedImageBlurDataUrl } from "@/lib/images";
 import { siteCopy } from "@/lib/siteContent";
 
 export async function AboutSection() {
@@ -22,6 +23,8 @@ export async function AboutSection() {
               alt="Imagem da história da NGF Racing"
               fill
               sizes="(max-width: 900px) 100vw, 40vw"
+              placeholder="blur"
+              blurDataURL={sharedImageBlurDataUrl}
               style={{ objectFit: "cover" }}
             />
           </div>
