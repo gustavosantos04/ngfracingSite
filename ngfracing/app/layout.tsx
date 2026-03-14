@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Orbitron } from "next/font/google";
+import { Suspense } from "react";
 import { GlobalBackdrop3D } from "@/components/site/GlobalBackdrop3D";
 import { GlobalRouteTransition } from "@/components/site/GlobalRouteTransition";
 import { InitialPreloader } from "@/components/site/InitialPreloader";
@@ -60,9 +61,11 @@ export default function RootLayout({
       <body className={`${montserrat.variable} ${orbitron.variable}`}>
         <GlobalBackdrop3D />
         <InitialPreloader />
-        <GlobalRouteTransition>
-          <PageTransitionShell>{children}</PageTransitionShell>
-        </GlobalRouteTransition>
+        <Suspense fallback={<div className="page-transition-layer">{children}</div>}>
+          <GlobalRouteTransition>
+            <PageTransitionShell>{children}</PageTransitionShell>
+          </GlobalRouteTransition>
+        </Suspense>
       </body>
     </html>
   );
