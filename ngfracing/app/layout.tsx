@@ -60,8 +60,9 @@ export default function RootLayout({
       <body className={`${montserrat.variable} ${orbitron.variable}`}>
         <GlobalBackdrop3D />
         <InitialPreloader />
-        <GlobalRouteTransition />
-        <PageTransitionShell>{children}</PageTransitionShell>
+        <GlobalRouteTransition>
+          <PageTransitionShell>{children}</PageTransitionShell>
+        </GlobalRouteTransition>
       </body>
     </html>
   );
