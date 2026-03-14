@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export function GlobalRouteTransition() {
   const pathname = usePathname();
@@ -12,7 +12,7 @@ export function GlobalRouteTransition() {
   const [transitionKey, setTransitionKey] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -44,7 +44,7 @@ export function GlobalRouteTransition() {
         <motion.div
           key={transitionKey}
           className="route-transition"
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={reduceMotion ? { duration: 0 } : { duration: 0.2 }}
