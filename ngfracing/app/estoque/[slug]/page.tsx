@@ -74,9 +74,11 @@ export default async function CarDetailsPage({ params }: Params) {
             </Link>
           </div>
 
-          <div className="field-grid two" style={{ alignItems: "start" }}>
-            <CarGallery car={car} />
-            <div className="stack">
+          <div className="field-grid details-layout" style={{ alignItems: "start" }}>
+            <div className="detail-gallery-panel">
+              <CarGallery car={car} />
+            </div>
+            <div className="stack detail-sidebar">
               <div className="admin-card">
                 <div className="inline-actions" style={{ justifyContent: "space-between" }}>
                   <StatusBadge status={car.status} />
@@ -91,14 +93,7 @@ export default async function CarDetailsPage({ params }: Params) {
                 <div className="price" style={{ fontSize: "2rem", marginTop: 10 }}>
                   {formatCurrency(car.priceCents)}
                 </div>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                    gap: 12,
-                    marginTop: 18
-                  }}
-                >
+                <div className="detail-specs-grid">
                   <div className="chip">Ano: {car.year}</div>
                   <div className="chip">KM: {formatKilometers(car.km)}</div>
                   <div className="chip">Combustivel: {car.fuel ?? "Nao informado"}</div>
@@ -119,7 +114,7 @@ export default async function CarDetailsPage({ params }: Params) {
 
               <div className="admin-card">
                 <h2 style={{ marginTop: 0 }}>Opcionais</h2>
-                <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.9 }}>
+                <ul className="detail-feature-list">
                   {car.features.length > 0 ? (
                     car.features.map((feature) => <li key={feature}>{feature}</li>)
                   ) : (

@@ -63,9 +63,11 @@ export default async function ProductDetailsPage({ params }: Params) {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
           />
-          <div className="field-grid two" style={{ alignItems: "start" }}>
-            <ProductGallery product={product} />
-            <div className="stack">
+          <div className="field-grid details-layout" style={{ alignItems: "start" }}>
+            <div className="detail-gallery-panel">
+              <ProductGallery product={product} />
+            </div>
+            <div className="stack detail-sidebar">
               <div className="admin-card">
                 <div className="inline-actions" style={{ justifyContent: "space-between" }}>
                   <span className="chip">{product.categoryLabel}</span>
@@ -80,14 +82,7 @@ export default async function ProductDetailsPage({ params }: Params) {
                 <p className="section-copy" style={{ marginTop: 22 }}>
                   {product.description}
                 </p>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                    gap: 12,
-                    marginTop: 18
-                  }}
-                >
+                <div className="detail-specs-grid">
                   <div className="chip">Categoria: {product.categoryLabel}</div>
                   <div className="chip">Disponibilidade: {product.totalStock > 0 ? "Em estoque" : "Sem estoque"}</div>
                   <div className="chip">

@@ -12,7 +12,7 @@ export const siteSettings: PublicSiteSettings = {
   aboutTitle: "Nossa historia",
   aboutText:
     "Por mais de 10 anos, aceleramos forte nas pistas de arrancada pelo Rio Grande do Sul e Brasil, conquistando vários troféus na jornada com o carro ST-658. A paixão por performance começou nas pistas e hoje a NGF Racing leva essa experiência para a venda de seminovos com procedência e produtos selecionados.",
-  aboutImage: "/branding/carro-corrida-antigo.jpg",
+  aboutImage: "/branding/carrocorrida.jpg",
   phoneWhatsapp: "5551999866578",
   phoneDisplay: "(51) 99986-6578",
   contactEmail: "ngfracing@hotmail.com",

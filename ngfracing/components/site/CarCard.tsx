@@ -82,6 +82,16 @@ export function CarCard({ car }: { car: PublicCar }) {
           ))}
         </div>
 
+        {car.features.length > 0 ? (
+          <div className="car-card-feature-list">
+            {car.features.slice(0, 3).map((feature) => (
+              <span key={feature} className="car-card-feature">
+                {feature}
+              </span>
+            ))}
+          </div>
+        ) : null}
+
         <div className="inline-actions">
           <Link href={`/estoque/${car.slug}`} className="button-primary">
             Ver detalhes

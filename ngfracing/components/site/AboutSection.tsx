@@ -18,15 +18,17 @@ export async function AboutSection() {
             <AboutTimeline items={siteCopy.about.timeline} />
           </div>
           <div className="about-media">
-            <Image
-              src={settings.aboutImage}
-              alt="Imagem da história da NGF Racing"
-              fill
-              sizes="(max-width: 900px) 100vw, 40vw"
-              placeholder="blur"
-              blurDataURL={sharedImageBlurDataUrl}
-              style={{ objectFit: "cover" }}
-            />
+            <div className="about-media-frame">
+              <Image
+                src={settings.aboutImage}
+                alt="Imagem da histÃ³ria da NGF Racing"
+                fill
+                sizes="(max-width: 900px) 100vw, 40vw"
+                placeholder="blur"
+                blurDataURL={sharedImageBlurDataUrl}
+                className="about-media-image"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -14,19 +14,21 @@ export function ProductGallery({ product }: { product: PublicProduct }) {
   }
 
   return (
-    <div className="stack">
+    <div className="stack car-gallery-shell">
       <div className="surface-card car-gallery-main">
         <div className="car-gallery-stage">
-          <Image
-            src={activeImage.url}
-            alt={activeImage.alt}
-            fill
-            priority={activeIndex === 0}
-            placeholder="blur"
-            blurDataURL={sharedImageBlurDataUrl}
-            sizes="(max-width: 900px) 100vw, 50vw"
-            style={{ objectFit: "cover" }}
-          />
+          <div className="car-gallery-stage-media">
+            <Image
+              src={activeImage.url}
+              alt={activeImage.alt}
+              fill
+              priority={activeIndex === 0}
+              placeholder="blur"
+              blurDataURL={sharedImageBlurDataUrl}
+              sizes="(max-width: 900px) 100vw, 58vw"
+              className="car-gallery-stage-image"
+            />
+          </div>
         </div>
       </div>
       {product.images.length > 1 ? (

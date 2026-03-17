@@ -97,16 +97,18 @@ export function CarGallery({ car }: { car: PublicCar }) {
             exit="exit"
             transition={reduceMotion ? { duration: 0 } : { duration: 0.55, ease: [0.19, 1, 0.22, 1] }}
           >
-            <Image
-              src={activeImage.url}
-              alt={activeImage.alt}
-              fill
-              priority={activeIndex === 0}
-              placeholder="blur"
-              blurDataURL={sharedImageBlurDataUrl}
-              sizes="(max-width: 900px) 100vw, 50vw"
-              style={{ objectFit: "cover" }}
-            />
+            <div className="car-gallery-stage-media">
+              <Image
+                src={activeImage.url}
+                alt={activeImage.alt}
+                fill
+                priority={activeIndex === 0}
+                placeholder="blur"
+                blurDataURL={sharedImageBlurDataUrl}
+                sizes="(max-width: 900px) 100vw, 58vw"
+                className="car-gallery-stage-image"
+              />
+            </div>
           </motion.div>
         </AnimatePresence>
 

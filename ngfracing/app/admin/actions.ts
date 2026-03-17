@@ -11,11 +11,26 @@ import { prisma } from "@/lib/prisma";
 import { carPayloadSchema, loginSchema, orderStatusSchema, productPayloadSchema } from "@/lib/validators";
 import { slugify } from "@/lib/utils";
 
-function splitLines(value: FormDataEntryValue | null) {
-  return String(value ?? "")
-    .split(/\r?\n|,/)
+function splitLines(...entries: Array<FormDataEntryValue | null | undefined>) {
+  return entries
+    .flatMap((entry) => String(entry ?? "").split(/\r?\n|,/))
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function getTextList(formData: FormData, fieldName: string) {
+  const values = splitLines(...formData.getAll(fieldName));
+  const seen = new Set<string>();
+
+  return values.filter((value) => {
+    const normalized = value.toLocaleLowerCase("pt-BR");
+    if (seen.has(normalized)) {
+      return false;
+    }
+
+    seen.add(normalized);
+    return true;
+  });
 }
 
 function getSelectedImageUrls(formData: FormData, primaryFieldName: string, galleryFieldName: string) {
@@ -111,8 +126,8 @@ export async function saveCarAction(formData: FormData) {
     priceCents: Math.round(Number(formData.get("price") ?? 0) * 100),
     description: formData.get("description"),
     mods: [],
-    features: splitLines(formData.get("features")),
-    tags: splitLines(formData.get("tags")),
+    features: getTextList(formData, "features"),
+    tags: getTextList(formData, "tags"),
     fuel: String(formData.get("fuel") ?? "") || null,
     transmission: String(formData.get("transmission") ?? "") || null,
     status: (formData.get("status") as CarStatus) ?? CarStatus.AVAILABLE,

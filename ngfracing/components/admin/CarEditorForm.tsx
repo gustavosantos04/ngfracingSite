@@ -5,6 +5,7 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { AdminPendingState, AdminSubmitButton } from "@/components/admin/AdminFormControls";
 import { RepositoryImagePicker } from "@/components/admin/RepositoryImagePicker";
+import { CAR_FEATURE_OPTIONS } from "@/lib/constants";
 import type { RepositoryImageOption } from "@/lib/image-library";
 import type { PublicCar } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
@@ -16,9 +17,16 @@ type Props = {
 };
 
 export function CarEditorForm({ action, availableImages, car }: Props) {
+  const presetFeatureSet = useMemo(() => new Set(CAR_FEATURE_OPTIONS), []);
   const [kmDigits, setKmDigits] = useState(car ? String(car.km) : "");
   const [priceDigits, setPriceDigits] = useState(car ? String(car.priceCents) : "");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedPresetFeatures, setSelectedPresetFeatures] = useState<string[]>(
+    car?.features.filter((feature) => presetFeatureSet.has(feature as (typeof CAR_FEATURE_OPTIONS)[number])) ?? []
+  );
+  const [customFeatures, setCustomFeatures] = useState(
+    car?.features.filter((feature) => !presetFeatureSet.has(feature as (typeof CAR_FEATURE_OPTIONS)[number])).join("\n") ?? ""
+  );
 
   const primaryImage = car?.images[0]?.url ?? "";
   const galleryImages = car?.images.slice(1).map((image) => image.url) ?? [];
@@ -40,6 +48,22 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
     }).format(Number(priceDigits) / 100);
   }, [priceDigits]);
   const priceValue = priceDigits ? (Number(priceDigits) / 100).toFixed(2) : "";
+  const selectedFeatures = useMemo(() => {
+    const unique = new Set<string>();
+    const items = [...selectedPresetFeatures, ...customFeatures.split(/\r?\n|,/)]
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    return items.filter((item) => {
+      const normalized = item.toLocaleLowerCase("pt-BR");
+      if (unique.has(normalized)) {
+        return false;
+      }
+
+      unique.add(normalized);
+      return true;
+    });
+  }, [customFeatures, selectedPresetFeatures]);
 
   const handleKmChange = (value: string) => {
     const digits = value.replace(/\D/g, "").slice(0, 8);
@@ -100,11 +124,18 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
     }
   };
 
+  const togglePresetFeature = (feature: string) => {
+    setSelectedPresetFeatures((current) =>
+      current.includes(feature) ? current.filter((item) => item !== feature) : [...current, feature]
+    );
+  };
+
   return (
     <form action={action} className="stack" onSubmit={handleSubmit} noValidate>
       <input type="hidden" name="carId" defaultValue={car?.id ?? ""} />
       <input type="hidden" name="km" value={kmDigits} />
       <input type="hidden" name="price" value={priceValue} />
+      <input type="hidden" name="features" value={selectedFeatures.join("\n")} />
 
       <div className="admin-card stack">
         <div className="field-grid two">
@@ -218,10 +249,52 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
         </div>
 
         <div className="field-grid two">
-          <div className="field">
-            <label htmlFor="features">Opcionais (uma por linha)</label>
-            <textarea id="features" name="features" defaultValue={car?.features.join("\n") ?? ""} />
+          <div className="feature-picker-panel">
+            <div className="feature-picker-head">
+              <div>
+                <span className="feature-picker-title">Opcionais</span>
+                <p className="muted feature-picker-copy">
+                  Marque os opcionais mais comuns e adicione itens customizados somente quando precisar.
+                </p>
+              </div>
+              <span className="feature-picker-count">{selectedFeatures.length} selecionado(s)</span>
+            </div>
+
+            <div className="feature-picker-grid" role="group" aria-label="Lista de opcionais pre-definidos">
+              {CAR_FEATURE_OPTIONS.map((feature) => {
+                const checked = selectedPresetFeatures.includes(feature);
+
+                return (
+                  <label key={feature} className={`feature-option${checked ? " is-selected" : ""}`}>
+                    <input type="checkbox" checked={checked} onChange={() => togglePresetFeature(feature)} />
+                    <span>{feature}</span>
+                  </label>
+                );
+              })}
+            </div>
+
+            <div className="field">
+              <label htmlFor="customFeatures">Opcionais customizados</label>
+              <textarea
+                id="customFeatures"
+                name="customFeatures"
+                value={customFeatures}
+                onChange={(event) => setCustomFeatures(event.target.value)}
+                placeholder={"Ex.: Suspensao preparada\nVolante multifuncional"}
+              />
+            </div>
+
+            {selectedFeatures.length > 0 ? (
+              <div className="feature-preview">
+                {selectedFeatures.map((feature) => (
+                  <span key={feature} className="feature-preview-chip">
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            ) : null}
           </div>
+
           <div className="field">
             <label htmlFor="tags">Tags (uma por linha)</label>
             <textarea id="tags" name="tags" defaultValue={car?.tags.join("\n") ?? ""} />
