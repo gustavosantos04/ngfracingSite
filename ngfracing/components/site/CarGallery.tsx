@@ -106,7 +106,7 @@ export function CarGallery({ car }: { car: PublicCar }) {
                 placeholder="blur"
                 blurDataURL={sharedImageBlurDataUrl}
                 sizes="(max-width: 900px) 100vw, 58vw"
-                className="car-gallery-stage-image"
+                className="car-gallery-stage-image car-gallery-stage-image-full"
               />
             </div>
           </motion.div>

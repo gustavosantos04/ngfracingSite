@@ -1982,8 +1982,8 @@ textarea {
   object-position: center center; /* Improved centering */
 }
 
-.car-gallery-stage-image {
-  object-fit: cover; /* Stronger visual impact as requested */
+.car-gallery-stage-image-full {
+  object-fit: contain;
   object-position: center;
 }
 
