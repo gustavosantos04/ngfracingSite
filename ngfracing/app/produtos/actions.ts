@@ -3,6 +3,7 @@
 import { getProductById } from "@/lib/data";
 import { getAvailableStock } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
+import { assertSameOriginActionRequest, consumeRateLimit, getActionRequestFingerprint } from "@/lib/security";
 import { purchaseRequestSchema } from "@/lib/validators";
 
 export type PurchaseRequestState = {
@@ -14,6 +15,28 @@ export async function submitPurchaseRequestAction(
   _previousState: PurchaseRequestState,
   formData: FormData
 ): Promise<PurchaseRequestState> {
+  try {
+    await assertSameOriginActionRequest();
+  } catch {
+    return {
+      status: "error",
+      message: "A solicitacao foi bloqueada por seguranca."
+    };
+  }
+
+  const rateLimitKey = await getActionRequestFingerprint("purchase-request", String(formData.get("productId") ?? ""));
+  const purchaseRateLimit = consumeRateLimit(rateLimitKey, {
+    limit: 12,
+    windowMs: 10 * 60 * 1000
+  });
+
+  if (!purchaseRateLimit.allowed) {
+    return {
+      status: "error",
+      message: "Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente."
+    };
+  }
+
   const parsed = purchaseRequestSchema.safeParse({
     productId: formData.get("productId"),
     quantity: Number.parseInt(String(formData.get("quantity") ?? "1"), 10),

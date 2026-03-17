@@ -90,12 +90,18 @@ export async function signAdminToken(payload: {
 
 export async function verifyAdminToken(token: string) {
   const verified = await jwtVerify(token, getJwtSecret());
-  return verified.payload as {
+  const payload = verified.payload as {
     userId: string;
     email: string;
     role: string;
     exp: number;
   };
+
+  if (payload.role !== "ADMIN") {
+    throw new Error("Invalid admin role");
+  }
+
+  return payload;
 }
 
 export async function authenticateAdmin(identifier: string, password: string) {

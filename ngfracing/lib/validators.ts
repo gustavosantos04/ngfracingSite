@@ -1,6 +1,24 @@
 import { CarStatus, OrderStatus, ProductCategory } from "@prisma/client";
 import { z } from "zod";
 
+const localAssetPathSchema = z.string().refine(
+  (value) => {
+    if (!value.startsWith("/") || value.startsWith("//") || value.includes("\0")) {
+      return false;
+    }
+
+    const [pathname] = value.split(/[?#]/, 1);
+    if (!pathname) {
+      return false;
+    }
+
+    return !pathname.split("/").some((segment) => segment === "." || segment === "..");
+  },
+  {
+    message: "Use apenas caminhos locais e seguros para imagens."
+  }
+);
+
 export const loginSchema = z.object({
   identifier: z.string().min(3),
   password: z.string().min(6)
@@ -22,7 +40,7 @@ export const carPayloadSchema = z.object({
   status: z.nativeEnum(CarStatus),
   isFeatured: z.boolean(),
   whatsappLink: z.string().url().optional().nullable(),
-  imageUrls: z.array(z.string()).min(1).max(8)
+  imageUrls: z.array(localAssetPathSchema).min(1).max(8)
 });
 
 export const productSizeStockSchema = z.object({
@@ -36,8 +54,8 @@ export const productPayloadSchema = z
     category: z.nativeEnum(ProductCategory),
     description: z.string().min(10),
     priceCents: z.number().int().min(0),
-    primaryImageUrl: z.string().min(1),
-    galleryUrls: z.array(z.string()).max(8),
+    primaryImageUrl: localAssetPathSchema,
+    galleryUrls: z.array(localAssetPathSchema).max(8),
     stockQuantity: z.number().int().min(0).nullable(),
     sizeStocks: z.array(productSizeStockSchema),
     isFeatured: z.boolean()

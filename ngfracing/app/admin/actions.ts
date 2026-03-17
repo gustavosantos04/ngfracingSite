@@ -8,6 +8,7 @@ import { authenticateAdmin, getAdminAuthConfigStatus, requireAdminSession, signA
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import { parseSizeStocksInput } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
+import { assertSameOriginActionRequest, consumeRateLimit, getActionRequestFingerprint } from "@/lib/security";
 import { carPayloadSchema, loginSchema, orderStatusSchema, productPayloadSchema } from "@/lib/validators";
 import { slugify } from "@/lib/utils";
 
@@ -68,13 +69,30 @@ function getProductImageSelection(formData: FormData) {
 }
 
 export async function loginAction(formData: FormData) {
+  try {
+    await assertSameOriginActionRequest();
+  } catch {
+    redirect("/admin/login?error=request-invalida");
+  }
+
   const authConfig = getAdminAuthConfigStatus();
   if (!authConfig.ok) {
     redirect("/admin/login?error=configuracao-invalida");
   }
 
+  const identifier = String(formData.get("identifier") ?? "");
+  const rateLimitKey = await getActionRequestFingerprint("admin-login", identifier);
+  const loginRateLimit = consumeRateLimit(rateLimitKey, {
+    limit: 8,
+    windowMs: 10 * 60 * 1000
+  });
+
+  if (!loginRateLimit.allowed) {
+    redirect("/admin/login?error=limite-excedido");
+  }
+
   const parsed = loginSchema.safeParse({
-    identifier: formData.get("identifier"),
+    identifier,
     password: formData.get("password")
   });
 
@@ -96,22 +114,25 @@ export async function loginAction(formData: FormData) {
   const cookieStore = await cookies();
   cookieStore.set(AUTH_COOKIE_NAME, token, {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 12
+    maxAge: 60 * 60 * 12,
+    priority: "high"
   });
 
   redirect("/admin");
 }
 
 export async function logoutAction() {
+  await assertSameOriginActionRequest();
   const cookieStore = await cookies();
   cookieStore.delete(AUTH_COOKIE_NAME);
   redirect("/admin/login");
 }
 
 export async function saveCarAction(formData: FormData) {
+  await assertSameOriginActionRequest();
   await requireAdminSession();
 
   const carId = String(formData.get("carId") ?? "").trim();
@@ -178,6 +199,7 @@ export async function saveCarAction(formData: FormData) {
 }
 
 export async function deleteCarAction(formData: FormData) {
+  await assertSameOriginActionRequest();
   await requireAdminSession();
   const carId = String(formData.get("carId") ?? "");
 
@@ -193,6 +215,7 @@ export async function deleteCarAction(formData: FormData) {
 }
 
 export async function saveProductAction(formData: FormData) {
+  await assertSameOriginActionRequest();
   await requireAdminSession();
 
   const productId = String(formData.get("productId") ?? "").trim();
@@ -251,6 +274,7 @@ export async function saveProductAction(formData: FormData) {
 }
 
 export async function deleteProductAction(formData: FormData) {
+  await assertSameOriginActionRequest();
   await requireAdminSession();
   const productId = String(formData.get("productId") ?? "");
 
@@ -272,6 +296,7 @@ export async function deleteProductAction(formData: FormData) {
 }
 
 export async function updateOrderStatusAction(formData: FormData) {
+  await assertSameOriginActionRequest();
   await requireAdminSession();
 
   const parsed = orderStatusSchema.parse({

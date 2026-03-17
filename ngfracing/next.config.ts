@@ -9,17 +9,7 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920],
-    imageSizes: [48, 64, 96, 120, 180, 240, 384],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**"
-      },
-      {
-        protocol: "http",
-        hostname: "**"
-      }
-    ]
+    imageSizes: [48, 64, 96, 120, 180, 240, 384]
   }
 };
 
