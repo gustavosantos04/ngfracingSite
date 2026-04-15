@@ -276,6 +276,25 @@ textarea {
   padding: 13px 14px;
 }
 
+.field select {
+  appearance: none;
+  color-scheme: dark;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 5.25 7 9l4-3.75' stroke='%23f6c90e' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+
+.field select option {
+  background: #111;
+  color: #fff;
+}
+
+.field select option:disabled {
+  color: rgba(255, 255, 255, 0.45);
+}
+
 .field textarea {
   min-height: 120px;
   resize: vertical;
@@ -523,9 +542,29 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 80;
+  isolation: isolate;
   backdrop-filter: blur(14px);
-  background: rgba(8, 8, 8, 0.82);
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.94), rgba(8, 8, 8, 0.88)),
+    radial-gradient(circle at top left, rgba(215, 0, 0, 0.14), transparent 32%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(215, 0, 0, 0.92), rgba(246, 201, 14, 0.9), rgba(215, 0, 0, 0.28));
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.site-header.is-mobile-open {
+  background:
+    linear-gradient(180deg, rgba(9, 9, 9, 0.98), rgba(7, 7, 7, 0.96)),
+    radial-gradient(circle at top left, rgba(215, 0, 0, 0.2), transparent 36%);
 }
 
 .site-header-inner {
@@ -538,6 +577,8 @@ textarea {
 
 .site-logo-wrap {
   display: inline-flex;
+  align-items: center;
+  min-height: 56px;
 }
 
 .desktop-nav {
@@ -575,8 +616,11 @@ textarea {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    radial-gradient(circle at top, rgba(246, 201, 14, 0.1), transparent 55%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 22px rgba(0, 0, 0, 0.28);
   padding: 10px 8px;
   justify-content: space-between;
   flex-direction: column;
@@ -613,8 +657,10 @@ textarea {
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgba(0, 0, 0, 0.56);
-  backdrop-filter: blur(8px);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0.8)),
+    radial-gradient(circle at top right, rgba(215, 0, 0, 0.14), transparent 34%);
+  backdrop-filter: blur(12px);
 }
 
 .mobile-nav-panel {
@@ -623,12 +669,83 @@ textarea {
   top: 0;
   width: min(88vw, 360px);
   height: 100%;
-  background: linear-gradient(180deg, rgba(21, 21, 21, 0.98), rgba(8, 8, 8, 0.98));
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(246, 201, 14, 0.12), transparent 24%),
+    radial-gradient(circle at top left, rgba(215, 0, 0, 0.2), transparent 30%),
+    linear-gradient(180deg, rgba(20, 20, 20, 0.99), rgba(7, 7, 7, 0.99));
   border-left: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 92px 20px 22px;
+  box-shadow: -20px 0 44px rgba(0, 0, 0, 0.42);
+  padding: 88px 20px 22px;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   gap: 20px;
+}
+
+.mobile-nav-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--red), var(--yellow), rgba(255, 255, 255, 0.08));
+}
+
+.mobile-nav-brand {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+}
+
+.mobile-nav-brand::after {
+  content: "";
+  position: absolute;
+  inset: auto 16px 0 16px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(215, 0, 0, 0.6), rgba(246, 201, 14, 0.9), transparent);
+}
+
+.mobile-nav-brand-mark {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mobile-nav-brand-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.mobile-nav-brand-copy strong {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.03em;
+}
+
+.mobile-nav-brand-copy p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+}
+
+.mobile-nav-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--yellow);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.mobile-nav-kicker::before {
+  content: "";
+  width: 26px;
+  height: 2px;
+  background: currentColor;
 }
 
 .mobile-nav-list {
@@ -639,15 +756,27 @@ textarea {
 
 .mobile-nav-link {
   display: block;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
-  padding: 14px 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025)),
+    radial-gradient(circle at left center, rgba(215, 0, 0, 0.08), transparent 36%);
+  padding: 15px 14px;
   font-weight: 700;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.mobile-nav-link:hover {
+  transform: translateX(4px);
+  border-color: rgba(246, 201, 14, 0.34);
+  background:
+    linear-gradient(180deg, rgba(246, 201, 14, 0.12), rgba(215, 0, 0, 0.07)),
+    radial-gradient(circle at left center, rgba(215, 0, 0, 0.12), transparent 44%);
 }
 
 .mobile-nav-cta {
   width: 100%;
+  min-height: 54px;
 }
 
 .about-shell {
@@ -1758,6 +1887,17 @@ textarea {
     display: inline-flex;
   }
 
+  .site-header {
+    background:
+      linear-gradient(180deg, rgba(10, 10, 10, 0.98), rgba(7, 7, 7, 0.96)),
+      radial-gradient(circle at top left, rgba(215, 0, 0, 0.16), transparent 34%);
+    backdrop-filter: blur(16px);
+  }
+
+  .site-header-inner {
+    min-height: 74px;
+  }
+
   .car-gallery-main {
     min-height: 420px;
   }
@@ -1787,6 +1927,35 @@ textarea {
 
   .admin-card {
     padding: 18px;
+  }
+
+  .site-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.28);
+  }
+
+  .site-header-inner {
+    min-height: 70px;
+  }
+
+  .site-logo-wrap img {
+    width: 144px;
+    height: auto;
+  }
+
+  .menu-button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .mobile-nav-panel {
+    width: min(92vw, 360px);
+    padding: 82px 16px 18px;
+  }
+
+  .mobile-nav-brand {
+    padding: 14px;
+    border-radius: 16px;
   }
 
   .about-content,

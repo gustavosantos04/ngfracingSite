@@ -37,7 +37,7 @@ export function SiteHeaderClient({ settings }: SiteHeaderClientProps) {
   );
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${open ? "is-mobile-open" : ""}`}>
       <div className="container site-header-inner">
         <Link href="/" aria-label="Voltar para a página inicial da NGF Racing" className="site-logo-wrap">
           <Image src="/branding/logoNGFRACING.png" alt="NGF Racing" width={180} height={58} priority />
@@ -95,6 +95,17 @@ export function SiteHeaderClient({ settings }: SiteHeaderClientProps) {
               exit={reduceMotion ? { opacity: 0 } : { x: "100%", opacity: 0 }}
               transition={drawerTransition}
             >
+              <div className="mobile-nav-brand">
+                <div className="mobile-nav-brand-mark">
+                  <Image src="/branding/logoNGFRACING.png" alt="NGF Racing" width={132} height={42} />
+                </div>
+                <div className="mobile-nav-brand-copy">
+                  <span className="mobile-nav-kicker">NGF Racing</span>
+                  <strong>Navegação rápida</strong>
+                  <p>Seminovos, produtos e contato direto com a equipe.</p>
+                </div>
+              </div>
+
               <div className="mobile-nav-list">
                 {siteCopy.header.navItems.map((item, index) => (
                   <motion.div
@@ -111,7 +122,11 @@ export function SiteHeaderClient({ settings }: SiteHeaderClientProps) {
                 ))}
               </div>
 
-              <a href={`https://wa.me/${settings.phoneWhatsapp}`} className="button-primary mobile-nav-cta" onClick={() => setOpen(false)}>
+              <a
+                href={`https://wa.me/${settings.phoneWhatsapp}`}
+                className="button-primary mobile-nav-cta"
+                onClick={() => setOpen(false)}
+              >
                 {siteCopy.header.mobileCtaLabel}
               </a>
             </motion.nav>
