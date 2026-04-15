@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const car = await getCarBySlug(slug);
 
   if (!car) {
-    return { title: "Carro nao encontrado" };
+    return { title: "Carro não encontrado" };
   }
 
   return {
@@ -96,8 +96,8 @@ export default async function CarDetailsPage({ params }: Params) {
                 <div className="detail-specs-grid">
                   <div className="chip">Ano: {car.year}</div>
                   <div className="chip">KM: {formatKilometers(car.km)}</div>
-                  <div className="chip">Combustivel: {car.fuel ?? "Nao informado"}</div>
-                  <div className="chip">Cambio: {car.transmission ?? "Nao informado"}</div>
+                  <div className="chip">Combustível: {car.fuel ?? "Não informado"}</div>
+                  <div className="chip">Câmbio: {car.transmission ?? "Não informado"}</div>
                 </div>
                 <p className="section-copy" style={{ marginTop: 22 }}>
                   {car.description}

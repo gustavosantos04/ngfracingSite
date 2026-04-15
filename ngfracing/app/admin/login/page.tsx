@@ -27,22 +27,22 @@ export default async function AdminLoginPage({
             <h1 className="section-title" style={{ fontSize: "2rem" }}>
               Entrar no CMS
             </h1>
-            <p className="section-copy">Login por usuario ou e-mail e senha com sessao via cookie seguro.</p>
+            <p className="section-copy">Login por usuário ou e-mail e senha com sessão via cookie seguro.</p>
           </div>
           {error ? (
             <div className="admin-card" style={{ padding: 14, borderColor: "rgba(215,0,0,0.3)" }}>
               {isConfigError
-                ? "Configuracao de login ausente ou invalida."
+                ? "Configuração de login ausente ou inválida."
                 : isRateLimited
                   ? "Muitas tentativas de login. Aguarde alguns minutos e tente novamente."
                   : isRequestError
-                    ? "A requisicao de login foi bloqueada por seguranca."
-                    : "Credenciais invalidas."}
+                    ? "A requisição de login foi bloqueada por segurança."
+                    : "Credenciais inválidas."}
             </div>
           ) : null}
           <form action={loginAction} className="stack">
             <div className="field">
-              <label htmlFor="identifier">Usuario ou e-mail</label>
+              <label htmlFor="identifier">Usuário ou e-mail</label>
               <input id="identifier" name="identifier" type="text" autoComplete="username" required />
             </div>
             <div className="field">

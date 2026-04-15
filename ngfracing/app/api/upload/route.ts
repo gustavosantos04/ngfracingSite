@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       .slice(0, 8);
 
     if (!files.length) {
-      return NextResponse.json({ error: "Nenhum arquivo valido enviado." }, { status: 400 });
+      return NextResponse.json({ error: "Nenhum arquivo válido enviado." }, { status: 400 });
     }
 
     const rateLimitKey = getRequestFingerprint("admin-upload", request, "files");
@@ -41,9 +41,9 @@ export async function POST(request: Request) {
       {
         error:
           status === 403
-            ? "Origem da requisicao invalida."
+            ? "Origem da requisição inválida."
             : status === 401
-              ? "Nao autorizado."
+              ? "Não autorizado."
               : "Falha no upload."
       },
       { status }

@@ -22,7 +22,7 @@ export default async function AdminNewCarPage() {
           <h1 className="section-title" style={{ marginBottom: 8 }}>
             Novo carro
           </h1>
-          <p className="section-copy">Cadastro completo com selecao visual de imagens, listas editaveis e status.</p>
+          <p className="section-copy">Cadastro completo com seleção visual de imagens, listas editáveis e status.</p>
         </div>
         <CarEditorForm action={saveCarAction} availableImages={availableImages} />
       </div>

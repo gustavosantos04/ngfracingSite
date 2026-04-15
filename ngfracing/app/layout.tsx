@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   description: "NGF Racing: loja de carros seminovos, projetos diferenciados e produtos selecionados.",
   openGraph: {
     title: "NGF Racing",
-    description: "Seminovos, carros diferenciados e produtos selecionados com procedencia.",
+    description: "Seminovos, carros diferenciados e produtos selecionados com procedência.",
     url: "/",
     siteName: "NGF Racing",
     locale: "pt_BR",

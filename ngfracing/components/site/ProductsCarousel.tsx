@@ -94,7 +94,7 @@ export function ProductsCarousel({ products }: Props) {
             type="button"
             className="carousel-arrow"
             onClick={() => paginate(1)}
-            aria-label="Ver proximos produtos"
+            aria-label="Ver próximos produtos"
             disabled={shuffledProducts.length <= cardsPerPage}
           >
             <span aria-hidden="true">{">"}</span>

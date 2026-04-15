@@ -22,10 +22,10 @@ export async function AdminHeader() {
         <div>
           <div style={{ fontFamily: "var(--font-display)", fontSize: "1.45rem" }}>NGF Racing Admin</div>
           <div className="muted" style={{ fontSize: "0.9rem" }}>
-            CMS para estoque, conteudo e catalogo de produtos
+            CMS para estoque, conteúdo e catálogo de produtos
           </div>
         </div>
-        <nav className="inline-actions" aria-label="Navegacao do admin">
+        <nav className="inline-actions" aria-label="Navegação do admin">
           <Link href="/admin" className="button-ghost">
             Dashboard
           </Link>
@@ -40,7 +40,7 @@ export async function AdminHeader() {
             Produtos
           </Link>
           <Link href="/admin/configuracoes" className="button-ghost">
-            Configuracoes
+            Configurações
           </Link>
           <form action={logoutAction}>
             <button type="submit" className="button-danger">

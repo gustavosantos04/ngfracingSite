@@ -2,32 +2,32 @@ import type { PublicSiteSettings } from "@/lib/types";
 
 export const siteSettings: PublicSiteSettings = {
   id: "site_settings",
-  heroTitle: "Acelerando rumo a sua melhor conquista sobre quatro rodas.",
-  heroSubtitle: "NGF Racing: seminovos com procedência e qualidade , além de um catalogo completo de produtos para acelerar seu projeto.",
+  heroTitle: "Acelerando rumo à sua melhor conquista sobre quatro rodas.",
+  heroSubtitle: "NGF Racing: seminovos com procedência e qualidade, além de um catálogo completo de produtos para acelerar seu projeto.",
   heroBgImage: "/branding/hero-car.jpg",
   heroPrimaryCtaLabel: "Quero meu carro",
   heroPrimaryCtaHref: "/estoque",
   heroSecondaryCtaLabel: "Falar com a NGF",
   heroSecondaryCtaHref: "https://wa.me/5551999866578",
-  aboutTitle: "Nossa historia",
+  aboutTitle: "Nossa história",
   aboutText:
     "Por mais de 10 anos, aceleramos forte nas pistas de arrancada pelo Rio Grande do Sul e Brasil, conquistando vários troféus na jornada com o carro ST-658. A paixão por performance começou nas pistas e hoje a NGF Racing leva essa experiência para a venda de seminovos com procedência e produtos selecionados.",
   aboutImage: "/branding/carrocorrida.jpg",
   phoneWhatsapp: "5551999866578",
   phoneDisplay: "(51) 99986-6578",
   contactEmail: "ngfracing@hotmail.com",
-  address: "R. Verissimo Rosa, 452 - Partenon, Porto Alegre/RS, Brasil",
-  addressLine: "R. Verissimo Rosa, 452 - Partenon",
+  address: "R. Veríssimo Rosa, 452 - Partenon, Porto Alegre/RS, Brasil",
+  addressLine: "R. Veríssimo Rosa, 452 - Partenon",
   addressRegion: "Porto Alegre/RS",
   addressCountry: "Brasil",
   instagramUrl: "https://instagram.com/ngfracing",
-  businessHours: "Segunda a Sexta: 8h às 18h | Sábado: 9h às 15h"
+  businessHours: "Segunda a sexta: 8h às 18h | Sábado: 9h às 15h"
 };
 
 export const siteCopy = {
   header: {
     navItems: [
-      { href: "/", label: "Inicio" },
+      { href: "/", label: "Início" },
       { href: "/#sobre", label: "Sobre" },
       { href: "/estoque", label: "Estoque" },
       { href: "/produtos", label: "Produtos" },

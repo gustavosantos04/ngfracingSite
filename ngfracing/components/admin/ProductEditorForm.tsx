@@ -19,11 +19,11 @@ type Props = {
 const categoryOptions = [
   {
     value: ProductCategory.PART,
-    title: "Peca",
+    title: "Peça",
     kicker: "Performance",
     icon: "PT",
-    description: "Estoque simples para componentes e itens tecnicos.",
-    meta: "Quantidade unica e controle direto no cadastro."
+    description: "Estoque simples para componentes e itens técnicos.",
+    meta: "Quantidade única e controle direto no cadastro."
   },
   {
     value: ProductCategory.APPAREL,
@@ -35,11 +35,11 @@ const categoryOptions = [
   },
   {
     value: ProductCategory.ACCESSORY,
-    title: "Acessorio",
+    title: "Acessório",
     kicker: "Lifestyle",
     icon: "AC",
-    description: "Estoque simples para bones, chaveiros e afins.",
-    meta: "Fluxo rapido para itens de giro e merchandising."
+    description: "Estoque simples para bonés, chaveiros e afins.",
+    meta: "Fluxo rápido para itens de giro e merchandising."
   }
 ];
 
@@ -77,10 +77,10 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
       nextErrors.name = "Informe o nome do produto.";
     }
     if (!priceDigits) {
-      nextErrors.price = "Informe o preco do produto.";
+      nextErrors.price = "Informe o preço do produto.";
     }
     if (description.length < 10) {
-      nextErrors.description = "A descricao precisa ter ao menos 10 caracteres.";
+      nextErrors.description = "A descrição precisa ter ao menos 10 caracteres.";
     }
     if (!selectedPrimaryImage) {
       nextErrors.images = "Selecione uma imagem principal.";
@@ -89,7 +89,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
       nextErrors.sizeStocks = "Informe ao menos um tamanho com estoque.";
     }
     if (category !== ProductCategory.APPAREL && (stockQuantity === "" || Number(stockQuantity) < 0)) {
-      nextErrors.stockQuantity = "Informe o estoque disponivel.";
+      nextErrors.stockQuantity = "Informe o estoque disponível.";
     }
 
     setErrors(nextErrors);
@@ -113,7 +113,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
             {errors.name ? <span className="field-error">{errors.name}</span> : null}
           </div>
           <div className="field">
-            <label htmlFor="price">Preco (BRL)</label>
+            <label htmlFor="price">Preço (BRL)</label>
             <div className="input-with-prefix">
               <span className="input-prefix">R$</span>
               <input
@@ -137,7 +137,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
           <div>
             <label style={{ display: "block", fontWeight: 700, marginBottom: 8 }}>Categoria</label>
             <p className="muted" style={{ margin: "0 0 14px" }}>
-              Escolha o tipo de produto para liberar o bloco correto de estoque no formulario.
+              Escolha o tipo de produto para liberar o bloco correto de estoque no formulário.
             </p>
             <div className="category-card-grid">
               {categoryOptions.map((option) => (
@@ -165,7 +165,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
         </div>
 
         <div className="field">
-          <label htmlFor="description">Descricao</label>
+          <label htmlFor="description">Descrição</label>
           <textarea
             id="description"
             name="description"
@@ -178,7 +178,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
 
         <div className="stack">
           <div>
-            <h3 style={{ marginBottom: 8 }}>Imagens do repositorio</h3>
+            <h3 style={{ marginBottom: 8 }}>Imagens do repositório</h3>
             <p className="muted" style={{ margin: 0 }}>
               Escolha uma imagem principal e fotos adicionais a partir dos arquivos presentes em `public/images/produtos`.
             </p>
@@ -209,7 +209,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
           </div>
         ) : (
           <div className="field">
-            <label htmlFor="stockQuantity">Estoque disponivel</label>
+            <label htmlFor="stockQuantity">Estoque disponível</label>
             <input
               id="stockQuantity"
               name="stockQuantity"
@@ -237,7 +237,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
         />
         {product ? (
           <div className="muted" style={{ alignSelf: "center" }}>
-            Preco atual: {formatCurrency(product.priceCents)}
+            Preço atual: {formatCurrency(product.priceCents)}
           </div>
         ) : null}
       </div>

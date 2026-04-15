@@ -22,7 +22,7 @@ export default async function AdminNewProductPage() {
           <h1 className="section-title" style={{ marginBottom: 8 }}>
             Novo produto
           </h1>
-          <p className="section-copy">Cadastre pecas, roupas e acessorios com selecao visual de categoria e imagens.</p>
+          <p className="section-copy">Cadastre peças, roupas e acessórios com seleção visual de categoria e imagens.</p>
         </div>
         <ProductEditorForm action={saveProductAction} availableImages={availableImages} />
       </div>

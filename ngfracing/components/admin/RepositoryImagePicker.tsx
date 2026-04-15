@@ -31,7 +31,7 @@ function normalizeGroupLabel(group: string) {
   }
 
   if (group === "current-selection") {
-    return "Selecao atual";
+    return "Seleção atual";
   }
 
   return group;
@@ -162,7 +162,7 @@ export function RepositoryImagePicker({
           <div className="picker-section-head">
             <div>
               <h3 style={{ margin: 0 }}>Galeria</h3>
-              <p className="muted picker-caption">Selecione quantas imagens extras fizerem sentido para a pagina interna.</p>
+              <p className="muted picker-caption">Selecione quantas imagens extras fizerem sentido para a página interna.</p>
             </div>
             <button type="button" className="button-ghost picker-inline-button" onClick={() => setGalleryImages([])}>
               Limpar
@@ -205,7 +205,7 @@ export function RepositoryImagePicker({
         <div className="picker-section-head">
           <div>
             <h3 style={{ margin: 0 }}>Biblioteca de imagens</h3>
-            <p className="muted picker-caption">Busque e filtre a biblioteca para montar a principal e a galeria sem poluicao visual.</p>
+            <p className="muted picker-caption">Busque e filtre a biblioteca para montar a principal e a galeria sem poluição visual.</p>
           </div>
           <div className="picker-counter">{filteredImages.length} arquivo(s)</div>
         </div>

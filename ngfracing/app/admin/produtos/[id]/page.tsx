@@ -31,7 +31,7 @@ export default async function AdminEditProductPage({ params }: Params) {
             Voltar
           </Link>
           <Link href={`/produtos/${product.slug}`} className="button-ghost">
-            Ver pagina publica
+            Ver página pública
           </Link>
         </div>
         <div>
@@ -39,7 +39,7 @@ export default async function AdminEditProductPage({ params }: Params) {
           <h1 className="section-title" style={{ marginBottom: 8 }}>
             Editar produto
           </h1>
-          <p className="section-copy">Atualize preco, estoque, fotos e disponibilidade em um unico formulario.</p>
+          <p className="section-copy">Atualize preço, estoque, fotos e disponibilidade em um único formulário.</p>
         </div>
         <ProductEditorForm action={saveProductAction} product={product} availableImages={availableImages} />
       </div>

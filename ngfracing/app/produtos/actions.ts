@@ -20,7 +20,7 @@ export async function submitPurchaseRequestAction(
   } catch {
     return {
       status: "error",
-      message: "A solicitacao foi bloqueada por seguranca."
+      message: "A solicitação foi bloqueada por segurança."
     };
   }
 
@@ -50,7 +50,7 @@ export async function submitPurchaseRequestAction(
   if (!parsed.success) {
     return {
       status: "error",
-      message: parsed.error.issues[0]?.message ?? "Revise os campos obrigatorios."
+      message: parsed.error.issues[0]?.message ?? "Revise os campos obrigatórios."
     };
   }
 
@@ -58,7 +58,7 @@ export async function submitPurchaseRequestAction(
   if (!product) {
     return {
       status: "error",
-      message: "Produto nao encontrado."
+      message: "Produto não encontrado."
     };
   }
 
@@ -66,14 +66,14 @@ export async function submitPurchaseRequestAction(
   if (availableStock < parsed.data.quantity) {
     return {
       status: "error",
-      message: "A quantidade solicitada excede o estoque disponivel."
+      message: "A quantidade solicitada excede o estoque disponível."
     };
   }
 
   if (product.category === "APPAREL" && !parsed.data.size) {
     return {
       status: "error",
-      message: "Selecione um tamanho valido para continuar."
+      message: "Selecione um tamanho válido para continuar."
     };
   }
 
@@ -96,13 +96,13 @@ export async function submitPurchaseRequestAction(
 
     return {
       status: "success",
-      message: "Pedido registrado com sucesso. A equipe da NGF Racing vai analisar a solicitacao."
+      message: "Pedido registrado com sucesso. A equipe da NGF Racing vai analisar a solicitação."
     };
   } catch (error) {
     console.error("[purchase-request] create order error", error);
     return {
       status: "error",
-      message: "Nao foi possivel registrar seu pedido agora. Tente novamente em instantes."
+      message: "Não foi possível registrar seu pedido agora. Tente novamente em instantes."
     };
   }
 }

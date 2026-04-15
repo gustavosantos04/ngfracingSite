@@ -30,7 +30,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
 
   const primaryImage = car?.images[0]?.url ?? "";
   const galleryImages = car?.images.slice(1).map((image) => image.url) ?? [];
-  
+
   const kmDisplay = useMemo(() => {
     if (!kmDigits) return "";
     return new Intl.NumberFormat("pt-BR").format(Number(kmDigits));
@@ -76,9 +76,9 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const nextErrors: Record<string, string> = {};
-    
+
     const requiredFields = ["title", "brand", "model", "year"];
-    requiredFields.forEach(field => {
+    requiredFields.forEach((field) => {
       if (!String(formData.get(field) ?? "").trim()) {
         nextErrors[field] = "Campo obrigatório.";
       }
@@ -86,7 +86,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
 
     if (!kmDigits) nextErrors.km = "Informe a quilometragem.";
     if (!priceDigits) nextErrors.price = "Informe o valor.";
-    
+
     const description = String(formData.get("description") ?? "").trim();
     if (description.length < 20) {
       nextErrors.description = "A descrição precisa ter ao menos 20 caracteres.";
@@ -99,8 +99,8 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
       event.preventDefault();
-      const firstError = document.querySelector('.field-error');
-      firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const firstError = document.querySelector(".field-error");
+      firstError?.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
 
@@ -117,18 +117,25 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
       <input type="hidden" name="price" value={priceValue} />
       <input type="hidden" name="features" value={selectedFeatures.join("\n")} />
 
-      <div className="admin-card stack" style={{ gap: '32px' }}>
-        {/* Seção 1: Informações Básicas */}
+      <div className="admin-card stack" style={{ gap: "32px" }}>
+        {/* Seção 1: Informações básicas */}
         <section className="form-section">
           <h3 className="form-section-title">Informações Básicas</h3>
           <div className="field-grid two">
             <div className="field">
-              <label htmlFor="title">Título do Anúncio</label>
-              <input id="title" name="title" defaultValue={car?.title ?? ""} placeholder="Ex: Porsche 911 Carrera S 2023" required aria-invalid={Boolean(errors.title)} />
+              <label htmlFor="title">Título do anúncio</label>
+              <input
+                id="title"
+                name="title"
+                defaultValue={car?.title ?? ""}
+                placeholder="Ex: Porsche 911 Carrera S 2023"
+                required
+                aria-invalid={Boolean(errors.title)}
+              />
               {errors.title && <span className="field-error">{errors.title}</span>}
             </div>
             <div className="field">
-              <label htmlFor="status">Status de Venda</label>
+              <label htmlFor="status">Status de venda</label>
               <select id="status" name="status" defaultValue={(car?.status ?? "AVAILABLE") as CarStatus}>
                 <option value="AVAILABLE">Disponível</option>
                 <option value="RESERVED">Reservado</option>
@@ -137,28 +144,50 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
             </div>
           </div>
 
-          <div className="field-grid three" style={{ marginTop: '16px' }}>
+          <div className="field-grid three" style={{ marginTop: "16px" }}>
             <div className="field">
               <label htmlFor="brand">Marca</label>
-              <input id="brand" name="brand" defaultValue={car?.brand ?? ""} placeholder="Ex: Porsche" required aria-invalid={Boolean(errors.brand)} />
+              <input
+                id="brand"
+                name="brand"
+                defaultValue={car?.brand ?? ""}
+                placeholder="Ex: Porsche"
+                required
+                aria-invalid={Boolean(errors.brand)}
+              />
               {errors.brand && <span className="field-error">{errors.brand}</span>}
             </div>
             <div className="field">
               <label htmlFor="model">Modelo</label>
-              <input id="model" name="model" defaultValue={car?.model ?? ""} placeholder="Ex: 911 Carrera S" required aria-invalid={Boolean(errors.model)} />
+              <input
+                id="model"
+                name="model"
+                defaultValue={car?.model ?? ""}
+                placeholder="Ex: 911 Carrera S"
+                required
+                aria-invalid={Boolean(errors.model)}
+              />
               {errors.model && <span className="field-error">{errors.model}</span>}
             </div>
             <div className="field">
               <label htmlFor="year">Ano</label>
-              <input id="year" name="year" type="number" defaultValue={car?.year ?? ""} placeholder="Ex: 2023" required aria-invalid={Boolean(errors.year)} />
+              <input
+                id="year"
+                name="year"
+                type="number"
+                defaultValue={car?.year ?? ""}
+                placeholder="Ex: 2023"
+                required
+                aria-invalid={Boolean(errors.year)}
+              />
               {errors.year && <span className="field-error">{errors.year}</span>}
             </div>
           </div>
         </section>
 
-        {/* Seção 2: Detalhes Técnicos e Preço */}
+        {/* Seção 2: Detalhes técnicos e preço */}
         <section className="form-section">
-          <h3 className="form-section-title">Detalhes Técnicos & Preço</h3>
+          <h3 className="form-section-title">Detalhes técnicos e preço</h3>
           <div className="field-grid three">
             <div className="field">
               <label htmlFor="km">Quilometragem</label>
@@ -169,7 +198,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
                   type="text"
                   inputMode="numeric"
                   value={kmDisplay}
-                  onChange={(e) => handleKmChange(e.target.value)}
+                  onChange={(event) => handleKmChange(event.target.value)}
                   placeholder="0"
                   required
                   aria-invalid={Boolean(errors.km)}
@@ -179,7 +208,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
               {errors.km && <span className="field-error">{errors.km}</span>}
             </div>
             <div className="field">
-              <label htmlFor="price">Preço de Venda</label>
+              <label htmlFor="price">Preço de venda</label>
               <div className="input-with-prefix">
                 <span className="input-prefix">R$</span>
                 <input
@@ -188,7 +217,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
                   type="text"
                   inputMode="numeric"
                   value={priceDisplay}
-                  onChange={(e) => handlePriceChange(e.target.value)}
+                  onChange={(event) => handlePriceChange(event.target.value)}
                   placeholder="0,00"
                   required
                   aria-invalid={Boolean(errors.price)}
@@ -202,13 +231,13 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
             </div>
           </div>
 
-          <div className="field-grid two" style={{ marginTop: '16px' }}>
+          <div className="field-grid two" style={{ marginTop: "16px" }}>
             <div className="field">
               <label htmlFor="transmission">Câmbio / Transmissão</label>
               <input id="transmission" name="transmission" defaultValue={car?.transmission ?? ""} placeholder="Ex: PDK 8 marchas" />
             </div>
             <div className="field">
-              <label htmlFor="whatsappLink">Link Direto WhatsApp</label>
+              <label htmlFor="whatsappLink">Link direto WhatsApp</label>
               <input
                 id="whatsappLink"
                 name="whatsappLink"
@@ -220,11 +249,11 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
           </div>
         </section>
 
-        {/* Seção 3: Descrição e Tags */}
+        {/* Seção 3: Descrição e tags */}
         <section className="form-section">
-          <h3 className="form-section-title">Conteúdo do Anúncio</h3>
+          <h3 className="form-section-title">Conteúdo do anúncio</h3>
           <div className="field">
-            <label htmlFor="description">Descrição Detalhada</label>
+            <label htmlFor="description">Descrição detalhada</label>
             <textarea
               id="description"
               name="description"
@@ -232,33 +261,37 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
               placeholder="Descreva os detalhes, histórico e diferenciais do veículo..."
               required
               aria-invalid={Boolean(errors.description)}
-              style={{ minHeight: '180px' }}
+              style={{ minHeight: "180px" }}
             />
             {errors.description && <span className="field-error">{errors.description}</span>}
           </div>
-          <div className="field" style={{ marginTop: '16px' }}>
-            <label htmlFor="tags">Tags de Busca (uma por linha)</label>
-            <textarea 
-              id="tags" 
-              name="tags" 
-              defaultValue={car?.tags.join("\n") ?? ""} 
-              placeholder="Ex: Unico Dono&#10;IPVA Pago&#10;Garantia de Fabrica"
-              style={{ minHeight: '100px' }}
+          <div className="field" style={{ marginTop: "16px" }}>
+            <label htmlFor="tags">Tags de busca, uma por linha</label>
+            <textarea
+              id="tags"
+              name="tags"
+              defaultValue={car?.tags.join("\n") ?? ""}
+              placeholder={"Ex: Único dono\nIPVA pago\nGarantia de fábrica"}
+              style={{ minHeight: "100px" }}
             />
           </div>
         </section>
 
-        {/* Seção 4: Opcionais Categorizados */}
+        {/* Seção 4: Opcionais categorizados */}
         <section className="form-section">
           <div className="feature-picker-head">
             <div>
-              <h3 className="form-section-title" style={{ marginBottom: '4px' }}>Opcionais do Veículo</h3>
-              <p className="muted" style={{ fontSize: '0.85rem' }}>Selecione os itens presentes no veículo para facilitar a busca do cliente.</p>
+              <h3 className="form-section-title" style={{ marginBottom: "4px" }}>
+                Opcionais do veículo
+              </h3>
+              <p className="muted" style={{ fontSize: "0.85rem" }}>
+                Selecione os itens presentes no veículo para facilitar a busca do cliente.
+              </p>
             </div>
             <span className="feature-picker-count">{selectedFeatures.length} selecionado(s)</span>
           </div>
 
-          <div className="feature-categories-stack" style={{ display: 'grid', gap: '24px', marginTop: '20px' }}>
+          <div className="feature-categories-stack" style={{ display: "grid", gap: "24px", marginTop: "20px" }}>
             {CAR_FEATURE_CATEGORIES.map((category) => (
               <div key={category.name} className="feature-category-group">
                 <h4 className="feature-category-label">{category.name}</h4>
@@ -277,23 +310,23 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
             ))}
           </div>
 
-          <div className="field" style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--line)' }}>
-            <label htmlFor="customFeatures">Outros Opcionais (Customizados)</label>
+          <div className="field" style={{ marginTop: "24px", paddingTop: "24px", borderTop: "1px solid var(--line)" }}>
+            <label htmlFor="customFeatures">Outros opcionais, customizados</label>
             <textarea
               id="customFeatures"
               name="customFeatures"
               value={customFeatures}
-              onChange={(e) => setCustomFeatures(e.target.value)}
+              onChange={(event) => setCustomFeatures(event.target.value)}
               placeholder="Adicione outros itens separados por linha ou vírgula..."
-              style={{ minHeight: '80px' }}
+              style={{ minHeight: "80px" }}
             />
           </div>
         </section>
 
-        {/* Seção 5: Galeria de Imagens */}
+        {/* Seção 5: Galeria de imagens */}
         <section className="form-section">
-          <h3 className="form-section-title">Galeria de Fotos</h3>
-          <p className="muted" style={{ fontSize: '0.85rem', marginBottom: '16px' }}>
+          <h3 className="form-section-title">Galeria de fotos</h3>
+          <p className="muted" style={{ fontSize: "0.85rem", marginBottom: "16px" }}>
             A primeira imagem selecionada será a capa do anúncio.
           </p>
           <RepositoryImagePicker
@@ -316,15 +349,15 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
       </div>
 
       <div className="admin-footer-actions">
-        <div className="container inline-actions" style={{ justifyContent: 'flex-end', padding: '24px 0' }}>
+        <div className="container inline-actions" style={{ justifyContent: "flex-end", padding: "24px 0" }}>
           {car && (
-            <div className="muted" style={{ alignSelf: "center", marginRight: 'auto' }}>
+            <div className="muted" style={{ alignSelf: "center", marginRight: "auto" }}>
               Valor atual: <strong>{formatCurrency(car.priceCents)}</strong>
             </div>
           )}
           <AdminSubmitButton
             className="button-primary"
-            idleLabel={car ? "Salvar Alterações" : "Publicar Veículo"}
+            idleLabel={car ? "Salvar alterações" : "Publicar veículo"}
             pendingLabel={car ? "Salvando..." : "Publicando..."}
           />
         </div>

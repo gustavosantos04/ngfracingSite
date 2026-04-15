@@ -15,10 +15,10 @@ export default async function AdminDashboardPage() {
   ]);
 
   const stats = [
-    { label: "Disponiveis", value: available, tone: "rgba(23,163,74,0.18)" },
+    { label: "Disponíveis", value: available, tone: "rgba(23,163,74,0.18)" },
     { label: "Reservados", value: reserved, tone: "rgba(246,201,14,0.18)" },
     { label: "Vendidos", value: sold, tone: "rgba(215,0,0,0.18)" },
-    { label: "Produtos no catalogo", value: totalProducts, tone: "rgba(255,255,255,0.08)" },
+    { label: "Produtos no catálogo", value: totalProducts, tone: "rgba(255,255,255,0.08)" },
     { label: "Pedidos novos", value: totalOrders, tone: "rgba(255,255,255,0.08)" }
   ];
 
@@ -39,7 +39,7 @@ export default async function AdminDashboardPage() {
             <h1 className="section-title" style={{ marginBottom: 8 }}>
               Painel de controle
             </h1>
-            <p className="section-copy">Resumo rapido para acompanhar o site sem editar codigo.</p>
+            <p className="section-copy">Resumo rápido para acompanhar o site sem editar código.</p>
           </div>
           <div className="inline-actions">
             <Link href="/admin/carros/new" className="button-primary">

@@ -48,11 +48,11 @@ export function PurchaseRequestForm({ productId, quantity, size }: Props) {
 
       <div className="field-grid two">
         <div className="field">
-          <label htmlFor="phone">Numero para contato</label>
+          <label htmlFor="phone">Número para contato</label>
           <input id="phone" name="phone" type="tel" autoComplete="tel" required />
         </div>
         <div className="field">
-          <label htmlFor="address">Endereco para entrega</label>
+          <label htmlFor="address">Endereço para entrega</label>
           <input id="address" name="address" autoComplete="street-address" required />
         </div>
       </div>
