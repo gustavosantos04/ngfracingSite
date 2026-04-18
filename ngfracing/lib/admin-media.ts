@@ -1,0 +1,2 @@
+export const MAX_CAR_IMAGE_SELECTION = 30;
+export const MAX_PRODUCT_GALLERY_SELECTION = 8;

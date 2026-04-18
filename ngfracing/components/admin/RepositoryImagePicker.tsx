@@ -12,6 +12,7 @@ type Props = {
   primaryInputName: string;
   galleryInputName: string;
   emptyMessage: string;
+  maxTotalSelection?: number;
 };
 
 const INITIAL_VISIBLE_IMAGES = 12;
@@ -31,7 +32,7 @@ function normalizeGroupLabel(group: string) {
   }
 
   if (group === "current-selection") {
-    return "Seleção atual";
+    return "Selecao atual";
   }
 
   return group;
@@ -43,12 +44,15 @@ export function RepositoryImagePicker({
   initialGallery = [],
   primaryInputName,
   galleryInputName,
-  emptyMessage
+  emptyMessage,
+  maxTotalSelection
 }: Props) {
   const [primaryImage, setPrimaryImage] = useState(initialPrimary);
   const [galleryImages, setGalleryImages] = useState<string[]>(initialGallery);
   const [search, setSearch] = useState("");
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_IMAGES);
+  const [selectionError, setSelectionError] = useState("");
+
   const catalogImages = useMemo(() => {
     const base = new Map(images.map((image) => [image.url, image]));
     const selectedUrls = [initialPrimary, ...initialGallery].filter((url): url is string => Boolean(url));
@@ -66,6 +70,7 @@ export function RepositoryImagePicker({
 
     return Array.from(base.values());
   }, [images, initialGallery, initialPrimary]);
+
   const groups = useMemo(() => Array.from(new Set(catalogImages.map((image) => image.group))), [catalogImages]);
   const [activeGroup, setActiveGroup] = useState(groups[0] ?? "all");
 
@@ -82,6 +87,10 @@ export function RepositoryImagePicker({
   }, [activeGroup, groups]);
 
   const gallerySet = useMemo(() => new Set(galleryImages), [galleryImages]);
+  const totalSelected = useMemo(
+    () => new Set([primaryImage, ...galleryImages].filter(Boolean)).size,
+    [galleryImages, primaryImage]
+  );
   const searchTerm = search.trim().toLowerCase();
 
   const filteredImages = useMemo(
@@ -114,9 +123,32 @@ export function RepositoryImagePicker({
   const primaryItem = catalogImages.find((image) => image.url === primaryImage) ?? null;
 
   const toggleGalleryImage = (url: string) => {
-    setGalleryImages((current) =>
-      current.includes(url) ? current.filter((item) => item !== url) : [...current, url]
-    );
+    setGalleryImages((current) => {
+      if (current.includes(url)) {
+        setSelectionError("");
+        return current.filter((item) => item !== url);
+      }
+
+      const nextTotal = new Set([primaryImage, ...current, url].filter(Boolean)).size;
+      if (maxTotalSelection && nextTotal > maxTotalSelection) {
+        setSelectionError(`Voce pode selecionar no maximo ${maxTotalSelection} imagens.`);
+        return current;
+      }
+
+      setSelectionError("");
+      return [...current, url];
+    });
+  };
+
+  const setPrimarySelection = (url: string) => {
+    const nextTotal = new Set([url, ...galleryImages].filter(Boolean)).size;
+    if (maxTotalSelection && nextTotal > maxTotalSelection) {
+      setSelectionError(`Voce pode selecionar no maximo ${maxTotalSelection} imagens.`);
+      return;
+    }
+
+    setSelectionError("");
+    setPrimaryImage(url);
   };
 
   return (
@@ -133,7 +165,14 @@ export function RepositoryImagePicker({
               <h3 style={{ margin: 0 }}>Imagem principal</h3>
               <p className="muted picker-caption">A foto que representa o carro ou produto no site.</p>
             </div>
-            <button type="button" className="button-ghost picker-inline-button" onClick={() => setPrimaryImage("")}>
+            <button
+              type="button"
+              className="button-ghost picker-inline-button"
+              onClick={() => {
+                setPrimaryImage("");
+                setSelectionError("");
+              }}
+            >
               Limpar
             </button>
           </div>
@@ -162,9 +201,16 @@ export function RepositoryImagePicker({
           <div className="picker-section-head">
             <div>
               <h3 style={{ margin: 0 }}>Galeria</h3>
-              <p className="muted picker-caption">Selecione quantas imagens extras fizerem sentido para a página interna.</p>
+              <p className="muted picker-caption">Selecione quantas imagens extras fizerem sentido para a pagina interna.</p>
             </div>
-            <button type="button" className="button-ghost picker-inline-button" onClick={() => setGalleryImages([])}>
+            <button
+              type="button"
+              className="button-ghost picker-inline-button"
+              onClick={() => {
+                setGalleryImages([]);
+                setSelectionError("");
+              }}
+            >
               Limpar
             </button>
           </div>
@@ -205,10 +251,17 @@ export function RepositoryImagePicker({
         <div className="picker-section-head">
           <div>
             <h3 style={{ margin: 0 }}>Biblioteca de imagens</h3>
-            <p className="muted picker-caption">Busque e filtre a biblioteca para montar a principal e a galeria sem poluição visual.</p>
+            <p className="muted picker-caption">
+              Busque e filtre a biblioteca para montar a principal e a galeria sem poluicao visual.
+              {maxTotalSelection ? ` Limite total: ${maxTotalSelection} imagens.` : ""}
+            </p>
           </div>
-          <div className="picker-counter">{filteredImages.length} arquivo(s)</div>
+          <div className="picker-counter">
+            {filteredImages.length} arquivo(s)
+            {maxTotalSelection ? ` - ${totalSelected}/${maxTotalSelection} selecionadas` : ""}
+          </div>
         </div>
+        {selectionError ? <span className="field-error">{selectionError}</span> : null}
 
         <div className="picker-toolbar">
           <div className="field" style={{ minWidth: 0 }}>
@@ -272,7 +325,7 @@ export function RepositoryImagePicker({
                         <button
                           type="button"
                           className={isPrimary ? "button-primary picker-action-button" : "button-secondary picker-action-button"}
-                          onClick={() => setPrimaryImage(image.url)}
+                          onClick={() => setPrimarySelection(image.url)}
                         >
                           {isPrimary ? "Imagem principal" : "Definir principal"}
                         </button>

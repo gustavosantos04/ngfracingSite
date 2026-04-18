@@ -3,6 +3,7 @@
 import type { CarStatus } from "@prisma/client";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
+import { MAX_CAR_IMAGE_SELECTION } from "@/lib/admin-media";
 import { AdminPendingState, AdminSubmitButton } from "@/components/admin/AdminFormControls";
 import { RepositoryImagePicker } from "@/components/admin/RepositoryImagePicker";
 import { CAR_FEATURE_CATEGORIES, CAR_FEATURE_OPTIONS } from "@/lib/constants";
@@ -76,11 +77,22 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const nextErrors: Record<string, string> = {};
+    const selectedImages = Array.from(
+      new Set(
+        [
+          String(formData.get("selectedPrimaryImage") ?? "").trim(),
+          ...formData
+            .getAll("selectedGalleryImages")
+            .map((entry) => String(entry).trim())
+            .filter(Boolean)
+        ].filter(Boolean)
+      )
+    );
 
     const requiredFields = ["title", "brand", "model", "year"];
     requiredFields.forEach((field) => {
       if (!String(formData.get(field) ?? "").trim()) {
-        nextErrors[field] = "Campo obrigatório.";
+        nextErrors[field] = "Campo obrigatorio.";
       }
     });
 
@@ -89,11 +101,13 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
 
     const description = String(formData.get("description") ?? "").trim();
     if (description.length < 20) {
-      nextErrors.description = "A descrição precisa ter ao menos 20 caracteres.";
+      nextErrors.description = "A descricao precisa ter ao menos 20 caracteres.";
     }
 
     if (!String(formData.get("selectedPrimaryImage") ?? "").trim()) {
       nextErrors.images = "Selecione ao menos uma imagem principal.";
+    } else if (selectedImages.length > MAX_CAR_IMAGE_SELECTION) {
+      nextErrors.images = `Selecione no maximo ${MAX_CAR_IMAGE_SELECTION} imagens.`;
     }
 
     setErrors(nextErrors);
@@ -118,12 +132,11 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
       <input type="hidden" name="features" value={selectedFeatures.join("\n")} />
 
       <div className="admin-card stack" style={{ gap: "32px" }}>
-        {/* Seção 1: Informações básicas */}
         <section className="form-section">
-          <h3 className="form-section-title">Informações Básicas</h3>
+          <h3 className="form-section-title">Informacoes basicas</h3>
           <div className="field-grid two">
             <div className="field">
-              <label htmlFor="title">Título do anúncio</label>
+              <label htmlFor="title">Titulo do anuncio</label>
               <input
                 id="title"
                 name="title"
@@ -137,7 +150,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
             <div className="field">
               <label htmlFor="status">Status de venda</label>
               <select id="status" name="status" defaultValue={(car?.status ?? "AVAILABLE") as CarStatus}>
-                <option value="AVAILABLE">Disponível</option>
+                <option value="AVAILABLE">Disponivel</option>
                 <option value="RESERVED">Reservado</option>
                 <option value="SOLD">Vendido</option>
               </select>
@@ -185,9 +198,8 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
           </div>
         </section>
 
-        {/* Seção 2: Detalhes técnicos e preço */}
         <section className="form-section">
-          <h3 className="form-section-title">Detalhes técnicos e preço</h3>
+          <h3 className="form-section-title">Detalhes tecnicos e preco</h3>
           <div className="field-grid three">
             <div className="field">
               <label htmlFor="km">Quilometragem</label>
@@ -208,7 +220,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
               {errors.km && <span className="field-error">{errors.km}</span>}
             </div>
             <div className="field">
-              <label htmlFor="price">Preço de venda</label>
+              <label htmlFor="price">Preco de venda</label>
               <div className="input-with-prefix">
                 <span className="input-prefix">R$</span>
                 <input
@@ -226,14 +238,14 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
               {errors.price && <span className="field-error">{errors.price}</span>}
             </div>
             <div className="field">
-              <label htmlFor="fuel">Combustível</label>
+              <label htmlFor="fuel">Combustivel</label>
               <input id="fuel" name="fuel" defaultValue={car?.fuel ?? ""} placeholder="Ex: Gasolina" />
             </div>
           </div>
 
           <div className="field-grid two" style={{ marginTop: "16px" }}>
             <div className="field">
-              <label htmlFor="transmission">Câmbio / Transmissão</label>
+              <label htmlFor="transmission">Cambio / Transmissao</label>
               <input id="transmission" name="transmission" defaultValue={car?.transmission ?? ""} placeholder="Ex: PDK 8 marchas" />
             </div>
             <div className="field">
@@ -249,16 +261,15 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
           </div>
         </section>
 
-        {/* Seção 3: Descrição e tags */}
         <section className="form-section">
-          <h3 className="form-section-title">Conteúdo do anúncio</h3>
+          <h3 className="form-section-title">Conteudo do anuncio</h3>
           <div className="field">
-            <label htmlFor="description">Descrição detalhada</label>
+            <label htmlFor="description">Descricao detalhada</label>
             <textarea
               id="description"
               name="description"
               defaultValue={car?.description ?? ""}
-              placeholder="Descreva os detalhes, histórico e diferenciais do veículo..."
+              placeholder="Descreva os detalhes, historico e diferenciais do veiculo..."
               required
               aria-invalid={Boolean(errors.description)}
               style={{ minHeight: "180px" }}
@@ -271,21 +282,20 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
               id="tags"
               name="tags"
               defaultValue={car?.tags.join("\n") ?? ""}
-              placeholder={"Ex: Único dono\nIPVA pago\nGarantia de fábrica"}
+              placeholder={"Ex: Unico dono\nIPVA pago\nGarantia de fabrica"}
               style={{ minHeight: "100px" }}
             />
           </div>
         </section>
 
-        {/* Seção 4: Opcionais categorizados */}
         <section className="form-section">
           <div className="feature-picker-head">
             <div>
               <h3 className="form-section-title" style={{ marginBottom: "4px" }}>
-                Opcionais do veículo
+                Opcionais do veiculo
               </h3>
               <p className="muted" style={{ fontSize: "0.85rem" }}>
-                Selecione os itens presentes no veículo para facilitar a busca do cliente.
+                Selecione os itens presentes no veiculo para facilitar a busca do cliente.
               </p>
             </div>
             <span className="feature-picker-count">{selectedFeatures.length} selecionado(s)</span>
@@ -317,17 +327,16 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
               name="customFeatures"
               value={customFeatures}
               onChange={(event) => setCustomFeatures(event.target.value)}
-              placeholder="Adicione outros itens separados por linha ou vírgula..."
+              placeholder="Adicione outros itens separados por linha ou virgula..."
               style={{ minHeight: "80px" }}
             />
           </div>
         </section>
 
-        {/* Seção 5: Galeria de imagens */}
         <section className="form-section">
           <h3 className="form-section-title">Galeria de fotos</h3>
           <p className="muted" style={{ fontSize: "0.85rem", marginBottom: "16px" }}>
-            A primeira imagem selecionada será a capa do anúncio.
+            A primeira imagem selecionada sera a capa do anuncio. Limite total: {MAX_CAR_IMAGE_SELECTION} imagens.
           </p>
           <RepositoryImagePicker
             images={availableImages}
@@ -335,7 +344,8 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
             initialGallery={galleryImages}
             primaryInputName="selectedPrimaryImage"
             galleryInputName="selectedGalleryImages"
-            emptyMessage="Selecione as fotos do veículo no repositório."
+            emptyMessage="Selecione as fotos do veiculo no repositorio."
+            maxTotalSelection={MAX_CAR_IMAGE_SELECTION}
           />
           {errors.images && <span className="field-error">{errors.images}</span>}
         </section>
@@ -343,7 +353,7 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
         <div className="field">
           <label className="checkbox-field">
             <input type="checkbox" name="isFeatured" defaultChecked={car?.isFeatured ?? false} />
-            <span className="checkbox-label">Destacar este veículo na página inicial</span>
+            <span className="checkbox-label">Destacar este veiculo na pagina inicial</span>
           </label>
         </div>
       </div>
@@ -357,12 +367,12 @@ export function CarEditorForm({ action, availableImages, car }: Props) {
           )}
           <AdminSubmitButton
             className="button-primary"
-            idleLabel={car ? "Salvar alterações" : "Publicar veículo"}
+            idleLabel={car ? "Salvar alteracoes" : "Publicar veiculo"}
             pendingLabel={car ? "Salvando..." : "Publicando..."}
           />
         </div>
       </div>
-      <AdminPendingState copy="Processando informações do veículo..." />
+      <AdminPendingState copy="Processando informacoes do veiculo..." />
     </form>
   );
 }

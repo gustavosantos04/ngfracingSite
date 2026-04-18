@@ -1,5 +1,6 @@
 import { CarStatus, OrderStatus, ProductCategory } from "@prisma/client";
 import { z } from "zod";
+import { MAX_CAR_IMAGE_SELECTION, MAX_PRODUCT_GALLERY_SELECTION } from "@/lib/admin-media";
 
 const localAssetPathSchema = z.string().refine(
   (value) => {
@@ -40,7 +41,7 @@ export const carPayloadSchema = z.object({
   status: z.nativeEnum(CarStatus),
   isFeatured: z.boolean(),
   whatsappLink: z.string().url().optional().nullable(),
-  imageUrls: z.array(localAssetPathSchema).min(1).max(8)
+  imageUrls: z.array(localAssetPathSchema).min(1).max(MAX_CAR_IMAGE_SELECTION)
 });
 
 export const productSizeStockSchema = z.object({
@@ -55,7 +56,7 @@ export const productPayloadSchema = z
     description: z.string().min(10),
     priceCents: z.number().int().min(0),
     primaryImageUrl: localAssetPathSchema,
-    galleryUrls: z.array(localAssetPathSchema).max(8),
+    galleryUrls: z.array(localAssetPathSchema).max(MAX_PRODUCT_GALLERY_SELECTION),
     stockQuantity: z.number().int().min(0).nullable(),
     sizeStocks: z.array(productSizeStockSchema),
     isFeatured: z.boolean()

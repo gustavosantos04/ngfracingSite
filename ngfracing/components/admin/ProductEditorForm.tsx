@@ -3,6 +3,7 @@
 import { ProductCategory } from "@prisma/client";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { MAX_PRODUCT_GALLERY_SELECTION } from "@/lib/admin-media";
 import { AdminPendingState, AdminSubmitButton } from "@/components/admin/AdminFormControls";
 import { RepositoryImagePicker } from "@/components/admin/RepositoryImagePicker";
 import type { RepositoryImageOption } from "@/lib/image-library";
@@ -70,6 +71,14 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
     const name = String(formData.get("name") ?? "").trim();
     const description = String(formData.get("description") ?? "").trim();
     const selectedPrimaryImage = String(formData.get("selectedPrimaryImage") ?? "").trim();
+    const selectedGalleryImages = Array.from(
+      new Set(
+        formData
+          .getAll("selectedGalleryImages")
+          .map((entry) => String(entry).trim())
+          .filter(Boolean)
+      )
+    );
     const sizeStocks = String(formData.get("sizeStocks") ?? "").trim();
     const stockQuantity = String(formData.get("stockQuantity") ?? "").trim();
 
@@ -84,6 +93,8 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
     }
     if (!selectedPrimaryImage) {
       nextErrors.images = "Selecione uma imagem principal.";
+    } else if (selectedGalleryImages.length > MAX_PRODUCT_GALLERY_SELECTION) {
+      nextErrors.images = `Selecione no maximo ${MAX_PRODUCT_GALLERY_SELECTION} imagens extras.`;
     }
     if (category === ProductCategory.APPAREL && !sizeStocks) {
       nextErrors.sizeStocks = "Informe ao menos um tamanho com estoque.";
@@ -190,6 +201,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
             primaryInputName="selectedPrimaryImage"
             galleryInputName="selectedGalleryImages"
             emptyMessage="Selecione uma imagem principal para o produto."
+            maxTotalSelection={MAX_PRODUCT_GALLERY_SELECTION + 1}
           />
           {errors.images ? <span className="field-error">{errors.images}</span> : null}
         </div>
