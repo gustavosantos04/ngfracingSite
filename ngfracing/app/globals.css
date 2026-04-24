@@ -879,6 +879,9 @@ textarea {
   gap: 12px;
   align-content: start;
   min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 2px;
 }
 
 .mobile-nav-link,
@@ -965,8 +968,7 @@ textarea {
 .mobile-nav-cta {
   width: 100%;
   min-height: 54px;
-  position: sticky;
-  bottom: max(12px, env(safe-area-inset-bottom));
+  align-self: end;
 }
 
 .about-shell {
