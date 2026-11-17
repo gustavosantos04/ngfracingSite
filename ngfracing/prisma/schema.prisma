@@ -112,6 +112,21 @@ model Product {
   @@index([category, createdAt])
 }
 
+// Independent assets can be shared by products. Detaching a URL never deletes the file.
+model ProductImageAsset {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  pathname    String   @unique
+  contentType String
+  size        Int
+  width       Int
+  height      Int
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+
+  @@index([uploadedBy, createdAt])
+}
+
 model Order {
   id                      String      @id @default(cuid())
   createdAt               DateTime    @default(now())

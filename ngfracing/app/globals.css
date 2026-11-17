@@ -2397,3 +2397,34 @@ textarea {
   color: var(--yellow);
   font-weight: 900;
 }
+.product-image-manager {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.product-image-manager legend { font-weight: 700; margin-bottom: 8px; }
+.product-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.product-image-grid > li { min-width: 0; }
+.product-image-preview { position: relative; aspect-ratio: 4 / 3; }
+.product-image-label { overflow-wrap: anywhere; }
+.product-image-grid .inline-actions { flex-wrap: wrap; gap: 6px; }
+.product-image-grid .button-ghost { padding: 10px; min-height: 44px; }
+.product-image-library { margin-top: 16px; }
+.product-image-manager input[type="file"] { max-width: 100%; }
+.product-image-manager summary { cursor: pointer; padding: 12px 0; }
+
+@media (max-width: 600px) {
+  .product-image-grid .inline-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
