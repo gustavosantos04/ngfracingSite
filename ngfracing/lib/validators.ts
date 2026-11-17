@@ -1,6 +1,7 @@
 import { CarStatus, OrderStatus, ProductCategory } from "@prisma/client";
 import { z } from "zod";
 import { MAX_CAR_IMAGE_SELECTION, MAX_PRODUCT_GALLERY_SELECTION } from "@/lib/admin-media";
+import { isProductBlobUrl } from "@/lib/product-images";
 
 const localAssetPathSchema = z.string().refine(
   (value) => {
@@ -49,14 +50,19 @@ export const productSizeStockSchema = z.object({
   stock: z.number().int().min(0)
 });
 
+const productImageUrlSchema = z.string().refine(
+  (value) => localAssetPathSchema.safeParse(value).success || isProductBlobUrl(value),
+  "Selecione uma imagem válida da biblioteca ou enviada pelo painel."
+);
+
 export const productPayloadSchema = z
   .object({
     name: z.string().min(2),
     category: z.nativeEnum(ProductCategory),
     description: z.string().min(10),
     priceCents: z.number().int().min(0),
-    primaryImageUrl: localAssetPathSchema,
-    galleryUrls: z.array(localAssetPathSchema).max(MAX_PRODUCT_GALLERY_SELECTION),
+    primaryImageUrl: productImageUrlSchema,
+    galleryUrls: z.array(productImageUrlSchema).max(MAX_PRODUCT_GALLERY_SELECTION),
     stockQuantity: z.number().int().min(0).nullable(),
     sizeStocks: z.array(productSizeStockSchema),
     isFeatured: z.boolean()

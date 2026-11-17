@@ -6,13 +6,14 @@ type SubmitButtonProps = {
   idleLabel: string;
   pendingLabel: string;
   className?: string;
+  disabled?: boolean;
 };
 
-export function AdminSubmitButton({ idleLabel, pendingLabel, className = "button-primary" }: SubmitButtonProps) {
+export function AdminSubmitButton({ idleLabel, pendingLabel, className = "button-primary", disabled = false }: SubmitButtonProps) {
   const { pending } = useFormStatus();
 
   return (
-    <button type="submit" className={className} disabled={pending} aria-busy={pending}>
+    <button type="submit" className={className} disabled={pending || disabled} aria-busy={pending}>
       <span className={`button-spinner ${pending ? "is-visible" : ""}`} aria-hidden="true" />
       <span>{pending ? pendingLabel : idleLabel}</span>
     </button>

@@ -1,7 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import { assertDatabaseEnvironment } from "@/lib/environment-safety";
+
+assertDatabaseEnvironment(process.env.POSTGRES_PRISMA_URL);
 
 declare global {
-  // eslint-disable-next-line no-var
   var prismaGlobal: PrismaClient | undefined;
 }
 

@@ -5,14 +5,14 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { MAX_PRODUCT_GALLERY_SELECTION } from "@/lib/admin-media";
 import { AdminPendingState, AdminSubmitButton } from "@/components/admin/AdminFormControls";
-import { RepositoryImagePicker } from "@/components/admin/RepositoryImagePicker";
+import { ProductImageManager } from "@/components/admin/ProductImageManager";
 import type { RepositoryImageOption } from "@/lib/image-library";
 import { serializeSizeStocks } from "@/lib/products";
 import type { PublicProduct } from "@/lib/types";
 import { formatCurrency } from "@/lib/utils";
 
 type Props = {
-  action: (formData: FormData) => void | Promise<void>;
+  action: (formData: FormData) => Promise<void | { error: string }>;
   availableImages: RepositoryImageOption[];
   product?: PublicProduct | null;
 };
@@ -48,6 +48,13 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
   const [category, setCategory] = useState<ProductCategory>(product?.category ?? ProductCategory.PART);
   const [priceDigits, setPriceDigits] = useState(product ? String(product.priceCents) : "");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [imagesBlocked, setImagesBlocked] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const [name, setName] = useState(product?.name ?? "");
+  const [description, setDescription] = useState(product?.description ?? "");
+  const [stockQuantity, setStockQuantity] = useState(String(product?.stockQuantity ?? ""));
+  const [sizeStocks, setSizeStocks] = useState(serializeSizeStocks(product?.sizeStocks ?? []));
+  const [isFeatured, setIsFeatured] = useState(product?.isFeatured ?? false);
 
   const priceDisplay = priceDigits
     ? new Intl.NumberFormat("pt-BR", {
@@ -68,6 +75,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
     const nextErrors: Record<string, string> = {};
+    if (imagesBlocked) nextErrors.images = "Envie ou remova as imagens pendentes antes de salvar.";
     const name = String(formData.get("name") ?? "").trim();
     const description = String(formData.get("description") ?? "").trim();
     const selectedPrimaryImage = String(formData.get("selectedPrimaryImage") ?? "").trim();
@@ -111,7 +119,11 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
   };
 
   return (
-    <form action={action} className="stack" onSubmit={handleSubmit} noValidate>
+    <form action={async (formData) => {
+      setSaveError("");
+      const result = await action(formData);
+      if (result?.error) setSaveError(result.error);
+    }} className="stack" onSubmit={handleSubmit} noValidate>
       <input type="hidden" name="productId" defaultValue={product?.id ?? ""} />
       <input type="hidden" name="category" value={category} />
       <input type="hidden" name="price" value={priceValue} />
@@ -120,7 +132,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
         <div className="field-grid two">
           <div className="field">
             <label htmlFor="name">Nome do produto</label>
-            <input id="name" name="name" defaultValue={product?.name ?? ""} required aria-invalid={Boolean(errors.name)} />
+            <input id="name" name="name" value={name} onChange={(event) => setName(event.target.value)} required aria-invalid={Boolean(errors.name)} />
             {errors.name ? <span className="field-error">{errors.name}</span> : null}
           </div>
           <div className="field">
@@ -180,7 +192,8 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
           <textarea
             id="description"
             name="description"
-            defaultValue={product?.description ?? ""}
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
             required
             aria-invalid={Boolean(errors.description)}
           />
@@ -189,19 +202,15 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
 
         <div className="stack">
           <div>
-            <h3 style={{ marginBottom: 8 }}>Imagens do repositório</h3>
+            <h3 style={{ marginBottom: 8 }}>Fotos e galeria</h3>
             <p className="muted" style={{ margin: 0 }}>
-              Escolha uma imagem principal e fotos adicionais a partir dos arquivos presentes em `public/images/produtos`.
+              Envie fotos pelo painel ou aproveite as imagens da biblioteca existente.
             </p>
           </div>
-          <RepositoryImagePicker
-            images={availableImages}
-            initialPrimary={product?.primaryImageUrl ?? ""}
-            initialGallery={product?.images.slice(1).map((image) => image.url) ?? []}
-            primaryInputName="selectedPrimaryImage"
-            galleryInputName="selectedGalleryImages"
-            emptyMessage="Selecione uma imagem principal para o produto."
-            maxTotalSelection={MAX_PRODUCT_GALLERY_SELECTION + 1}
+          <ProductImageManager
+            availableImages={availableImages}
+            initialImages={product?.images.map((image) => image.url) ?? []}
+            onBlockedChange={setImagesBlocked}
           />
           {errors.images ? <span className="field-error">{errors.images}</span> : null}
         </div>
@@ -212,7 +221,8 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
             <textarea
               id="sizeStocks"
               name="sizeStocks"
-              defaultValue={serializeSizeStocks(product?.sizeStocks ?? [])}
+              value={sizeStocks}
+              onChange={(event) => setSizeStocks(event.target.value)}
               placeholder={"PP:2\nP:5\nM:4\nG:3\nGG:1"}
               required
               aria-invalid={Boolean(errors.sizeStocks)}
@@ -227,7 +237,8 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
               name="stockQuantity"
               type="number"
               min="0"
-              defaultValue={product?.stockQuantity ?? ""}
+              value={stockQuantity}
+              onChange={(event) => setStockQuantity(event.target.value)}
               required
               aria-invalid={Boolean(errors.stockQuantity)}
             />
@@ -236,7 +247,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
         )}
 
         <label style={{ display: "inline-flex", alignItems: "center", gap: 10, fontWeight: 700 }}>
-          <input type="checkbox" name="isFeatured" defaultChecked={product?.isFeatured ?? false} />
+          <input type="checkbox" name="isFeatured" checked={isFeatured} onChange={(event) => setIsFeatured(event.target.checked)} />
           Marcar como destaque
         </label>
       </div>
@@ -246,6 +257,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
           className="button-primary"
           idleLabel={product ? "Salvar produto" : "Criar produto"}
           pendingLabel={product ? "Salvando produto..." : "Criando produto..."}
+          disabled={imagesBlocked}
         />
         {product ? (
           <div className="muted" style={{ alignSelf: "center" }}>
@@ -253,6 +265,7 @@ export function ProductEditorForm({ action, availableImages, product }: Props) {
           </div>
         ) : null}
       </div>
+      {saveError ? <div className="field-error" role="alert">{saveError}</div> : null}
       <AdminPendingState copy="Processando cadastro do produto..." />
     </form>
   );

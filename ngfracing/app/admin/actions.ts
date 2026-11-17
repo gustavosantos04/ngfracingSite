@@ -1,6 +1,7 @@
 "use server";
 
-import { CarStatus, OrderStatus, ProductCategory } from "@prisma/client";
+import { CarStatus, OrderStatus, Prisma, ProductCategory } from "@prisma/client";
+import { ZodError } from "zod";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -11,6 +12,8 @@ import { prisma } from "@/lib/prisma";
 import { assertSameOriginActionRequest, consumeRateLimit, getActionRequestFingerprint } from "@/lib/security";
 import { carPayloadSchema, loginSchema, orderStatusSchema, productPayloadSchema } from "@/lib/validators";
 import { slugify } from "@/lib/utils";
+import { getRepositoryProductImages } from "@/lib/image-library";
+import { assertKnownProductImages } from "@/lib/product-image-selection";
 
 function splitLines(...entries: Array<FormDataEntryValue | null | undefined>) {
   return entries
@@ -218,55 +221,85 @@ export async function saveProductAction(formData: FormData) {
   await assertSameOriginActionRequest();
   await requireAdminSession();
 
-  const productId = String(formData.get("productId") ?? "").trim();
-  const existingProduct = productId
-    ? await prisma.product.findUnique({ where: { id: productId }, select: { slug: true } })
-    : null;
-  const { primaryImageUrl, galleryUrls } = getProductImageSelection(formData);
-  const category = (String(formData.get("category") ?? "").trim().toUpperCase() || "PART") as ProductCategory;
-  const parsedSizeStocks = parseSizeStocksInput(String(formData.get("sizeStocks") ?? ""));
-  const rawStock = String(formData.get("stockQuantity") ?? "").trim();
+  let savedSlug = "";
+  let previousSlug = "";
+  try {
+    const productId = String(formData.get("productId") ?? "").trim();
+    const existingProduct = productId
+      ? await prisma.product.findUnique({ where: { id: productId }, select: { slug: true, primaryImageUrl: true, galleryJson: true } })
+      : null;
+    if (productId && !existingProduct) return { error: "Produto não encontrado. Recarregue o painel." };
+    const { primaryImageUrl, galleryUrls } = getProductImageSelection(formData);
+    const category = (String(formData.get("category") ?? "").trim().toUpperCase() || "PART") as ProductCategory;
+    const parsedSizeStocks = parseSizeStocksInput(String(formData.get("sizeStocks") ?? ""));
+    const rawStock = String(formData.get("stockQuantity") ?? "").trim();
 
-  const payload = productPayloadSchema.parse({
-    name: formData.get("name"),
-    category,
-    description: formData.get("description"),
-    priceCents: Math.round(Number(formData.get("price") ?? 0) * 100),
-    primaryImageUrl,
-    galleryUrls,
-    stockQuantity:
-      category === ProductCategory.APPAREL
-        ? null
-        : rawStock === ""
+    const payload = productPayloadSchema.parse({
+      name: formData.get("name"),
+      category,
+      description: formData.get("description"),
+      priceCents: Math.round(Number(formData.get("price") ?? 0) * 100),
+      primaryImageUrl,
+      galleryUrls,
+      stockQuantity:
+        category === ProductCategory.APPAREL
           ? null
-          : Number.parseInt(rawStock, 10),
-    sizeStocks: category === ProductCategory.APPAREL ? parsedSizeStocks : [],
-    isFeatured: formData.get("isFeatured") === "on"
-  });
+          : rawStock === ""
+            ? null
+            : Number.parseInt(rawStock, 10),
+      sizeStocks: category === ProductCategory.APPAREL ? parsedSizeStocks : [],
+      isFeatured: formData.get("isFeatured") === "on"
+    });
 
-  const data = {
-    name: payload.name,
-    slug: slugify(payload.name),
-    category: payload.category,
-    description: payload.description,
-    priceCents: payload.priceCents,
-    primaryImageUrl: payload.primaryImageUrl,
-    galleryJson: JSON.stringify(payload.galleryUrls),
-    stockQuantity: payload.category === ProductCategory.APPAREL ? null : payload.stockQuantity,
-    sizeStockJson: JSON.stringify(payload.category === ProductCategory.APPAREL ? payload.sizeStocks : []),
-    isFeatured: payload.isFeatured
-  };
+    const data = {
+      name: payload.name,
+      slug: slugify(payload.name),
+      category: payload.category,
+      description: payload.description,
+      priceCents: payload.priceCents,
+      primaryImageUrl: payload.primaryImageUrl,
+      galleryJson: JSON.stringify(payload.galleryUrls),
+      stockQuantity: payload.category === ProductCategory.APPAREL ? null : payload.stockQuantity,
+      sizeStockJson: JSON.stringify(payload.category === ProductCategory.APPAREL ? payload.sizeStocks : []),
+      isFeatured: payload.isFeatured
+    };
 
-  if (productId) {
-    await prisma.product.update({ where: { id: productId }, data });
-  } else {
-    await prisma.product.create({ data });
+    const selectedUrls = [payload.primaryImageUrl, ...payload.galleryUrls];
+    const remoteUrls = selectedUrls.filter((url) => url.startsWith("https://"));
+    const [repositoryImages, uploadedImages] = await Promise.all([
+      getRepositoryProductImages(),
+      remoteUrls.length ? prisma.productImageAsset.findMany({
+        where: { url: { in: remoteUrls } }, select: { url: true }
+      }) : Promise.resolve([])
+    ]);
+    assertKnownProductImages(selectedUrls, repositoryImages.map((image) => image.url),
+      uploadedImages.map((image) => image.url), existingProduct);
+
+    // Product fields and the entire gallery are persisted together in a single atomic write.
+    if (productId) {
+      await prisma.product.update({ where: { id: productId }, data });
+    } else {
+      await prisma.product.create({ data });
+    }
+    savedSlug = data.slug;
+    previousSlug = existingProduct?.slug ?? "";
+  } catch (error) {
+    if (error instanceof ZodError) return { error: error.issues[0]?.message || "Confira os dados do produto." };
+    if (error instanceof Error && error.message === "UNKNOWN_PRODUCT_IMAGE") {
+      return { error: "Uma imagem não foi confirmada. Envie-a novamente ou selecione uma imagem da biblioteca." };
+    }
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return { error: "Já existe um produto com este nome. Ajuste o nome e tente novamente." };
+    }
+    console.error("[products] Save failed", error);
+    return { error: "Não foi possível salvar o produto. Suas imagens foram preservadas; tente novamente." };
   }
 
+  revalidatePath("/");
   revalidatePath("/produtos");
-  revalidatePath(`/produtos/${data.slug}`);
-  if (existingProduct?.slug && existingProduct.slug !== data.slug) {
-    revalidatePath(`/produtos/${existingProduct.slug}`);
+  revalidatePath(`/produtos/${savedSlug}`);
+  if (previousSlug && previousSlug !== savedSlug) {
+    revalidatePath(`/produtos/${previousSlug}`);
   }
   revalidatePath("/admin");
   revalidatePath("/admin/produtos");
